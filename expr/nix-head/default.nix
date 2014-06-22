@@ -3,7 +3,8 @@
 stdenv.lib.overrideDerivation nix (old: {
   src = fetchgit {
     url = https://github.com/NixOS/nix;
-    sha256 = "ef09093e92a6fb4d9d2743b8ba1dab8f0c61e1cbb370459988e9135b7a3134c4";
+    rev = "9d0709e8c47082cec35d6412053eacfadae23bcd";
+    sha256 = "d5d09d08af782f9677c4e46d7393c16aa67cad5e6137bc37f680c3da6621405d";
   };
   buildInputs = old.buildInputs ++ [ autoconf automake libxml2 libxslt flex bison tetex dblatex git w3m ];
   preConfigure = "./bootstrap.sh";

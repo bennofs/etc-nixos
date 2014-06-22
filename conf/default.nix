@@ -6,39 +6,40 @@
 
 {
   imports =
-    [ <nixos/modules/programs/virtualbox.nix> 
+    [ <nixos/modules/programs/virtualbox.nix>
     ];
 
   nixpkgs.config = import ./nixpkgs.nix;
 
   # Available packages
-  environment.systemPackages = with pkgs; 
+  environment.systemPackages = with pkgs;
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
       pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
       emacs chromiumWrapper weechat skype kde4.kdevelop calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
       haskellPackages.cabalInstall_1_20_0_2 haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
-        Cabal_1_20_0_0 ghcPaths cpphs hlint
-	terminfo zlib text textIcu async hinotify systemFilepath haskeline unixMemory systemTimeMonotonic
-	gloss cairo pango glib gio gtk vty
-        lens pipes pipesConcurrency pipesNetwork aeson network optparseApplicative criterion wreq xmlLens uniplate
+        Cabal_1_20_0_1 ghcPaths cpphs hlint
+	terminfo zlib text textIcu async hinotify systemFilepath haskeline unixMemory systemTimeMonotonic curl
+	cairo pango glib gio gtk vty OpenGLRaw bmp GLUT
+        lens pipes pipesConcurrency pipesNetwork pipesParse pipesText aeson network optparseApplicative criterion wreq xmlLens uniplate
 	conduit xmlConduit httpConduit htmlConduit
 	either mtl monadControl mmorph bifunctors profunctors errors liftedBase transformers transformersBase dataDefault monadLoops
-        regexApplicative thLift thLiftInstances
+        regexApplicative thLift thLiftInstances linear vectorSpace
 	tasty tastyTh HUnit tastyHunit haskellSrcExts QuickCheck tastyQuickcheck quickcheckPropertyMonad doctest
         xmonad xmonadContrib
+        wlPprint colour Boolean
       ]))
       haskellPackages.xmobar dmenu xlibs.xmodmap kde4.l10n.de oxygen_gtk mplayer youtubeDL kde4.kdeartwork
-      neverball
+      neverball csound
       expr.armagetronad expr."softwarechallenge14-gui"
     ];
 
   fileSystems."/data" = {
     label = "data";
-    fsType = "ext4";    
+    fsType = "ext4";
   };
-  
+
 
   # Environment variables
   environment.variables = {
@@ -57,21 +58,23 @@
 
   # UDisks
   services.udisks2.enable = true;
-  
+
   # Polkit
   security.polkit.enable = true;
 
   # Setuid programs
   security.setuidPrograms = ["dumpcap"];
-  
+
   # GRUB 2 configuration
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/sda";
+# boot.loader.grub.splashImage = ./MatrixCode.xpm;
 
   # Kernel and hardware configuration
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.initrd.kernelModules = ["ext4"];
+  boot.cleanTmpDir = true;
   hardware.cpu.amd.updateMicrocode = true;
 
   # Select internationalisation properties.
@@ -85,8 +88,8 @@
   services.printing.enable = true;
 
   # Suspend on LID close
-  services.logind.extraConfig = "HandleLidSwitch=suspend"; 
- 
+  services.logind.extraConfig = "HandleLidSwitch=suspend";
+
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
@@ -96,7 +99,7 @@
     displayManager.slim.defaultUser = "benno";
     displayManager.slim.autoLogin = true;
     displayManager.slim.theme = pkgs.fetchurl {
-      url = "http://download.berlios.de/slim/slim-scotland-road.tar.gz";
+      url = mirror://sourceforge/slim.berlios/slim-scotland-road.tar.gz;
       sha256 = "18dvyfiprybmqvzyvv72lij2zlbcndbm87psiyb9plvf94sa8q7x";
     };
     displayManager.desktopManagerHandlesLidAndPower = false;
@@ -114,7 +117,7 @@
 	waitPID=$!
         ${pkgs.haskellPackages.xmobar}/bin/xmobar &
 	${pkgs.xlibs.xrdb}/bin/xrdb -load $HOME/.Xresources
-	${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" & 
+	${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
 	${pkgs.xcompmgr}/bin/xcompmgr &
 	${pkgs.skype}/bin/skype &
 	${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
@@ -124,8 +127,8 @@
         ${pkgs.gvolicon}/bin/gvolicon &
         ${pkgs.parcellite}/bin/parcellite &
         ${pkgs.unclutter}/bin/unclutter -idle 3 &
-        syndaemon -i 1 -R -K -t -d 
-	'';        
+        syndaemon -i 1 -R -K -t -d
+	'';
     }];
     xkbOptions = "";
   };
@@ -139,20 +142,20 @@
 
   # More fonts!
   fonts.fonts = with pkgs; [
-    inconsolata dejavu_fonts liberation_ttf vistafonts corefonts cantarell_fonts	
+    inconsolata dejavu_fonts liberation_ttf vistafonts corefonts cantarell_fonts
   ];
 
   # Configure one additional user
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
   users.mutableUsers = false;
-  users.extraUsers.benno = { 
+  users.extraUsers.benno = {
     uid = 1000;
     passwordFile = "/etc/nixos/conf/accounts/benno";
     createHome = true;
     home = "/home";
     description = "Benno Fünfstück";
     extraGroups = [ "wheel" "vboxusers" ];
-    useDefaultShell = true;    
+    useDefaultShell = true;
   };
   security.initialRootPassword = "!";
 
@@ -167,7 +170,13 @@
     #wicd.enable = true;
   };
 
-  services.httpd = { 
+  services.tor.client = {
+    enable = true;
+    privoxy.enable = true;
+    privoxy.listenAddress = "0.0.0.0:8118";
+  };
+
+  services.httpd = {
     enable = false;
     hostName = "localhost";
     adminAddr = "admin@example.org";
@@ -177,7 +186,7 @@
 
   # Enable remote access via SSH
   services.openssh.enable = true;
-  
+
   services.samba.enable = true;
   services.samba.defaultShare.enable = true;
   services.samba.defaultShare.guest = false;

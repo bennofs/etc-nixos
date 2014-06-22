@@ -11,7 +11,7 @@ packageOverrides = pkgs: rec {
       ${old.preConfigure}
       configureFlags="$configureFlags --enable-unicode3";
     '';
-  }); 
+  });
 };
 
 }
