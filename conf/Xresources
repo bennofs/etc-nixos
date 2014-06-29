@@ -53,7 +53,7 @@ URxvt*url-launcher: xdg-open
 ! URxvt*background:            S_base03
 
 *background:              #001e26
-URxvt*background:         [91]#001e26
+URxvt*background:         [80]#000e16
 *foreground:              S_base0
 *fading:                  40
 *fadeColor:               S_base03
