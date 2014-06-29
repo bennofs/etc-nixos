@@ -16,7 +16,7 @@
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
       pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
-      emacs chromiumWrapper weechat skype kde4.kdevelop calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice
+      emacs chromiumWrapper weechat skype kde4.kdevelop kde4.kate calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice xfce.thunar
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
       haskellPackages.cabalInstall_1_20_0_2 haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
         Cabal_1_20_0_1 ghcPaths cpphs hlint
@@ -30,9 +30,16 @@
         xmonad xmonadContrib
         wlPprint colour Boolean
       ]))
-      haskellPackages.xmobar dmenu xlibs.xmodmap kde4.l10n.de oxygen_gtk mplayer youtubeDL kde4.kdeartwork
+      haskellPackages.xmobar dmenu xlibs.xmodmap mplayer youtubeDL
       neverball csound
-      expr.armagetronad expr."softwarechallenge14-gui"
+      expr.armagetronad expr."softwarechallenge14-gui" expr.jumanjiWrapper
+
+      # QT icons / themes
+      kde4.kdeartwork kde4.l10n.de kde4.oxygen_icons
+
+      # GTK icons / themes
+      oxygen_gtk
+
     ];
 
   fileSystems."/data" = {
@@ -43,7 +50,7 @@
 
   # Environment variables
   environment.variables = {
-    BROWSER = "${pkgs.chromiumWrapper}/bin/chromium";
+    BROWSER = "${expr.jumanjiWrapper}/bin/jumanji";
   };
 
   # GTK theme
@@ -94,42 +101,43 @@
     enable = true;
     videoDrivers = ["ati"];
     layout = "de";
-    displayManager.slim.enable = true;
-    displayManager.slim.defaultUser = "benno";
-    displayManager.slim.autoLogin = true;
-    displayManager.slim.theme = pkgs.fetchurl {
-      url = mirror://sourceforge/slim.berlios/slim-scotland-road.tar.gz;
-      sha256 = "18dvyfiprybmqvzyvv72lij2zlbcndbm87psiyb9plvf94sa8q7x";
-    };
-    displayManager.desktopManagerHandlesLidAndPower = false;
     synaptics.enable = true;
     synaptics.accelFactor = "0.0005";
     synaptics.twoFingerScroll = true;
+    xkbOptions = "";
+
+    displayManager.slim = {
+      enable = true;
+      defaultUser = "benno";
+      autoLogin = true;
+      theme = pkgs.fetchurl {
+        url = mirror://sourceforge/slim.berlios/slim-scotland-road.tar.gz;
+        sha256 = "18dvyfiprybmqvzyvv72lij2zlbcndbm87psiyb9plvf94sa8q7x";
+      };
+    };
+    displayManager.desktopManagerHandlesLidAndPower = false;
+    displayManager.sessionCommands = ''
+      ${pkgs.feh}/bin/feh --bg-fill ${../data/wallpaper.jpg}
+      ${pkgs.haskellPackages.xmobar}/bin/xmobar &
+      ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
+      ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
+      ${pkgs.xcompmgr}/bin/xcompmgr &
+      ${pkgs.skype}/bin/skype &
+      ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
+      ${pkgs.rxvt_unicode}/bin/urxvtd &
+      ${expr.jumanjiWrapper}/bin/jumanji &
+      ${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
+      ${pkgs.gvolicon}/bin/gvolicon &
+      ${pkgs.parcellite}/bin/parcellite &
+      ${pkgs.unclutter}/bin/unclutter -idle 3 &
+      syndaemon -i 1 -R -K -t -d
+    '';
+
     desktopManager.default = "none";
     desktopManager.xterm.enable = false;
-    windowManager.default = "user";
-    windowManager.session = [{
-      name = "user";
-      start = ''
-	${pkgs.feh}/bin/feh --bg-fill ${../data/wallpaper.jpg}
-	${pkgs.haskellPackages.xmonad}/bin/xmonad &
-	waitPID=$!
-        ${pkgs.haskellPackages.xmobar}/bin/xmobar &
-	${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
-	${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
-	${pkgs.xcompmgr}/bin/xcompmgr &
-	${pkgs.skype}/bin/skype &
-	${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-	${pkgs.rxvt_unicode}/bin/urxvtd &
-	${pkgs.chromiumWrapper}/bin/chromium &
-	${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
-        ${pkgs.gvolicon}/bin/gvolicon &
-        ${pkgs.parcellite}/bin/parcellite &
-        ${pkgs.unclutter}/bin/unclutter -idle 3 &
-        syndaemon -i 1 -R -K -t -d
-	'';
-    }];
-    xkbOptions = "";
+
+    windowManager.xmonad.enable = true;
+    windowManager.xmonad.enableContribAndExtras = true;
   };
 
   # Make KDE apps work
