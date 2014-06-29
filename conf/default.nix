@@ -69,7 +69,6 @@
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/sda";
-# boot.loader.grub.splashImage = ./MatrixCode.xpm;
 
   # Kernel and hardware configuration
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -112,18 +111,18 @@
     windowManager.session = [{
       name = "user";
       start = ''
-	${pkgs.feh}/bin/feh --bg-fill /data/pics/wallpapers/Abstract.jpg
+	${pkgs.feh}/bin/feh --bg-fill ${../data/wallpaper.jpg}
 	${pkgs.haskellPackages.xmonad}/bin/xmonad &
 	waitPID=$!
         ${pkgs.haskellPackages.xmobar}/bin/xmobar &
-	${pkgs.xlibs.xrdb}/bin/xrdb -load $HOME/.Xresources
+	${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
 	${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
 	${pkgs.xcompmgr}/bin/xcompmgr &
 	${pkgs.skype}/bin/skype &
 	${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
 	${pkgs.rxvt_unicode}/bin/urxvtd &
 	${pkgs.chromiumWrapper}/bin/chromium &
-	${pkgs.xlibs.xmodmap}/bin/xmodmap /home/.xmodmap
+	${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
         ${pkgs.gvolicon}/bin/gvolicon &
         ${pkgs.parcellite}/bin/parcellite &
         ${pkgs.unclutter}/bin/unclutter -idle 3 &
@@ -196,6 +195,8 @@
     '';
 
   networking.firewall.allowPing = true;
+
+  # For tor
   networking.firewall.allowedTCPPorts = [ 80 445 139 ];
   networking.firewall.allowedUDPPorts = [ 137 138 ];
 
