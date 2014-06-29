@@ -16,7 +16,7 @@
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
       pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
-      emacs chromiumWrapper weechat skype kde4.kdevelop kde4.kate calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice xfce.thunar
+      emacs chromiumWrapper weechat skype kde4.kdevelop kde4.kate calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice dwbWrapper
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
       haskellPackages.cabalInstall_1_20_0_2 haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
         Cabal_1_20_0_1 ghcPaths cpphs hlint
@@ -32,7 +32,7 @@
       ]))
       haskellPackages.xmobar dmenu xlibs.xmodmap mplayer youtubeDL
       neverball csound
-      expr.armagetronad expr."softwarechallenge14-gui" expr.jumanjiWrapper
+      expr.armagetronad expr."softwarechallenge14-gui"
 
       # QT icons / themes
       kde4.kdeartwork kde4.l10n.de kde4.oxygen_icons
@@ -50,7 +50,7 @@
 
   # Environment variables
   environment.variables = {
-    BROWSER = "${expr.jumanjiWrapper}/bin/jumanji";
+    BROWSER = "${pkgs.dwbWrapper}/bin/dwb";
   };
 
   # GTK theme
@@ -125,7 +125,7 @@
       ${pkgs.skype}/bin/skype &
       ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
       ${pkgs.rxvt_unicode}/bin/urxvtd &
-      ${expr.jumanjiWrapper}/bin/jumanji &
+      ${pkgs.dwbWrapper}/bin/dwb &
       ${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
       ${pkgs.gvolicon}/bin/gvolicon &
       ${pkgs.parcellite}/bin/parcellite &
