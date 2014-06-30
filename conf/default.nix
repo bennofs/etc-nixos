@@ -31,14 +31,14 @@
         wlPprint colour Boolean
       ]))
       haskellPackages.xmobar dmenu xlibs.xmodmap mplayer youtubeDL
-      neverball csound
+      neverball csound manpages
       expr.armagetronad expr."softwarechallenge14-gui"
 
       # QT icons / themes
       kde4.kdeartwork kde4.l10n.de kde4.oxygen_icons
 
       # GTK icons / themes
-      oxygen_gtk
+      oxygen_gtk gnome.gnome_icon_theme gnome3.gnome_icon_theme hicolor_icon_theme
 
     ];
 
