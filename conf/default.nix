@@ -116,24 +116,27 @@
       };
     };
     displayManager.desktopManagerHandlesLidAndPower = false;
-    displayManager.sessionCommands = ''
-      ${pkgs.feh}/bin/feh --bg-fill ${../data/wallpaper.jpg}
-      ${pkgs.haskellPackages.xmobar}/bin/xmobar &
-      ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
-      ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
-      ${pkgs.xcompmgr}/bin/xcompmgr &
-      ${pkgs.skype}/bin/skype &
-      ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-      ${pkgs.rxvt_unicode}/bin/urxvtd &
-      ${pkgs.dwbWrapper}/bin/dwb &
-      ${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
-      ${pkgs.gvolicon}/bin/gvolicon &
-      ${pkgs.parcellite}/bin/parcellite &
-      ${pkgs.unclutter}/bin/unclutter -idle 3 &
-      syndaemon -i 1 -R -K -t -d
-    '';
 
-    desktopManager.default = "none";
+    desktopManager.session =
+      [ { name = "custom";
+          start = ''
+            ${pkgs.feh}/bin/feh --bg-fill ${../data/wallpaper.jpg}
+            ${pkgs.haskellPackages.xmobar}/bin/xmobar &
+            ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
+            ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
+            ${pkgs.xcompmgr}/bin/xcompmgr &
+            ${pkgs.skype}/bin/skype &
+            ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
+            ${pkgs.rxvt_unicode}/bin/urxvtd &
+            ${pkgs.dwbWrapper}/bin/dwb &
+            ${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
+            ${pkgs.gvolicon}/bin/gvolicon &
+            ${pkgs.parcellite}/bin/parcellite &
+            ${pkgs.unclutter}/bin/unclutter -idle 3 &
+            syndaemon -i 1 -R -K -t -d
+          '';
+      } ];
+    desktopManager.default = "custom";
     desktopManager.xterm.enable = false;
 
     windowManager.xmonad.enable = true;
