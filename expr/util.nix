@@ -4,11 +4,15 @@ lib = (import <nixpkgs> {}).lib;
 
 filterHaskellSrc = src:
   let
-    ignoredDirs = [ ".git" ".cabal-sandbox" "dist" ];
+    ignoredDirs = [ ".git" ];
     ignoredFiles = [ "cabal.sandbox.config" ];
     predicate = path: type:
          !( type == "unknown"
-         || type == "directory" && (builtins.elem (baseNameOf path) ignoredDirs || lib.hasPrefix ".nix" (baseNameOf path))
+         || type == "directory" && (builtins.elem (baseNameOf path) ignoredDirs
+                                 || lib.hasPrefix ".nix" (baseNameOf path)
+                                 || lib.hasPrefix "dist" (baseNameOf path)
+                                 || lib.hasSuffix "cabal-sandbox" (baseNameOf path)
+                                 )
          || type == "regular" && builtins.elem (baseNameOf path) ignoredFiles
          );
   in if builtins.typeOf src == "path"
