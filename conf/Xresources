@@ -56,7 +56,7 @@ URxvt*url-launcher: xdg-open
 URxvt*background:         [90]#000e16
 *foreground:              S_base0
 *fading:                  40
-*fadeColor:               S_base03
+*fadeColor:               [80]#000000
 *cursorColor:             S_base1
 *pointerColorBackground:  S_base01
 *pointerColorForeground:  S_base1
