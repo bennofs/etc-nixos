@@ -4,7 +4,7 @@
 
 { config, expr, pkgs, ... }:
 
-{
+with builtins; with pkgs.lib; {
   imports =
     [ <nixos/modules/programs/virtualbox.nix>
     ];
@@ -18,7 +18,7 @@
       nmap bc vagrant
       emacs chromiumWrapper weechat skype kde4.kdevelop kde4.kate calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice dwbWrapper
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
-      haskellPackages.cabalInstall_1_20_0_2 haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
+      haskellPackages.cabalInstall_1_20_0_3 haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
         Cabal_1_20_0_1 ghcPaths cpphs hlint
 	terminfo zlib text textIcu async hinotify systemFilepath haskeline unixMemory systemTimeMonotonic curl
 	cairo pango glib gio gtk vty OpenGLRaw bmp GLUT
@@ -120,7 +120,7 @@
     desktopManager.session =
       [ { name = "custom";
           start = ''
-            ${pkgs.feh}/bin/feh --bg-fill ${../data/wallpaper.jpg}
+            ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/Echo/robocop_d.jpg}
             ${pkgs.haskellPackages.xmobar}/bin/xmobar &
             ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
             ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
@@ -139,6 +139,7 @@
     desktopManager.default = "custom";
     desktopManager.xterm.enable = false;
 
+    windowManager.default = "xmonad";
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
   };
@@ -169,7 +170,6 @@
   };
   security.initialRootPassword = "!";
 
-  # Use wicd for networking
   networking = {
     hostName = "c-cube";
     interfaceMonitor.enable = false;
@@ -177,7 +177,6 @@
     wireless.interfaces = ["wlo1"];
     wireless.userControlled.enable = true;
     useDHCP = true;
-    #wicd.enable = true;
   };
 
   services.tor.client = {
@@ -186,30 +185,31 @@
     privoxy.listenAddress = "0.0.0.0:8118";
   };
 
-  services.httpd = {
-    enable = false;
-    hostName = "localhost";
-    adminAddr = "admin@example.org";
-    documentRoot = "/home/httpd";
-    extraModules = [ { name = "php5"; path = "${pkgs.php}/modules/libphp5.so"; } ];
+  services.xinetd.enable = true;
+
+  # Enable remote access via SSH and a SSH web-interface on :4200
+  services.openssh.enable = true;
+  services.xinetd.services = singleton {
+    name = "shellinaboxd";
+    port = 4200;
+    server = "${pkgs.shellinabox}/bin/shellinaboxd";
   };
 
-  # Enable remote access via SSH
-  services.openssh.enable = true;
-
-  services.samba.enable = true;
-  services.samba.defaultShare.enable = true;
-  services.samba.defaultShare.guest = false;
-  services.samba.securityType = "share";
-  services.samba.extraConfig = ''
-    workgroup = WORKGROUP
+  services.samba = {
+    enable = true;
+    defaultShare.enable = true;
+    defaultShare.guest = false;
+    securityType = "share";
+    extraConfig = ''
+      workgroup = WORKGROUP
     '';
+  };
 
-  networking.firewall.allowPing = true;
-
-  # For tor
-  networking.firewall.allowedTCPPorts = [ 80 445 139 ];
-  networking.firewall.allowedUDPPorts = [ 137 138 ];
+  networking.firewall = {
+    allowPing = true;
+    allowedTCPPorts = [ 80 445 139 ];
+    allowedUDPPorts = [ 137 138 ];
+  };
 
   nix.extraOptions = ''
     build-use-chroot = true
