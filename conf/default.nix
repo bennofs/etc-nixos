@@ -180,19 +180,20 @@ with builtins; with pkgs.lib; {
   };
 
   services.tor.client = {
-    enable = true;
-    privoxy.enable = true;
-    privoxy.listenAddress = "0.0.0.0:8118";
+# This clashes with SAMBA
+#    enable = true;
+#    privoxy.enable = true;
+#    privoxy.listenAddress = "0.0.0.0:8118";
   };
-
-  services.xinetd.enable = true;
 
   # Enable remote access via SSH and a SSH web-interface on :4200
   services.openssh.enable = true;
-  services.xinetd.services = singleton {
-    name = "shellinaboxd";
-    port = 4200;
-    server = "${pkgs.shellinabox}/bin/shellinaboxd";
+  jobs.shellinaboxd = {
+    description = "Shellinabox daemon";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    setuid = "nobody";
+    exec = "${pkgs.shellinabox}/bin/shellinaboxd";
   };
 
   services.samba = {
@@ -207,7 +208,7 @@ with builtins; with pkgs.lib; {
 
   networking.firewall = {
     allowPing = true;
-    allowedTCPPorts = [ 80 445 139 ];
+    allowedTCPPorts = [ 80 445 139 4200 ];
     allowedUDPPorts = [ 137 138 ];
   };
 
