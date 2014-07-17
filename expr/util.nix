@@ -25,7 +25,7 @@ cabalFilter = haskellPackages: haskellPackages.cabal.override {
   };
 };
 
-autoHaskell = src: f: { haskellPackages ? (import <nixpkgs> {}).haskellPackages, cabal2nix ? (import /data/apps/cabal2nix) }:
+autoHaskell = src: f: { haskellPackages ? (import <nixpkgs> {}).haskellPackages, cabal2nix ? (import /data/apps/cabal2nix { inherit haskellPackages; }) }:
   let
     filtered = filterHaskellSrc src;
     projectNix = (import <nixpkgs> {}).runCommand "project.nix" {
