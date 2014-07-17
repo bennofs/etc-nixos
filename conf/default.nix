@@ -14,7 +14,7 @@ with builtins; with pkgs.lib; {
   # Available packages
   environment.systemPackages = with pkgs;
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
-      pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages.perf wpa_supplicant_gui gnuplot
+      pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages_latest.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
       emacs chromiumWrapper weechat skype kde4.kdevelop kde4.kate calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice dwbWrapper
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
