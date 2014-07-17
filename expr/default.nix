@@ -8,4 +8,6 @@ armagetronad = callPackage ./armagetronad {};
 
 nixHead = callPackage ./nix-head {};
 
+rustHead = callPackage ./rust-head {};
+
 }
