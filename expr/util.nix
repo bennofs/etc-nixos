@@ -25,9 +25,10 @@ cabalFilter = haskellPackages: haskellPackages.cabal.override {
   };
 };
 
-autoHaskell = src: local:
+autoHaskell = src: overrides:
   { haskellPackages ? (import <nixpkgs> {}).haskellPackages,
-    cabal2nix ? (import /data/apps/cabal2nix { inherit haskellPackages; })
+    cabal2nix ? (import /data/apps/cabal2nix { inherit haskellPackages; }),
+    versions ? {}
   }:
   let
     filtered = filterHaskellSrc src;
@@ -36,11 +37,24 @@ autoHaskell = src: local:
       LOCALE_ARCHIVE = "${(import <nixpkgs> {}).glibcLocales}/lib/locale/locale-archive";
     } "${cabal2nix}/bin/cabal2nix ${filtered} > $out";
     haskellPackagesOverride = haskellPackages.override {
-      extension = self: super:
-        lib.mapAttrs
-          (_: x: import x { haskellPackages = haskellPackagesOverride; })
-          local;
+      extension = self: super: lib.mapAttrs resolvePackage (overrides // versions);
     };
+    resolvePackage = name: override:
+      let
+        version = lib.replaceChars ["."] ["_"] override;
+        attrname = name + "_" + version;
+        matching = lib.filterAttrs (n: _: lib.hasPrefix attrname n) haskellPackagesOverride;
+        matchingDerivs = lib.attrValues matching;
+        tooManyPkgs = "autoHaskell: more than one package matching " + attrname;
+      in if builtins.typeOf override == "path"
+        then import override { haskellPackages = haskellPackagesOverride; }
+        else if builtins.length matchingDerivs > 1
+          then builtins.throw (tooManyPkgs
+            + "\n  matching: " + lib.concatStringsSep " " (builtins.attrNames matching))
+          else if builtins.length matchingDerivs < 1
+            then builtins.throw ("autoHaskell: No package matching " + attrname)
+            else builtins.head matchingDerivs;
+
   in haskellPackagesOverride.callPackage (import projectNix) {
     cabal = haskellPackages.cabal.override {
       extension = self: super: { src = filtered; };
