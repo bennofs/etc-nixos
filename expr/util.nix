@@ -25,21 +25,27 @@ cabalFilter = haskellPackages: haskellPackages.cabal.override {
   };
 };
 
-autoHaskell = src: f: { haskellPackages ? (import <nixpkgs> {}).haskellPackages, cabal2nix ? (import /data/apps/cabal2nix { inherit haskellPackages; }) }:
+autoHaskell = src: local:
+  { haskellPackages ? (import <nixpkgs> {}).haskellPackages,
+    cabal2nix ? (import /data/apps/cabal2nix { inherit haskellPackages; })
+  }:
   let
     filtered = filterHaskellSrc src;
     projectNix = (import <nixpkgs> {}).runCommand "project.nix" {
       LANG = "en_US.UTF-8";
       LOCALE_ARCHIVE = "${(import <nixpkgs> {}).glibcLocales}/lib/locale/locale-archive";
     } "${cabal2nix}/bin/cabal2nix ${filtered} > $out";
-  in haskellPackages.callPackage (import projectNix) (f haskellPackages // {
-    cabal = haskellPackages.cabal.override { extension = self: super: { src = filtered; }; };
-  });
-
-buildHaskell = pkg: f: { haskellPackages ? (import <nixpkgs> {}).haskellPackages }:
-  haskellPackages.callPackage (import pkg) (f haskellPackages // {
-    cabal = cabalFilter haskellPackages;
-  });
+    haskellPackagesOverride = haskellPackages.override {
+      extension = self: super:
+        lib.mapAttrs
+          (_: x: import x { haskellPackages = haskellPackagesOverride; })
+          local;
+    };
+  in haskellPackagesOverride.callPackage (import projectNix) {
+    cabal = haskellPackages.cabal.override {
+      extension = self: super: { src = filtered; };
+    };
+  };
 
 useHaskell = src: f: { haskellPackages ? (import <nixpkgs> {}).haskellPackages }:
   (f haskellPackages).override {
