@@ -143,38 +143,6 @@ with builtins; with pkgs.lib; {
     windowManager.xmonad.enableContribAndExtras = true;
 
     wacom.enable = true;
-
-/*    config = ''
-      Section "InputClass"
-              Identifier "Waltop buttons"
-              MatchProduct "WALTOP"
-              MatchIsKeyboard "on"
-              MatchDevicePath "/dev/input/event*"
-              Driver "evdev"
-      EndSection
-
-      Section "InputClass"
-              Identifier "Waltop scroll"
-              MatchProduct "WALTOP"
-              MatchIsPointer "off"
-              MatchIsKeyboard "off"
-              MatchIsTouchpad "off"
-              MatchIsTablet "off"
-              MatchIsTouchscreen "off"
-              MatchDevicePath "/dev/input/event*"
-              Driver "evdev"
-      EndSection
-
-      Section "InputClass"
-              Identifier "Waltop pen"
-              MatchProduct "WALTOP"
-              MatchIsTablet "on"
-              MatchDevicePath "/dev/input/event*"
-              Driver "evdev"
-              # Apply custom Options below this line.
-
-      EndSection
-    ''; */
   };
 
   # Make KDE apps work
