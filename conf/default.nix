@@ -18,7 +18,7 @@ with builtins; with pkgs.lib; {
       nmap bc vagrant
       emacs chromiumWrapper weechat skype kde4.kdevelop kde4.kate calibre rxvt_unicode zathura hipchat ncmpc mpc_cli wireshark blender gimp libreoffice dwbWrapper
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
-      haskellPackages.cabalInstall_1_20_0_3 haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
+      haskellPackages.cabalInstall haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
         Cabal_1_20_0_1 ghcPaths cpphs hlint
 	terminfo zlib text textIcu async hinotify systemFilepath haskeline unixMemory systemTimeMonotonic curl
 	cairo pango glib gio gtk vty OpenGLRaw bmp GLUT
@@ -27,7 +27,6 @@ with builtins; with pkgs.lib; {
 	either mtl monadControl mmorph bifunctors profunctors errors liftedBase transformers transformersBase dataDefault monadLoops
         regexApplicative thLift thLiftInstances linear vectorSpace
 	tasty tastyTh HUnit tastyHunit haskellSrcExts QuickCheck tastyQuickcheck quickcheckPropertyMonad doctest
-        xmonad xmonadContrib
         wlPprint colour Boolean
       ]))
       haskellPackages.xmobar dmenu xlibs.xmodmap mplayer youtubeDL
@@ -132,7 +131,7 @@ with builtins; with pkgs.lib; {
             ${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
             ${pkgs.gvolicon}/bin/gvolicon &
             ${pkgs.parcellite}/bin/parcellite &
-            ${pkgs.unclutter}/bin/unclutter -idle 3 &
+            ${pkgs.unclutter}/bin/unclutter -idle 3 -grab &
             syndaemon -i 1 -R -K -t -d
           '';
       } ];
@@ -142,6 +141,40 @@ with builtins; with pkgs.lib; {
     windowManager.default = "xmonad";
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
+
+    wacom.enable = true;
+
+/*    config = ''
+      Section "InputClass"
+              Identifier "Waltop buttons"
+              MatchProduct "WALTOP"
+              MatchIsKeyboard "on"
+              MatchDevicePath "/dev/input/event*"
+              Driver "evdev"
+      EndSection
+
+      Section "InputClass"
+              Identifier "Waltop scroll"
+              MatchProduct "WALTOP"
+              MatchIsPointer "off"
+              MatchIsKeyboard "off"
+              MatchIsTouchpad "off"
+              MatchIsTablet "off"
+              MatchIsTouchscreen "off"
+              MatchDevicePath "/dev/input/event*"
+              Driver "evdev"
+      EndSection
+
+      Section "InputClass"
+              Identifier "Waltop pen"
+              MatchProduct "WALTOP"
+              MatchIsTablet "on"
+              MatchDevicePath "/dev/input/event*"
+              Driver "evdev"
+              # Apply custom Options below this line.
+
+      EndSection
+    ''; */
   };
 
   # Make KDE apps work
