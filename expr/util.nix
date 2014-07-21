@@ -27,7 +27,7 @@ cabalFilter = haskellPackages: haskellPackages.cabal.override {
 
 autoHaskell = src: overrides:
   { haskellPackages ? (import <nixpkgs> {}).haskellPackages,
-    cabal2nix ? (import /data/apps/cabal2nix { inherit haskellPackages; }),
+    cabal2nix ? (import /data/apps/cabal2nix {}),
     versions ? {}
   }:
   let

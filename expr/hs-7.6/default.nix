@@ -1,2 +1,1 @@
-{}:
-(import <nixpkgs> {}).haskellPackages
+(import <nixpkgs> {}).haskellPackages_ghc763
