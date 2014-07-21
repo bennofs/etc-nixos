@@ -217,5 +217,5 @@ with builtins; with pkgs.lib; {
   nix.extraOptions = ''
     build-use-chroot = true
     '';
-  nix.package = expr.nixHead;
+  nix.package = pkgs.nixUnstable;
 }
