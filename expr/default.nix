@@ -10,4 +10,6 @@ nixHead = callPackage ./nix-head {};
 
 rustHead = callPackage ./rust-head {};
 
+k2pdfopt = callPackage ./k2pdfopt {};
+
 }
