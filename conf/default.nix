@@ -16,7 +16,7 @@ with builtins; with pkgs.lib; {
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
       pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages_latest.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
-      emacs chromiumWrapper weechat skype calibre rxvt_unicode zathura hipchat wireshark blender gimp /*libreoffice*/ dwbWrapper
+      emacs chromiumWrapper weechat skype calibre rxvt_unicode zathura hipchat wireshark blender gimp libreoffice dwbWrapper
       expr.k2pdfopt ncmpc mpc_cli
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
       haskellPackages.cabalInstall haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackagesOld (hs: with hs; [
