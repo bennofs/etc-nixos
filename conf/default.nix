@@ -16,12 +16,12 @@ with builtins; with pkgs.lib; {
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
       pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages_latest.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
-      emacs chromiumWrapper weechat skype calibre rxvt_unicode zathura hipchat wireshark blender gimp libreoffice dwbWrapper
+      emacs chromiumWrapper weechat skype calibre rxvt_unicode zathura hipchat wireshark blender gimp /*libreoffice*/ dwbWrapper
       expr.k2pdfopt ncmpc mpc_cli
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
-      haskellPackages.cabalInstall haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackages (hs: with hs; [
+      haskellPackages.cabalInstall haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackagesOld (hs: with hs; [
         Cabal_1_20_0_1 ghcPaths cpphs hlint
-	terminfo zlib text textIcu async hinotify systemFilepath haskeline unixMemory systemTimeMonotonic curl
+	zlib text textIcu async hinotify systemFilepath haskeline unixMemory systemTimeMonotonic curl
 	cairo pango glib gio gtk vty OpenGLRaw bmp GLUT
         lens pipes pipesConcurrency pipesNetwork pipesParse pipesText aeson network optparseApplicative criterion wreq xmlLens uniplate
 	conduit xmlConduit httpConduit htmlConduit
@@ -218,4 +218,5 @@ with builtins; with pkgs.lib; {
     build-use-chroot = true
     '';
   nix.package = pkgs.nixUnstable;
+  nix.trustedBinaryCaches = [ http://cache.nixos.org http://hydra.nixos.org ];
 }
