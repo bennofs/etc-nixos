@@ -5,6 +5,7 @@
 { config, expr, pkgs, ... }:
 
 with builtins; with pkgs.lib; {
+
   imports =
     [ <nixos/modules/programs/virtualbox.nix>
     ];
@@ -14,7 +15,7 @@ with builtins; with pkgs.lib; {
   # Available packages
   environment.systemPackages = with pkgs;
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
-      pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages_latest.perf wpa_supplicant_gui gnuplot
+      pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
       emacs chromiumWrapper weechat skype calibre rxvt_unicode zathura hipchat wireshark blender gimp libreoffice dwbWrapper
       expr.k2pdfopt ncmpc mpc_cli
@@ -42,15 +43,22 @@ with builtins; with pkgs.lib; {
 
     ];
 
+  boot.loader.grub.device = "/dev/sda";
+  boot.initrd.kernelModules = ["ext4"];
+  boot.cleanTmpDir = true;
+  hardware.cpu.amd.updateMicrocode = true;
+
   fileSystems."/data" = {
     label = "data";
     fsType = "ext4";
   };
 
-
   # Environment variables
   environment.variables = {
     BROWSER = "${pkgs.dwbWrapper}/bin/dwb";
+    LC_MESSAGES = "en_US.UTF-8";
+    LANGUAGE = "de";
+    SHELL = "${pkgs.fish}/bin/fish";
   };
 
   # GTK theme
@@ -59,29 +67,9 @@ with builtins; with pkgs.lib; {
     export GTK2_RC_FILES=$GTK2_RC_FILES:${pkgs.oxygen_gtk}/share/themes/oxygen-gtk/gtk-2.0/gtkrc
     '';
 
-  # Enable some shells and sudo
-  programs.zsh.enable = true;
-  security.sudo.enable = true;
-
-  # UDisks
-  services.udisks2.enable = true;
-
-  # Polkit
-  security.polkit.enable = true;
-
-  # Setuid programs
+  # dumpcap is needed for wireshark
   security.setuidPrograms = ["dumpcap"];
-
-  # GRUB 2 configuration
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/sda";
-
-  # Kernel and hardware configuration
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.initrd.kernelModules = ["ext4"];
-  boot.cleanTmpDir = true;
-  hardware.cpu.amd.updateMicrocode = true;
+  security.sudo.enable = true;
 
   # Select internationalisation properties.
   i18n = {
@@ -126,12 +114,11 @@ with builtins; with pkgs.lib; {
             ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
             ${pkgs.xcompmgr}/bin/xcompmgr &
             ${pkgs.skype}/bin/skype &
-            ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
             ${pkgs.rxvt_unicode}/bin/urxvtd &
+            ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
             ${pkgs.dwbWrapper}/bin/dwb &
             ${pkgs.xlibs.xmodmap}/bin/xmodmap ${./xmodmap}
             ${pkgs.gvolicon}/bin/gvolicon &
-            ${pkgs.parcellite}/bin/parcellite &
             ${pkgs.unclutter}/bin/unclutter -idle 3 -grab &
             syndaemon -i 1 -R -K -t -d
           '';
@@ -146,7 +133,7 @@ with builtins; with pkgs.lib; {
     wacom.enable = true;
   };
 
-  # Make KDE apps work
+  # Make KDE apps work (icons, etc)
   environment.pathsToLink = [ "/share" ];
 
   # mpd
@@ -159,14 +146,14 @@ with builtins; with pkgs.lib; {
   ];
 
   # Configure one additional user
-  users.defaultUserShell = "/run/current-system/sw/bin/zsh";
   users.mutableUsers = false;
+  users.defaultUserShell = "/run/current-system/sw/bin/bash";
   users.extraUsers.benno = {
+    description = "Benno Fünfstück";
     uid = 1000;
     passwordFile = "/etc/nixos/conf/accounts/benno";
     createHome = true;
     home = "/home";
-    description = "Benno Fünfstück";
     extraGroups = [ "wheel" "vboxusers" ];
     useDefaultShell = true;
   };
@@ -174,18 +161,15 @@ with builtins; with pkgs.lib; {
 
   networking = {
     hostName = "c-cube";
-    interfaceMonitor.enable = false;
     wireless.enable = true;
     wireless.interfaces = ["wlo1"];
     wireless.userControlled.enable = true;
-    useDHCP = true;
   };
 
   services.tor.client = {
-# This clashes with SAMBA
-#    enable = true;
-#    privoxy.enable = true;
-#    privoxy.listenAddress = "0.0.0.0:8118";
+    enable = true;
+    privoxy.enable = true;
+    privoxy.listenAddress = "0.0.0.0:8118";
   };
 
   # Enable remote access via SSH and a SSH web-interface on :4200
