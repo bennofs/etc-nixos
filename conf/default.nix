@@ -33,7 +33,7 @@ with builtins; with pkgs.lib; {
       ]))
       haskellPackages.xmobar dmenu xlibs.xmodmap mplayer youtubeDL
       neverball csound manpages
-      expr.armagetronad expr."softwarechallenge14-gui"
+      expr.armagetronad expr.softwarechallenge14-gui
 
       # QT icons / themes
       kde4.kdeartwork kde4.l10n.de kde4.oxygen_icons
@@ -44,7 +44,7 @@ with builtins; with pkgs.lib; {
     ];
 
   boot.loader.grub.device = "/dev/sda";
-  boot.initrd.kernelModules = ["ext4"];
+  boot.initrd.kernelModules = [ "ext4" ];
   boot.cleanTmpDir = true;
   hardware.cpu.amd.updateMicrocode = true;
 
