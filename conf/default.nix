@@ -17,11 +17,11 @@ with builtins; with pkgs.lib; {
     [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
       pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot linuxPackages.perf wpa_supplicant_gui gnuplot
       nmap bc vagrant
-      emacs chromiumWrapper weechat skype calibre rxvt_unicode zathura hipchat wireshark blender gimp libreoffice dwbWrapper
+      emacs /*chromiumWrapper*/ firefoxWrapper weechat skype calibre rxvt_unicode zathura hipchat wireshark /*blender*/ gimp libreoffice dwbWrapper
       expr.k2pdfopt ncmpc mpc_cli
       ruby python python3 nix-repl texLiveFull ghostscript llvm haskellPackages.hasktags
       haskellPackages.cabalInstall haskellPackages.hlint (pkgs.haskellPackages.ghcWithPackagesOld (hs: with hs; [
-        Cabal_1_20_0_1 ghcPaths cpphs hlint
+        Cabal_1_20_0_2 ghcPaths cpphs hlint
 	zlib text textIcu async hinotify systemFilepath haskeline unixMemory systemTimeMonotonic curl
 	cairo pango glib gio gtk vty OpenGLRaw bmp GLUT
         lens pipes pipesConcurrency pipesNetwork pipesParse pipesText aeson network optparseApplicative criterion wreq xmlLens uniplate
@@ -108,7 +108,7 @@ with builtins; with pkgs.lib; {
     desktopManager.session =
       [ { name = "custom";
           start = ''
-            ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/Echo/robocop_d.jpg}
+            ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/Nordsee1.jpg}
             ${pkgs.haskellPackages.xmobar}/bin/xmobar &
             ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
             ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
@@ -174,12 +174,12 @@ with builtins; with pkgs.lib; {
 
   # Enable remote access via SSH and a SSH web-interface on :4200
   services.openssh.enable = true;
-  jobs.shellinaboxd = {
+  systemd.services.shellinaboxd = {
     description = "Shellinabox daemon";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    setuid = "nobody";
-    exec = "${pkgs.shellinabox}/bin/shellinaboxd";
+    script = "${pkgs.shellinabox}/bin/shellinaboxd";
+    serviceConfig.User = "nobody";
   };
 
   services.samba = {
@@ -202,5 +202,6 @@ with builtins; with pkgs.lib; {
     build-use-chroot = true
     '';
   nix.package = pkgs.nixUnstable;
-  nix.trustedBinaryCaches = [ http://cache.nixos.org http://hydra.nixos.org ];
+  nix.binaryCaches = [ "http://cache.nixos.org" "http://hydra.cryp.to" ];
+  nix.trustedBinaryCaches = [ http://cache.nixos.org http://hydra.nixos.org http://hydra.cryp.to ];
 }
