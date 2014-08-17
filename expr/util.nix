@@ -14,6 +14,7 @@ filterHaskellSrc = src:
                                  || lib.hasSuffix "cabal-sandbox" (baseNameOf path)
                                  )
          || type == "regular" && builtins.elem (baseNameOf path) ignoredFiles
+         || type == "symlink"
          );
   in if builtins.typeOf src == "path"
     then builtins.filterSource predicate src
