@@ -1,0 +1,3 @@
+[submodule "expr/hydra"]
+	path = expr/hydra
+	url = git://github.com/NixOS/hydra.git

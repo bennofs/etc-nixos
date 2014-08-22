@@ -1,8 +1,0 @@
- !
- ! Swap Caps_Lock and Control_L
- !
- clear Lock
- clear Control
- keycode 66 = Escape
- keycode 37 = Control_L
- add Control = Control_L Control_R

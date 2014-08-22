@@ -1,8 +1,13 @@
 URxvt*.scrollBar:      false
 URxvt*.depth:          32
-URxvt*font:             xft:Sauce Code Powerline:size=9, xft:Menlo for Powerline:size=9
-URxvt*perl-ext-common: default,matcher
-URxvt*matcher.button: 1
+URxvt*font:            xft:Source Code Pro:size=9, xft:DejaVu Sans:size=8
+URxvt*perl-lib:        /etc/nixos/conf/urxvt-perl
+URxvt*perl-ext-common: default,clipboard,url-select,keyboard-select
+URxvt.keysym.Control-f: perl:keyboard-select:search
+URxvt.keysym.Control-s: perl:keyboard-select:activate
+URxvt.keysym.Control-u: perl:url-select:select_next
+URxvt.keysym.Control-x: perl:clipboard:copy
+URxvt.keysym.Control-y: perl:clipboard:paste
 URxvt*url-launcher: xdg-open
 
 
@@ -49,8 +54,6 @@ URxvt*url-launcher: xdg-open
 ! *background:              #001e26
 URxvt*background:         [90]#000e16
 URxvt*foreground:         S_base0
-URxvt*fading:                  40
-URxvt*fadeColor:               [80]#000000
 URxvt*cursorColor:             S_base1
 URxvt*pointerColorBackground:  S_base01
 URxvt*pointerColorForeground:  S_base1
