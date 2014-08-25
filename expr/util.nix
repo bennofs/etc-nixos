@@ -27,7 +27,7 @@ cabalFilter = haskellPackages: haskellPackages.cabal.override {
 };
 
 autoHaskell = src: overrides:
-  { haskellPackages ? (import <nixpkgs> {}).haskellPackages,
+  { haskellPackages ? builtins.trace "autoimport" (import <nixpkgs> {}).haskellPackages,
     cabal2nix ? (import /data/apps/cabal2nix {}),
     versions ? {}
   }:
@@ -37,9 +37,9 @@ autoHaskell = src: overrides:
       LANG = "en_US.UTF-8";
       LOCALE_ARCHIVE = "${(import <nixpkgs> {}).glibcLocales}/lib/locale/locale-archive";
     } "${cabal2nix}/bin/cabal2nix ${filtered} > $out";
-    haskellPackagesOverride = haskellPackages.override {
-      extension = self: super: lib.mapAttrs resolvePackage (overrides // versions);
-    };
+    haskellPackagesOverride = haskellPackages.override (old: {
+      extension = self: super: (if old ? extension then old.extension self super else {}) // (lib.mapAttrs resolvePackage (overrides // versions));
+    });
     resolvePackage = name: override:
       let
         version = lib.replaceChars ["."] ["_"] override;
