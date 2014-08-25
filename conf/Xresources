@@ -1,6 +1,6 @@
 URxvt*.scrollBar:      false
 URxvt*.depth:          32
-URxvt*font:            xft:Source Code Pro:size=9, xft:DejaVu Sans:size=8
+URxvt*font:            xft:Source Code Pro:size=9, xft:DejaVu Sans:size=8, xft:Free Mono:size=10
 URxvt*perl-lib:        /etc/nixos/conf/urxvt-perl
 URxvt*perl-ext-common: default,clipboard,url-select,keyboard-select
 URxvt.keysym.Control-f: perl:keyboard-select:search
