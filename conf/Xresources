@@ -5,10 +5,11 @@ URxvt*perl-lib:        /etc/nixos/conf/urxvt-perl
 URxvt*perl-ext-common: default,clipboard,url-select,keyboard-select
 URxvt.keysym.Control-f: perl:keyboard-select:search
 URxvt.keysym.Control-s: perl:keyboard-select:activate
-URxvt.keysym.Control-u: perl:url-select:select_next
-URxvt.keysym.Control-x: perl:clipboard:copy
-URxvt.keysym.Control-y: perl:clipboard:paste
-URxvt*url-launcher: xdg-open
+URxvt.keysym.Mod1-u: perl:url-select:select_next
+URxvt.keysym.Mod1-x: perl:clipboard:copy
+URxvt.keysym.Mod1-y: perl:clipboard:paste
+URxvt.url-select.launcher: xdg-open
+URxvt.url-select.underline: true
 
 
 ! Solarized color scheme for the X Window System
