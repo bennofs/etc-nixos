@@ -10,7 +10,7 @@ services.xserver = {
   synaptics.enable = true;
   synaptics.accelFactor = "0.0005";
   synaptics.twoFingerScroll = true;
-  xkbOptions = "";
+  xkbOptions = "ctrl:nocaps";
 
   displayManager.slim = {
     enable = true;
@@ -32,9 +32,9 @@ services.xserver = {
           ${pkgs.trayer}/bin/trayer --monitor 1 --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
           ${pkgs.xcompmgr}/bin/xcompmgr &
           ${pkgs.skype}/bin/skype &
+          ${pkgs.hipchat}/bin/hipchat &
           ${pkgs.rxvt_unicode}/bin/urxvtd &
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-          ${pkgs.dwbWrapper}/bin/dwb &
           ${pkgs.gvolicon}/bin/gvolicon &
           ${pkgs.unclutter}/bin/unclutter -idle 3 -grab &
           ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
@@ -58,6 +58,7 @@ services.xserver = {
 environment.extraInit = ''
   export GTK_PATH=$GTK_PATH:${pkgs.oxygen_gtk}/lib/gtk-2.0
   export GTK2_RC_FILES=$GTK2_RC_FILES:${pkgs.oxygen_gtk}/share/themes/oxygen-gtk/gtk-2.0/gtkrc
+  export XDG_DOWNLOAD_DIR="$HOME/downloads"
 '';
 
 environment.systemPackages = with pkgs; [

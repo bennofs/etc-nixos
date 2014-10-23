@@ -15,17 +15,17 @@ nixpkgs.config = import ./nixpkgs.nix;
 # Available packages
 environment.systemPackages = with pkgs;
   [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
-    pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot
+    pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot xsel
     linuxPackages.perf wpa_supplicant_gui gnuplot
     nmap bc vagrant
-    emacs weechat skype calibre rxvt_unicode zathura hipchat wireshark gimp libreoffice
-    dwbWrapper firefoxWrapper
+    emacs weechat skype calibre rxvt_unicode zathura wireshark gimp libreoffice hipchat
+    firefoxWrapper uzbl
     expr.k2pdfopt ncmpc mpc_cli
     ruby python python3 nix-repl texLiveFull ghostscript llvm
     (with haskellPackages; [hasktags hlint xmobar dmenu cabalInstall ghcPlain])
     xlibs.xmodmap mplayer youtubeDL
     neverball csound manpages
-    expr.armagetronad
+    expr.armagetronad expr.esu
   ];
 
 boot.loader.grub.device = "/dev/sda";
@@ -40,7 +40,7 @@ fileSystems."/data" = {
 
 # Environment variables
 environment.variables = {
-  BROWSER = "${pkgs.dwbWrapper}/bin/dwb";
+  BROWSER = "${pkgs.uzbl}/bin/uzbl-browser";
   LC_MESSAGES = "en_US.UTF-8";
   LANGUAGE = "de";
   SHELL = "${pkgs.fish}/bin/fish";
@@ -82,7 +82,6 @@ nix = {
     http://hydra.nixos.org
     http://hydra.cryp.to
   ];
-  gc.automatic = true;
   daemonNiceLevel = 1;
   daemonIONiceLevel = 1;
 };
