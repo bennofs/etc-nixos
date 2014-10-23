@@ -1,3 +1,4 @@
+*international: true
 URxvt*.scrollBar:      false
 URxvt*.depth:          32
 URxvt*font:            xft:Source Code Pro:size=9, xft:DejaVu Sans:size=8, xft:Free Mono:size=10
