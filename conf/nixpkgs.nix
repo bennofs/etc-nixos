@@ -15,6 +15,9 @@ packageOverrides = pkgs: rec {
       configureFlags="$configureFlags --enable-unicode3";
     '';
   });
+  trayer = pkgs.trayer.overrideDerivation (old: {
+    patches = [ ./patches/trayer-force-icon-width.patch ];
+  });
 };
 
 }

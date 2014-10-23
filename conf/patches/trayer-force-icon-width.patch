@@ -1,0 +1,15 @@
+diff --git a/eggtraymanager.c b/eggtraymanager.c
+index 576e10d..9788793 100644
+--- a/eggtraymanager.c
++++ b/eggtraymanager.c
+@@ -226,8 +226,9 @@ egg_tray_manager_handle_dock_request (EggTrayManager       *manager,
+     {
+       g_signal_connect (socket, "plug_removed",
+ 			G_CALLBACK (egg_tray_manager_plug_removed), manager);
+-      
++
+       gtk_socket_add_id (GTK_SOCKET (socket), xevent->data.l[2]);
++      gtk_widget_set_size_request(socket, 20, -1);
+ 
+       g_hash_table_insert (manager->socket_table, GINT_TO_POINTER (xevent->data.l[2]), socket);
+     }
