@@ -37,7 +37,7 @@ services.xserver = {
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
           ${pkgs.gvolicon}/bin/gvolicon &
           ${pkgs.unclutter}/bin/unclutter -idle 3 -grab &
-          ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
+          udiskie --tray &
           ${pkgs.dunst}/bin/dunst -key 'mod4+less' -history_key 'mod4+shift+less' -all_key ' ' -cto 4 -nto 2 -lto 1 &
           syndaemon -i 1 -R -K -t -d
         '';
@@ -67,6 +67,9 @@ environment.systemPackages = with pkgs; [
 
   # GTK icons / themes
   oxygen_gtk gnome3.gnome_icon_theme hicolor_icon_theme
+
+  # Other packages
+  pythonPackages.udiskie
 ];
 
 # QT / KDE
