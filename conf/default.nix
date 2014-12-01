@@ -3,7 +3,6 @@
 with builtins; with pkgs.lib; {
 
 imports = [
-  <nixos/modules/programs/virtualbox.nix>
   ./desktop.nix
   ./services.nix
   ./accounts
@@ -15,7 +14,7 @@ nixpkgs.config = import ./nixpkgs.nix;
 # Available packages
 environment.systemPackages = with pkgs;
   [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
-    pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot xsel
+    pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot xsel slock
     linuxPackages.perf wpa_supplicant_gui gnuplot
     nmap bc vagrant
     emacs weechat skype calibre rxvt_unicode zathura wireshark gimp libreoffice hipchat
@@ -23,7 +22,7 @@ environment.systemPackages = with pkgs;
     expr.k2pdfopt ncmpc mpc_cli
     ruby python python3 nix-repl texLiveFull ghostscript llvm
     (with haskellPackages; [hasktags hlint xmobar dmenu cabalInstall ghcPlain])
-    xlibs.xmodmap mplayer youtubeDL
+    xlibs.xmodmap xclip mplayer youtubeDL
     neverball csound manpages
     expr.armagetronad expr.esu
   ];
@@ -40,14 +39,26 @@ fileSystems."/data" = {
 
 # Environment variables
 environment.variables = {
-  BROWSER = "${pkgs.uzbl}/bin/uzbl-browser";
+  BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
+    #!${pkgs.bash}/bin/bash
+    ${pkgs.uzbl}/bin/uzbl-browser "$@" &
+  '');
   LC_MESSAGES = "en_US.UTF-8";
   LANGUAGE = "de";
   SHELL = "${pkgs.fish}/bin/fish";
 };
 
+# Make SSL root certificates used by Mozilla Firefox available
+environment.etc."ssl/certs/mozilla.crt" = {
+  source = pkgs.fetchurl {
+    url = "http://curl.haxx.se/ca/cacert.pem";
+    sha256 = "1r1ccw9mch23jvchvb12mdska22p75jmh7zmzyxp7jnmyj2flh6z";
+  };
+  mode = "444";
+};
+
 # dumpcap is needed for wireshark
-security.setuidPrograms = ["dumpcap"];
+security.setuidPrograms = ["dumpcap" "slock"];
 security.sudo.enable = true;
 
 # Select internationalisation properties.

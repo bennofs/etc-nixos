@@ -9,7 +9,7 @@ dwb.enableAdobeFlash = true;
 firefox.enableAdobeFlash = true;
 cabal.libraryProfiling = true;
 packageOverrides = pkgs: rec {
-  rxvt_unicode = pkgs.stdenv.lib.overrideDerivation pkgs.rxvt_unicode (old: {
+  rxvt_unicode = pkgs.rxvt_unicode.overrideDerivation (old: {
     preConfigure = ''
       ${old.preConfigure}
       configureFlags="$configureFlags --enable-unicode3";
