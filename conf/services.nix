@@ -42,7 +42,11 @@ services = {
   postgresql.enable = true;
   postgresql.package = pkgs.postgresql;
 
+  avahi.enable = true;
+
 };
+
+virtualisation.libvirtd.enable = true;
 
 networking.firewall = {
   allowPing = true;
@@ -53,6 +57,16 @@ networking.firewall = {
   allowedUDPPorts = [
     137 138 139 # nmbd
   ];
+
+  # We need to disable reverse path test because libvirt networking fails with it.
+  # Setup our own reverse path test that ignores libvirt virtual interfaces
+  checkReversePath = false;
+  extraCommands = ''
+    ip46tables -A PREROUTING -t raw ! -i virbr+ -m rpfilter --invert -j DROP
+  '';
+  extraStopCommands = ''
+    ip46tables -D PREROUTING -t raw ! -i virbr+ -m rpfilter --invert -j DROP
+  '';
 };
 
 }
