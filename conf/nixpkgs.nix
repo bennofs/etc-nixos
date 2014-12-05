@@ -6,6 +6,7 @@ chromium.enablePepperFlash = true;
 chromium.enablePepperPDF = true;
 dmenu.enableXft = true;
 dwb.enableAdobeFlash = true;
+conkeror.enableAdobeFlash = true;
 firefox.enableAdobeFlash = true;
 cabal.libraryProfiling = true;
 packageOverrides = pkgs: rec {

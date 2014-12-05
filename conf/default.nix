@@ -14,17 +14,16 @@ nixpkgs.config = import ./nixpkgs.nix;
 # Available packages
 environment.systemPackages = with pkgs;
   [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
-    pmutils psmisc htop fuse inetutils samba which binutils patchelf scrot xsel slock
+    pmutils psmisc htop fuse inetutils samba which binutils scrot xsel
     linuxPackages.perf wpa_supplicant_gui gnuplot
-    nmap bc vagrant
+    nmap bc libvirt expr.k2pdfopt ncmpc mpc_cli
     emacs weechat skype calibre rxvt_unicode zathura wireshark gimp libreoffice hipchat
-    firefoxWrapper uzbl
-    expr.k2pdfopt ncmpc mpc_cli
+    conkerorWrapper
     ruby python python3 nix-repl texLiveFull ghostscript llvm
     (with haskellPackages; [hasktags hlint xmobar dmenu cabalInstall ghcPlain])
     xlibs.xmodmap xclip mplayer youtubeDL
     neverball csound manpages
-    expr.armagetronad expr.esu
+    expr.armagetronad
   ];
 
 boot.loader.grub.device = "/dev/sda";
@@ -41,7 +40,7 @@ fileSystems."/data" = {
 environment.variables = {
   BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
     #!${pkgs.bash}/bin/bash
-    ${pkgs.uzbl}/bin/uzbl-browser "$@" &
+    ${pkgs.conkerorWrapper}/bin/conkeror "$@" &
   '');
   LC_MESSAGES = "en_US.UTF-8";
   LANGUAGE = "de";
