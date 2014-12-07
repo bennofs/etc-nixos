@@ -16,7 +16,7 @@ environment.systemPackages = with pkgs;
   [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
     pmutils psmisc htop fuse inetutils samba which binutils scrot xsel
     linuxPackages.perf wpa_supplicant_gui gnuplot
-    nmap bc libvirt expr.k2pdfopt ncmpc mpc_cli
+    nmap bc libvirt k2pdfopt ncmpc mpc_cli
     emacs weechat skype calibre rxvt_unicode zathura wireshark gimp libreoffice hipchat
     conkerorWrapper
     ruby python python3 nix-repl texLiveFull ghostscript llvm
