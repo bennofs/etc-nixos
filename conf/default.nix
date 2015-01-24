@@ -16,14 +16,15 @@ environment.systemPackages = with pkgs;
   [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
     pmutils psmisc htop fuse inetutils samba which binutils scrot xsel
     linuxPackages.perf wpa_supplicant_gui gnuplot
-    nmap bc libvirt k2pdfopt ncmpc mpc_cli
-    emacs weechat skype calibre rxvt_unicode zathura wireshark gimp libreoffice hipchat
-    conkerorWrapper
-    ruby python python3 nix-repl texLiveFull ghostscript llvm
-    (with haskellPackages; [hasktags hlint xmobar dmenu cabalInstall ghcPlain])
+    nmap bc libvirt k2pdfopt ncmpcpp mpc_cli beets arandr
+    emacs weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode
+    calibre libreoffice wireshark gimp hipchat skype
+    ruby python python3 nix-repl texLiveFull ghostscript llvm coq
+    (with haskellngPackages; [hasktags hlint xmobar cabal-install ghc])
+    emacs24Packages.proofgeneral_4_3_pre
     xlibs.xmodmap xclip mplayer youtubeDL
-    neverball csound manpages
-    expr.armagetronad
+    manpages man_db expr.armagetronad
+    shadow # required by lxc
   ];
 
 boot.loader.grub.device = "/dev/sda";
@@ -31,8 +32,21 @@ boot.initrd.kernelModules = [ "ext4" ];
 boot.cleanTmpDir = true;
 hardware.cpu.amd.updateMicrocode = true;
 
+services.udev.packages = with pkgs; [
+  # Enable Android udev rules
+  # This is needed so that the android device nodes in /dev have
+  # the correct access levels (they will be managed by systemd-logind)
+  libmtp
+];
+
+
 fileSystems."/data" = {
   label = "data";
+  fsType = "ext4";
+};
+
+fileSystems."/vms" = {
+  label = "vms";
   fsType = "ext4";
 };
 
@@ -40,7 +54,7 @@ fileSystems."/data" = {
 environment.variables = {
   BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
     #!${pkgs.bash}/bin/bash
-    ${pkgs.conkerorWrapper}/bin/conkeror "$@" &
+    ${pkgs.conkerorWrapperWithoutScrollbars}/bin/conkeror "$@" &
   '');
   LC_MESSAGES = "en_US.UTF-8";
   LANGUAGE = "de";
@@ -56,16 +70,13 @@ environment.etc."ssl/certs/mozilla.crt" = {
   mode = "444";
 };
 
-# dumpcap is needed for wireshark
-security.setuidPrograms = ["dumpcap" "slock"];
-security.sudo.enable = true;
-
 # Select internationalisation properties.
 i18n = {
   consoleFont = "lat9w-16";
   consoleKeyMap = "de-latin1";
   defaultLocale = "de_DE.UTF-8";
 };
+time.timeZone = "Europe/Berlin";
 
 
 # More fonts!
@@ -81,12 +92,22 @@ networking = {
   wireless.userControlled.enable = true;
 };
 
+# Sound
+sound.extraConfig = builtins.readFile ./asound.conf;
+
+# Tell systemd that we want to suspend even if an additional
+# monitor is connected.
+services.logind.extraConfig = ''
+  HandleLidSwitchDocked=suspend
+'';
+
 nix = {
+  useChroot = true;
   extraOptions = ''
-    build-use-chroot = true
     auto-optimise-store = true
   '';
   package = pkgs.nixUnstable;
+  binaryCaches = [ https://cache.nixos.org http://hydra.cryp.to ];
   trustedBinaryCaches = [
     http://cache.nixos.org
     http://hydra.nixos.org

@@ -54,7 +54,7 @@ URxvt.url-select.underline: true
 ! #define S_base3         #002b36
 
 ! *background:              #001e26
-URxvt*background:         [90]#000e16
+URxvt*background:         #000e16
 URxvt*foreground:         S_base0
 URxvt*cursorColor:             S_base1
 URxvt*pointerColorBackground:  S_base01

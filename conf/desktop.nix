@@ -30,14 +30,13 @@ services.xserver = {
           ${pkgs.haskellPackages.xmobar}/bin/xmobar --screen 0 &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.trayer}/bin/trayer --monitor 1 --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
-          ${pkgs.xcompmgr}/bin/xcompmgr &
           ${pkgs.skype}/bin/skype &
           ${pkgs.hipchat}/bin/hipchat &
           ${pkgs.rxvt_unicode}/bin/urxvtd &
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
           ${pkgs.gvolicon}/bin/gvolicon &
           ${pkgs.unclutter}/bin/unclutter -idle 3 -grab &
-          udiskie --tray &
+          ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
           ${pkgs.dunst}/bin/dunst -key 'mod4+less' -history_key 'mod4+shift+less' -all_key ' ' -cto 4 -nto 2 -lto 1 &
           syndaemon -i 1 -R -K -t -d
         '';

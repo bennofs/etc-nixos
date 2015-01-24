@@ -8,6 +8,8 @@ imports = [];
 
 services = {
 
+  locate.enable = true;
+
   # Enable CUPS to print documents.
   printing.enable = true;
 
@@ -15,14 +17,14 @@ services = {
   mpd.enable = true;
   mpd.musicDirectory = "/data/music";
 
-#  tor.client = {
-#    enable = true;
-#    privoxy.enable = true;
-#    privoxy.listenAddress = "0.0.0.0:8118";
-#  };
+  tor.client = {
+    enable = true;
+    privoxy.enable = true;
+    privoxy.listenAddress = "0.0.0.0:8118";
+  };
 
   # Fixme: doesn't seem to work if tor is enabled (port clash?)
-  # Hmm, Doesn't seem to work reliably at all
+  # doesn't seem to work reliably at all
   samba = {
     enable = true;
     securityType = "share";
@@ -34,12 +36,12 @@ services = {
 
   # Setup Hydra-CI
   hydra = {
-#    enable = true;
+    #enable = true;
     package = expr.hydra;
     hydraURL = "c-cube";
     notificationSender = "benno.fuenfstueck@gmail.com";
   };
-  postgresql.enable = true;
+  #postgresql.enable = true;
   postgresql.package = pkgs.postgresql;
 
   avahi.enable = true;

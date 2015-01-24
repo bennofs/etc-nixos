@@ -1,10 +1,10 @@
-{ stdenv, unzip, fetchurl, oraclejre7, bash }:
+{ stdenv, unzip, fetchurl, jre, bash }:
 
 stdenv.mkDerivation rec {
   name = "softwarechallenge15-gui";
   src = fetchurl {
-    url = "http://www.software-challenge.de/de/download/server-mit-grafischer-oberflaeche";
-    sha256 = "159hfs8bsbl1kjx4c9gqiyr37qp5msdg8hjy6zkhbzdfxm90ligi";
+    url = "http://www.software-challenge.de/de/download/der-server-mit-grafischer-oberflaeche-fuer-java-8";
+    sha256 = "0pn88gnn6vhzrpjr2kc2lv0wv6am11rqmrsa0x7rwi6dz6c5gzvg";
   };
 
   buildInputs = [ unzip ];
@@ -15,9 +15,9 @@ stdenv.mkDerivation rec {
   '';
 
   installPhase = ''
-    mkdir -p $out
+    mkdir -p $out $out/plugins
     cp -r lib $out/
-    cp -r plugins $out/
+    cp ${./plugin2015.jar} $out/plugins
     cp softwarechallenge-gui.jar $out/
 
     mkdir $out/bin
@@ -26,13 +26,9 @@ stdenv.mkDerivation rec {
     #!${bash}/bin/bash
     mkdir -p \$HOME/.softwarechallenge/2015
     rm -rf \$HOME/.softwarechallenge/2015/replays
-    for i in $out/${"*"}; do
-      rm -rf     \$HOME/.softwarechallenge/2015/\''${i##*/}
-      ln -sf \$i \$HOME/.softwarechallenge/2015/\''${i##*/}
-    done
 
     cd \$HOME/.softwarechallenge/2015
-    ${oraclejre7}/bin/java -jar ./softwarechallenge-gui.jar
+    ${jre}/bin/java -jar $out/softwarechallenge-gui.jar -p "$out/plugins" "$@"
     EOF
 
     chmod +x $out/bin/softwarechallenge15-gui
