@@ -73,6 +73,11 @@ environment.etc."ssl/certs/mozilla.crt" = {
   mode = "444";
 };
 
+environment.etc."sync" = {
+  source = expr.nixos-sync (config.system.build.nixos-rebuild);
+  mode = "500";
+};
+
 # Select internationalisation properties.
 i18n = {
   consoleFont = "lat9w-16";

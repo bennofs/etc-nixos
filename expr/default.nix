@@ -18,4 +18,9 @@ hydra = (import ./hydra/release.nix {}).build.${builtins.currentSystem};
 
 hydraModule = ./hydra/hydra-module.nix;
 
+nixos-sync = nixos-rebuild: callPackage ./nixos-sync {
+  git = gitMinimal;
+  inherit nixos-rebuild;
+};
+
 }
