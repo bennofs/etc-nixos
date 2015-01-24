@@ -30,6 +30,9 @@ environment.systemPackages = with pkgs;
 boot.loader.grub.device = "/dev/sda";
 boot.initrd.kernelModules = [ "ext4" ];
 boot.cleanTmpDir = true;
+boot.kernel.sysctl = {
+  kernel.dmesg_restrict = true;
+};
 hardware.cpu.amd.updateMicrocode = true;
 
 services.udev.packages = with pkgs; [
