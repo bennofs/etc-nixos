@@ -16,6 +16,9 @@ services = {
   # Music Player Daemon
   mpd.enable = true;
   mpd.musicDirectory = "/data/music";
+  mpd.extraConfig = ''
+    log_level default
+  '';
 
   tor.client = {
     enable = true;
