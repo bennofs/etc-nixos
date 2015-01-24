@@ -5,7 +5,7 @@ function finish {
 }
 trap finish EXIT
 
-sudo -u nobody git clone https://github.com/bennofs/etc-nixos $checkout
+sudo -u nobody git clone /home/nixos $checkout
 chown root:root -R $checkout
 chmod a-w -R $checkout
 chmod a+x -R $checkout
