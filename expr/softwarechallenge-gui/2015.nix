@@ -25,7 +25,6 @@ stdenv.mkDerivation rec {
     cat > $out/bin/softwarechallenge15-gui <<EOF
     #!${bash}/bin/bash
     mkdir -p \$HOME/.softwarechallenge/2015
-    rm -rf \$HOME/.softwarechallenge/2015/replays
 
     cd \$HOME/.softwarechallenge/2015
     ${jre}/bin/java -jar $out/softwarechallenge-gui.jar -p "$out/plugins" "$@"
