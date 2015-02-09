@@ -113,7 +113,7 @@ nix = {
   useChroot = true;
   extraOptions = ''
     auto-optimise-store = true
-    cache-build-failures = true;
+    build-cache-failure = true;
   '';
   binaryCaches = [ https://cache.nixos.org http://hydra.cryp.to ];
   trustedBinaryCaches = [
