@@ -16,5 +16,6 @@ read -r -p "Accept? [Y/n] " response
 response=${response,,} # tolower
 if [[ $response =~ ^(yes|y| ) ]]; then
   git pull --ff $checkout
+  git submodule update --init --recursive
   nixos-rebuild switch
 fi
