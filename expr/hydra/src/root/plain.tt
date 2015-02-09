@@ -1,0 +1,10 @@
+[% WRAPPER layout.tt title=title %]
+[% PROCESS common.tt %]
+
+[% project = build.project %]
+[% jobset = build.jobset %]
+[% job = build.job %]
+
+<pre>[% HTML.escape(contents) %]</pre>
+
+[% END %]

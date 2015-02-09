@@ -1,0 +1,149 @@
+#! /var/run/current-system/sw/bin/perl
+
+use strict;
+use File::Path;
+use File::stat;
+use File::Basename;
+use Nix::Store;
+use Hydra::Schema;
+use Hydra::Helper::Nix;
+use Hydra::Model::DB;
+use POSIX qw(strftime);
+
+my $db = Hydra::Model::DB->new();
+
+
+my %roots;
+
+sub addRoot {
+    my ($path) = @_;
+    registerRoot($path);
+    $roots{$path} = 1;
+}
+
+
+my @columns = ( "id", "project", "jobset", "job", "system", "finished", "drvpath", "timestamp", "buildstatus" );
+
+sub keepBuild {
+    my ($build, $keepFailedDrvs) = @_;
+    print STDERR "  keeping ", ($build->finished ? "" : "scheduled "), "build ", $build->id, " (",
+        $build->get_column('project'), ":", $build->get_column('jobset'), ":", $build->get_column('job'), "; ",
+        $build->system, "; ",
+        strftime("%Y-%m-%d %H:%M:%S", localtime($build->timestamp)), ")\n";
+    if ($build->finished && ($build->buildstatus == 0 || $build->buildstatus == 6)) {
+        foreach my $out ($build->buildoutputs->all) {
+            if (isValidPath($out->path)) {
+                addRoot $out->path;
+            } else {
+                print STDERR "    warning: output ", $out->path, " has disappeared\n" if $build->finished;
+            }
+        }
+    }
+    if (!$build->finished || ($keepFailedDrvs && $build->buildstatus != 0)) {
+        if (isValidPath($build->drvpath)) {
+            addRoot $build->drvpath;
+        } else {
+            print STDERR "    warning: derivation ", $build->drvpath, " has disappeared\n";
+        }
+    }
+}
+
+
+# Read the current GC roots.
+print STDERR "*** reading current roots...\n";
+my $gcRootsDir = getGCRootsDir;
+opendir DIR, $gcRootsDir or die;
+my @roots = readdir DIR;
+closedir DIR;
+
+
+# For scheduled builds, we register the derivation as a GC root.
+print STDERR "*** looking for scheduled builds\n";
+keepBuild($_, 0) foreach $db->resultset('Builds')->search({ finished => 0 }, { columns => [ @columns ] });
+
+
+# Keep every build in every release of every project.
+print STDERR "*** looking for release members\n";
+keepBuild($_, 0) foreach $db->resultset('Builds')->search_literal(
+    "exists (select 1 from releasemembers where build = me.id)",
+    { order_by => ["project", "jobset", "job", "id"], columns => [ @columns ] });
+
+
+# Keep all builds that have been marked as "keep".
+print STDERR "*** looking for kept builds\n";
+my @buildsToKeep = $db->resultset('Builds')->search(
+    { finished => 1, keep => 1 }, { order_by => ["project", "jobset", "job", "id"], columns => [ @columns ] });
+keepBuild($_, 0) foreach @buildsToKeep;
+
+
+# Go over all projects.
+foreach my $project ($db->resultset('Projects')->search({}, { order_by => ["name"] })) {
+
+    # Go over all jobsets in this project.
+    foreach my $jobset ($project->jobsets->search({}, { order_by => ["name" ]})) {
+        my $keepnr = $jobset->keepnr;
+
+        # If the jobset has been hidden and disabled for more than one
+        # week, then don't keep its builds anymore.
+        if ($jobset->enabled == 0 && ($project->hidden == 1 || $jobset->hidden == 1) && (time() - ($jobset->lastcheckedtime || 0) > (7 * 24 * 3600))) {
+            print STDERR "*** skipping disabled jobset ", $project->name, ":", $jobset->name, "\n";
+            next;
+        }
+
+        print STDERR "*** looking for all builds in the unfinished and $keepnr most recent finished evaluations of jobset ",
+            $project->name, ":", $jobset->name, "\n";
+
+        my @evals;
+
+        # Get the unfinished evals.
+        push @evals, $_->get_column("eval") foreach $jobset->builds->search(
+            { finished => 0 },
+            { join => "jobsetevalmembers", select => "jobsetevalmembers.eval", as => "eval", distinct => 1 });
+
+        # Get the N most recent finished evals.
+        if ($keepnr) {
+            push @evals, $_->get_column("id") foreach $jobset->jobsetevals->search(
+                { hasNewBuilds => 1 },
+                { where => \ "not exists (select 1 from builds b join jobsetevalmembers m on b.id = m.build where m.eval = me.id and b.finished = 0)"
+                , order_by => "id desc", rows => $keepnr });
+        }
+
+        keepBuild($_, 1) foreach $jobset->builds->search(
+            { id => { -in => $db->resultset('JobsetEvalMembers')->search({ eval => { -in => [@evals] } }, { select => "build" })->as_query }
+            },
+            { order_by => ["job", "id"], columns => [ @columns ] });
+    }
+}
+
+
+# Remove existing roots that are no longer wanted.
+print STDERR "*** removing unneeded GC roots\n";
+
+my $rootsKept = 0;
+my $rootsDeleted = 0;
+my $now = time();
+
+foreach my $link (@roots) {
+    next if $link eq "." || $link eq "..";
+    my $path = "/nix/store/$link";
+    if (!defined $roots{$path}) {
+        # Don't delete roots that are less than a day old, to prevent
+        # a race where hydra-eval-jobs has added a root but
+        # hydra-evaluator hasn't added them to the database yet.
+        my $st = lstat("$gcRootsDir/$link");
+        if (!defined $st) {
+            print STDERR "skipping link $link: $!\n";
+        } elsif ($st->ctime < $now - 24 * 60 * 60) {
+            print STDERR "removing root $path\n";
+            $rootsDeleted++;
+            unlink "$gcRootsDir/$link" or warn "cannot remove $gcRootsDir/$link";
+        } else {
+            print STDERR "NOT removing recent root $path\n";
+            $rootsKept++;
+        }
+    } else {
+        $rootsKept++;
+    }
+}
+
+print STDERR "kept $rootsKept roots, deleted $rootsDeleted roots\n";

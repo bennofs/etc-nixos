@@ -1,0 +1,30 @@
+[% WRAPPER layout.tt title="Build machines" %]
+[% PROCESS common.tt %]
+
+<table class="table table-condensed table-striped">
+    <thead>
+        <tr>
+            <th>Enabled</th>
+            <th>Machine</th>
+            <th>Max concurrent</th>
+            <th>Speed factor</th>
+            <th>Systems</th>
+        </tr>
+    </thead>
+    <tbody>
+        [% FOREACH m IN machines %]
+        <tr>
+            <td><input type="checkbox" name="enabled" [% IF m.value.maxJobs > 0  %]CHECKED[% END %] disabled="true" /></td>
+            <td>[% m.key %]</a></td>
+            <td>[% m.value.maxJobs %]</td>
+            <td>[% m.value.speedFactor %]</td>
+            <td>
+                [% comma=0; FOREACH system IN m.value.systemTypes %][% IF comma; %], [% ELSE; comma = 1; END; system; END %]
+            </td>
+        </tr>
+        [% END %]
+    </tbody>
+
+</table>
+
+[% END %]

@@ -1,0 +1,139 @@
+* Recreating the schema bindings:
+
+  $ make -C src/sql update-dbix
+
+* Running the test server:
+
+  $ DBIC_TRACE=1 ./script/hydra_server.pl
+
+* Setting the maximum number of concurrent builds per system type:
+
+  $ sqlite3 hydra.sqlite "insert into SystemTypes(system, maxConcurrent) values('i686-linux', 3);"
+
+* Creating a user:
+
+  $ sqlite3 hydra.sqlite "insert into Users(userName, emailAddress, password) values('root', 'e.dolstra@tudelft.nl', '$(echo -n foobar | sha1sum | cut -c1-40)');"
+
+  (Replace "foobar" with the desired password.)
+
+  To make the user an admin:
+
+  $ sqlite3 hydra.sqlite "insert into UserRoles(userName, role) values('root', 'admin');"
+
+  To enable a non-admin user to create projects:
+  
+  $ sqlite3 hydra.sqlite "insert into UserRoles(userName, role) values('alice', 'create-projects');"
+  
+* Creating a release set:
+
+  insert into ReleaseSets(project, name) values('patchelf', 'unstable');
+  insert into ReleaseSetJobs(isPrimary, project, release, job, attrs, description) values(1, 'patchelf', 'unstable', 'tarball', 'officialRelease=false', 'Source distribution');
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'unstable', 'build', 'system=i686-linux', 'Build on i686-linux');
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'unstable', 'build', 'system=x86_64-linux', 'Build on x86_64-linux');
+  insert into ReleaseSetJobs(project, release, job, attrs, description, mayFail) values('patchelf', 'unstable', 'rpm_fedora9i386', '', 'Fedora 9 (i386)', 1);
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'unstable', 'rpm_fedora10i386', '', 'Fedora 10 (i386)');
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'unstable', 'deb_ubuntu804i386', '', 'Ubuntu 8.04 (i386)');
+
+  insert into ReleaseSets(project, name) values('patchelf', 'stable');
+  insert into ReleaseSetJobs(isPrimary, project, release, job, attrs, description) values(1, 'patchelf', 'stable', 'tarball', 'officialRelease=true', 'Source distribution');
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'stable', 'build', 'system=i686-linux', 'Build on i686-linux');
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'stable', 'build', 'system=x86_64-linux', 'Build on x86_64-linux');
+  insert into ReleaseSetJobs(project, release, job, attrs, description, mayFail) values('patchelf', 'stable', 'rpm_fedora9i386', '', 'Fedora 9 (i386)', 1);
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'stable', 'rpm_fedora10i386', '', 'Fedora 10 (i386)');
+  insert into ReleaseSetJobs(project, release, job, attrs, description) values('patchelf', 'stable', 'deb_ubuntu804i386', '', 'Ubuntu 8.04 (i386)');
+
+* Changing the priority of a scheduled build:
+
+  update buildschedulinginfo set priority = 200 where id = <ID>;
+
+* Changing the priority of all builds for a jobset:
+
+  update buildschedulinginfo set priority = 20 where id in (select id from builds where finished = 0 and project = 'nixpkgs' and jobset = 'trunk');
+  
+
+* Steps to install:
+
+  - Install the Hydra closure.
+
+  - Set HYDRA_DATA to /somewhere.
+  
+  - Run hydra_init.pl
+
+  - Start hydra_server
+
+  - Visit http://localhost:3000/
+
+  - Create a user (see above)
+
+  - Create a project, jobset etc.
+
+  - Start hydra_evaluator and hydra_queue_runner
+
+
+* Job selection:
+  
+    php-sat:build [system = "i686-linux"]
+    php-sat:build [same system]
+    tarball [same patchelfSrc]
+    --if system i686-linux --arg build {...}
+
+
+* Restart all aborted builds in a given evaluation (e.g. 820909):
+
+  > update builds set finished = 0 where id in (select id from builds where finished = 1 and buildstatus = 3 and exists (select 1 from jobsetevalmembers where eval = 820909 and build = id));
+
+
+* Restart all builds in a given evaluation that had a build step time out:
+
+  > update builds set finished = 0 where id in (select id from builds where finished = 1 and buildstatus != 0 and exists (select 1 from jobsetevalmembers where eval = 926992 and build = id) and exists (select 1 from buildsteps where build = id and status = 7));
+
+
+* select * from (select project, jobset, job, system, max(timestamp) timestamp from builds where finished = 1 group by project, jobset, job, system) x join builds y on x.timestamp = y.timestamp and x.project = y.project and x.jobset = y.jobset and x.job = y.job and x.system = y.system;
+
+  select * from (select project, jobset, job, system, max(timestamp) timestamp from builds where finished = 1 group by project, jobset, job, system) natural join builds;
+
+
+* Delete all scheduled builds that are not already building:
+
+  delete from builds where finished = 0 and not exists (select 1 from buildschedulinginfo s where s.id = builds.id and busy = 1);
+
+
+* select x.project, x.jobset, x.job, x.system, x.id, x.timestamp, r.buildstatus, b.id, b.timestamp
+  from (select project, jobset, job, system, max(id) as id from Builds where finished = 1 group by project, jobset, job, system) as a_
+  natural join Builds x
+  natural join BuildResultInfo r
+  left join Builds b on b.id =
+    (select max(id) from builds c
+     natural join buildresultinfo r2
+     where x.project = c.project and x.jobset = c.jobset and x.job = c.job and x.system = c.system
+           and x.id > c.id and r.buildstatus != r2.buildstatus);
+
+* Using PostgreSQL (version 9.2 or newer is required): 
+
+  $ HYDRA_DBI="dbi:Pg:dbname=hydra;" hydra-server
+
+
+* Find the builds with the highest number of build steps:
+
+  select id, (select count(*) from buildsteps where build = x.id) as n from builds x order by n desc;
+
+
+* Evaluating the NixOS Hydra jobs:
+
+  $ ./hydra_eval_jobs ~/Dev/nixos-wc/release.nix --arg nixpkgs '{outPath = /home/eelco/Dev/nixpkgs-wc;}' --arg nixosSrc '{outPath = /home/eelco/Dev/nixos-wc; rev = 1234;}' --arg services '{outhPath = /home/eelco/services-wc;}' --argstr system i686-linux --argstr system x86_64-linux --arg officialRelease false
+
+
+* Show all the failing jobs/systems in the nixpkgs:stdenv jobset that
+  succeed in the nixpkgs:trunk jobset:
+
+  select job, system from builds b natural join buildresultinfo where project = 'nixpkgs' and jobset = 'stdenv' and iscurrent = 1 and finished = 1 and buildstatus != 0 and exists (select 1 from builds natural join buildresultinfo where project = 'nixpkgs' and jobset = 'trunk' and job = b.job and system = b.system and iscurrent = 1 and finished = 1 and buildstatus = 0) order by job, system;
+
+
+* Get all Nixpkgs jobs that have never built succesfully:
+
+  select project, jobset, job from builds b1
+    where project = 'nixpkgs' and jobset = 'trunk' and iscurrent = 1
+    group by project, jobset, job
+    having not exists
+      (select 1 from builds b2 where b1.project = b2.project and b1.jobset = b2.jobset and b1.job = b2.job and finished = 1 and buildstatus = 0)
+    order by project, jobset, job;

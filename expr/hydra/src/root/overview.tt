@@ -1,0 +1,48 @@
+[% WRAPPER layout.tt title="Overview" hideHeader=1 %]
+[% PROCESS common.tt %]
+
+[% IF newsItems.size != 0 %]
+  <div class="alert alert-info">
+    [% FOREACH i IN newsItems %]
+      <div class="news-item">
+        [% contents = String.new(i.contents) %]
+        <h4 class="alert-heading">[% INCLUDE renderDateTime timestamp=i.createtime %] by [% i.author.fullname %]</h4>
+        [% contents.replace('\n','<br />\n') %]
+      </div>
+    [% END %]
+  </div>
+[% END %]
+
+<div class="page-header">Projects</div>
+
+[% IF projects.size != 0 %]
+
+<p>The following projects are hosted on this server:</p>
+
+<table class="table table-condensed table-striped clickable-rows">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    [% FOREACH p IN projects %]
+    <tr>
+      <td><span class="[% IF !p.enabled %]disabled-project[% END %] [%+ IF p.hidden %]hidden-project[% END %]">[% INCLUDE renderProjectName project=p.name inRow=1 %]</span></td>
+      <td>[% HTML.escape(p.displayname) %]</td>
+      <td>[% WRAPPER maybeLink uri=p.homepage %][% HTML.escape(p.description) %][% END %]</td>
+    </tr>
+    [% END %]
+  </tbody>
+</table>
+
+[% ELSE %]
+
+  <div class="alert alert-warning">Hydra has no projects yet. Please
+  <a href="[% c.uri_for(c.controller('Project').action_for('create')) %]">create a project</a>.</div>
+
+[% END %]
+
+[% END %]

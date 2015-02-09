@@ -1,0 +1,42 @@
+[% WRAPPER layout.tt title="News items" %]
+[% PROCESS common.tt %]
+
+[% USE String %]
+
+[% IF newsItems.size == 0 %]
+    <p>No news items</p>
+[% ELSE %]
+    <table class="table table-striped table-condensed">
+        <thead><th>Date</th><th>Contents</th><th></th></thead>
+        <tbody>
+        [% FOREACH i IN newsItems %]
+            [% contents = String.new(i.contents) %]
+            <tr>
+                <td>[% INCLUDE renderDateTime timestamp=i.createtime %]</td>
+                <td>[% contents.replace('\n','<br />\n') %]</td>
+                <td>[% INCLUDE maybeLink uri = c.uri_for(c.controller('Admin').action_for('news_delete') i.id) content = "Delete" confirmmsg = "Are you sure you want to delete this news item?" class = "btn btn-mini btn-danger" %]</td>
+            </tr>
+        [% END %]
+        </tbody>
+    </table>
+[% END %]
+
+<form class="form-horizontal" action="[% c.uri_for('/admin/news/submit') %]" method="post">
+  <fieldset>
+    <legend>Add news item</legend>
+    <div class="control-group">
+      <label class="control-label">News text (HTML)</label>
+      <div class="controls">
+        <textarea class="span9" name="contents"></textarea>
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">
+      <i class="icon-ok icon-white"></i>
+      Post
+    </button>
+  </div>
+</form>
+
+[% END %]

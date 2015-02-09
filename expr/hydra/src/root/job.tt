@@ -1,0 +1,112 @@
+[% WRAPPER layout.tt
+    title="Job $project.name:$jobset.name:$job.name"
+    starUri=c.uri_for(c.controller('Job').action_for('star'), c.req.captures)
+%]
+[% PROCESS common.tt %]
+[% hideProjectName=1 hideJobsetName=1 hideJobName=1 %]
+
+[% INCLUDE includeFlot %]
+
+[% IF !jobExists(job) %]
+<div class="alert alert-warning">This job is not a member of the <a
+href="[%c.uri_for('/jobset' project.name jobset.name
+'evals')%]">latest evaluation</a> of its jobset. This means it was
+removed or had an evaluation error.</div>
+[% END %]
+
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#tabs-status" data-toggle="tab">Status</a></li>
+  [% IF constituentJobs.size > 0 %]
+    <li><a href="#tabs-constituents" data-toggle="tab">Constituents</a></li>
+  [% END %]
+  <li><a href="#tabs-charts" data-toggle="tab">Charts</a></li>
+  <li><a href="#tabs-links" data-toggle="tab">Links</a></li>
+</ul>
+
+<div id="generic-tabs" class="tab-content">
+
+  <div id="tabs-status" class="tab-pane active">
+    [% IF lastBuilds.size != 0 %]
+      <h3>Latest builds</h3>
+      [% INCLUDE renderBuildList builds=lastBuilds
+          linkToAll=c.uri_for('/job' project.name jobset.name job.name 'all') %]
+    [% END %]
+    [% IF queuedBuilds.size != 0 %]
+      <h3>Queued builds</h3>
+      [% INCLUDE renderBuildList builds=queuedBuilds showSchedulingInfo=1 hideResultInfo=1 %]
+    [% END %]
+  </div>
+
+  [% IF constituentJobs.size > 0 %]
+
+    <div id="tabs-constituents" class="tab-pane">
+
+      <div class="well well-small">This is an <em>aggregate job</em>:
+      its success or failure is determined entirely by the result of
+      building its <em>constituent jobs</em>. The table below shows
+      the status of each constituent job for the [%
+      aggregates.keys.size %] most recent builds of the
+      aggregate.</div>
+
+      [% aggs = aggregates.keys.nsort.reverse %]
+      <table class="table table-striped table-condensed table-header-rotated">
+        <thead>
+          <tr>
+            <th>Job</th>
+            [% FOREACH agg IN aggs %]
+              <th class="rotate-45">
+                [% agg_ = aggregates.$agg %]
+                <div><span class="[% agg_.build.finished == 0 ? "text-info" : (agg_.build.buildstatus == 0 ? "text-success" : "text-warning") %] override-link">
+                  <a href="[% c.uri_for('/build' agg) %]">[% agg %]</a>
+                </span></div></th>
+            [% END %]
+          </tr>
+        </thead>
+        <tbody>
+          [% FOREACH j IN constituentJobs %]
+            <tr>
+              <th style="width: 1em;">[% INCLUDE renderJobName project=project.name jobset=jobset.name job=j %]</th>
+              [% FOREACH agg IN aggs %]
+                <td>
+                  [% r = aggregates.$agg.constituents.$j; IF r.id %]
+                    <a href="[% c.uri_for('/build' r.id) %]">
+                      [% INCLUDE renderBuildStatusIcon size=16 build=r %]
+                    </a>
+                  [% END %]
+                </td>
+              [% END %]
+            </tr>
+          [% END %]
+        </tbody>
+      </table>
+
+    </div>
+
+  [% END %]
+
+  <div id="tabs-charts" class="tab-pane">
+
+    <h3>Build time (in seconds)</h3>
+
+    [% INCLUDE createChart id="build-times" yaxis="sec" dataUrl=c.uri_for('/job' project.name jobset.name job.name 'build-times') %]
+
+    <h3>Closure size (in MiB)</h3>
+
+    [% INCLUDE createChart id="closure-size" yaxis="mib" dataUrl=c.uri_for('/job' project.name jobset.name job.name 'closure-sizes') %]
+
+    <h3>Output size (in MiB)</h3>
+
+    [% INCLUDE createChart id="output-size" yaxis="mib" dataUrl=c.uri_for('/job' project.name jobset.name job.name 'output-sizes') %]
+
+  </div>
+
+  <div id="tabs-links" class="tab-pane">
+    <ul>
+      <li><a href="[% c.uri_for('/job' project.name jobset.name job.name 'latest') %]">Latest successful build</a></li>
+      <li><a href="[% c.uri_for('/job' project.name jobset.name job.name 'latest-finished') %]">Latest successful build from a finished evaluation</a></li>
+    </ul>
+  </div>
+
+</div>
+
+[% END %]
