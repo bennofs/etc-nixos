@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   name = "armagetronad-0.4-bzr-r${rev}";
-  rev = "1533";
+  rev = "1557";
   src = fetchbzr {
     url = "lp:armagetronad/0.4";
     inherit rev;
-    sha256 = "1njrvf6di36d0kqzsba0nh787s43n6v3lnlswq9fhy6gml7zhnry";
+    sha256 = "0aisxyigzkq0017k0d52mzq2j9dyd3a2vn3h2dxnv2q0i5kbbd8m";
   };
   buildInputs = [stdenv boost which automake autoconf SDL SDL_mixer SDL_image libxml2 protobuf mesa ftgl glew pkgconfig libpng m4 yacc python];
   patches = [ ./coler_auto_completion.patch ];
@@ -16,6 +16,6 @@ stdenv.mkDerivation rec {
     ./bootstrap.sh
   '';
   preBuild = ''
-    NIX_CFLAGS_COMPILE+=" -march=native -ffast-math -msse4a -msse -mssse3 -msse2 -msse3"
+    NIX_CFLAGS_COMPILE+="-O2 -march=native -ffast-math -msse4a -msse -mssse3 -msse2 -msse3"
   '';
 }
