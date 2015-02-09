@@ -1,9 +1,0 @@
-[% PROCESS deps.tt %]
-
-[% global.nodeId = 10000 %]
-
-<div class="dep-tree">
-  <ul class="tree">
-    [% INCLUDE renderNode node=buildTimeGraph %]
-  </ul>
-</div>

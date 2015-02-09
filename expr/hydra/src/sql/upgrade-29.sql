@@ -1,4 +1,0 @@
-drop index IndexBuildsOnJobAndSystem;
-drop index IndexBuildsOnJobSystemCurrent;
-drop index IndexBuildsOnJobsetFinishedTimestamp;
-drop index IndexMostRecentSuccessfulBuilds;

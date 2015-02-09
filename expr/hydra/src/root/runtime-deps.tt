@@ -1,9 +1,0 @@
-[% PROCESS deps.tt %]
-
-[% global.nodeId = 1 %]
-
-<div class="dep-tree">
-  <ul class="tree">
-    [% FOREACH node IN runtimeGraph; INCLUDE renderNode; END %]
-  </ul>
-</div>
