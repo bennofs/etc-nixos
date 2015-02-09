@@ -39,7 +39,7 @@ services = {
 
   # Setup Hydra-CI
   hydra = {
-    enable = true;
+    enable = false;
     package = expr.hydra;
     hydraURL = "c-cube";
     notificationSender = "benno.fuenfstueck@gmail.com";
