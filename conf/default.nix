@@ -20,7 +20,7 @@ environment.systemPackages = with pkgs;
     emacs weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode
     calibre libreoffice wireshark gimp hipchat skype
     ruby python python3 nix-repl texLiveFull ghostscript llvm coq
-    (with haskellngPackages; [hasktags hlint xmobar cabal-install ghc])
+   ] ++ (with haskellngPackages; [hasktags hlint xmobar cabal-install ghc]) ++ [
     emacs24Packages.proofgeneral_4_3_pre
     xlibs.xmodmap xclip mplayer youtubeDL
     manpages man_db expr.armagetronad
