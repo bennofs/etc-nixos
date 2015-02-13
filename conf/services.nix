@@ -52,6 +52,7 @@ services = {
 };
 
 virtualisation.libvirtd.enable = true;
+virtualisation.docker.enable = true;
 
 networking.firewall = {
   allowPing = true;
