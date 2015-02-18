@@ -19,13 +19,6 @@ packageOverrides = pkgs: rec {
     patches = [ ./patches/trayer-force-icon-width.patch ];
   });
 
-  docker = pkgs.docker.overrideDerivation (old: {
-    postPatch = ''
-      patchShebangs ./hack/
-      ${old.postPatch or ""}
-    '';
-  });
-
   conkerorWrapperWithoutScrollbars = pkgs.lib.overrideDerivation pkgs.conkerorWrapper (old: rec {
     disableScrollbars = pkgs.writeText "conkeror-gtk2-no-scrollbars.rc" ''
       style "noscrollbars" {
