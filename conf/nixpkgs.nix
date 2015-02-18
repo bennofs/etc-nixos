@@ -1,5 +1,4 @@
 {
-
 allowUnfree = true;
 chromium.enablePepperFlash = true;
 chromium.enablePepperPDF = true;
@@ -13,6 +12,8 @@ packageOverrides = pkgs: rec {
       configureFlags="$configureFlags --enable-unicode3";
     '';
   });
+
+  custom = import ../expr { inherit pkgs; };
 
   trayer = pkgs.trayer.overrideDerivation (old: {
     patches = [ ./patches/trayer-force-icon-width.patch ];

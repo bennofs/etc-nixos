@@ -23,4 +23,6 @@ nixos-sync = nixos-rebuild: callPackage ./nixos-sync {
   inherit nixos-rebuild;
 };
 
+asurocon = callPackage ./asurocon {};
+
 }
