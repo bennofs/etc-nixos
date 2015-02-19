@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 set +eu
 checkout=$(sudo -u nobody mktemp -d)
 function finish {
@@ -15,7 +16,9 @@ sudo -u nobody env GIT_ALTERNATE_OBJECT_DIRECTORIES=$checkout/.git/objects git d
 read -r -p "Accept? [Y/n] " response
 response=${response,,} # tolower
 if [[ $response =~ ^(yes|y| ) ]]; then
-  git pull --ff $checkout
+  git fetch $checkout
+  git checkout master
+  git reset --hard $(git --git-dir=$checkout/.git rev-parse HEAD)
   git submodule update --init --recursive
   nixos-rebuild switch
 fi
