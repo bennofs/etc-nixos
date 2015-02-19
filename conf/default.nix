@@ -43,7 +43,7 @@ services.udev.packages = with pkgs; [
 ];
 services.udev.extraRules = ''
   # AREXX USB-IR-Transceiver. For flashing ASURO robot
-  SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTR{idProduct}=="6001", ENV{ID_REMOTE_CONTROL}="1"
+  SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ENV{ID_REMOTE_CONTROL}="1"
 '';
 
 
