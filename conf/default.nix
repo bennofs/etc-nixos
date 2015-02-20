@@ -34,6 +34,7 @@ boot.kernel.sysctl = {
   "kernel.dmesg_restrict" = true;
 };
 hardware.cpu.amd.updateMicrocode = true;
+hardware.pulseaudio.enable = true;
 
 services.udev.packages = with pkgs; [
   # Enable Android udev rules
@@ -46,6 +47,8 @@ services.udev.extraRules = ''
   SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ENV{ID_REMOTE_CONTROL}="1"
 '';
 
+# Required for user systemd dbus
+systemd.services."user@".environment.DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/%I/dbus/user_bus_socket";
 
 fileSystems."/data" = {
   label = "data";
@@ -103,9 +106,6 @@ networking = {
   wireless.interfaces = ["wlo1"];
   wireless.userControlled.enable = true;
 };
-
-# Sound
-sound.extraConfig = builtins.readFile ./asound.conf;
 
 # Tell systemd that we want to suspend even if an additional
 # monitor is connected.
