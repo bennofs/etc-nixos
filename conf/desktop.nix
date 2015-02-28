@@ -27,7 +27,7 @@ services.xserver = {
     [ { name = "custom";
         start = ''
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/Nordsee1.jpg}
-          ${pkgs.haskellPackages.xmobar}/bin/xmobar --screen 0 &
+          ${pkgs.haskellngPackages.xmobar}/bin/xmobar --screen 0 &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.trayer}/bin/trayer --monitor 1 --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
           ${pkgs.skype}/bin/skype &
