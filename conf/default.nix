@@ -124,6 +124,7 @@ nix = {
     http://cache.nixos.org
     http://hydra.nixos.org
     http://hydra.cryp.to
+    http://hydra.hype.im
   ];
   daemonNiceLevel = 1;
   daemonIONiceLevel = 1;
