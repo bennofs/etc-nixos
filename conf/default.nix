@@ -119,7 +119,7 @@ nix = {
     auto-optimise-store = true
     build-cache-failure = true
   '';
-  binaryCaches = [ https://cache.nixos.org http://hydra.cryp.to ];
+  binaryCaches = [ https://cache.nixos.org ];
   trustedBinaryCaches = [
     http://cache.nixos.org
     http://hydra.nixos.org
