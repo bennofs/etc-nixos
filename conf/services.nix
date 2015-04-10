@@ -30,16 +30,6 @@ services = {
     '';
   };
 
-  # Setup Hydra-CI
-  hydra = {
-    enable = false;
-    package = expr.hydra;
-    hydraURL = "c-cube";
-    notificationSender = "benno.fuenfstueck@gmail.com";
-  };
-  postgresql.enable = true;
-  postgresql.package = pkgs.postgresql;
-
   avahi.enable = true;
 
 };

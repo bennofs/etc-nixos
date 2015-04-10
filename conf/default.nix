@@ -1,4 +1,4 @@
-{ config, expr, pkgs, ... }:
+{ config, pkgs, expr, ... }:
 
 with builtins; with pkgs.lib; {
 
@@ -6,10 +6,7 @@ imports = [
   ./desktop.nix
   ./services.nix
   ./accounts
-  expr.hydraModule
 ];
-
-nixpkgs.config = import ./nixpkgs.nix;
 
 # Available packages
 environment.systemPackages = with pkgs;

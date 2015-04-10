@@ -12,15 +12,10 @@ services.xserver = {
   synaptics.twoFingerScroll = true;
   xkbOptions = "ctrl:nocaps";
 
-  displayManager.slim = {
+  displayManager.sddm = {
     enable = true;
-    defaultUser = "benno";
-    autoLogin = true;
-    theme = pkgs.fetchurl {
-      url = mirror://sourceforge/slim.berlios/slim-scotland-road.tar.gz;
-      sha256 = "18dvyfiprybmqvzyvv72lij2zlbcndbm87psiyb9plvf94sa8q7x";
-    };
   };
+
   displayManager.desktopManagerHandlesLidAndPower = false;
   xrandrHeads = ["VGA-0" "LVDS"];
   desktopManager.session =
