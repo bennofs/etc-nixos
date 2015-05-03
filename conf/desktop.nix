@@ -25,7 +25,7 @@ services.xserver = {
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --screen 0 &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-          ${pkgs.trayer}/bin/trayer --monitor 1 --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0x001212" &
+          ${pkgs.trayer}/bin/trayer --monitor 1 --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0xeee8d3" &
           ${pkgs.skype}/bin/skype &
           ${pkgs.hipchat}/bin/hipchat &
           ${pkgs.rxvt_unicode}/bin/urxvtd &
