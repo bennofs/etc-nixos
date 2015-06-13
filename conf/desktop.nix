@@ -60,7 +60,7 @@ environment.systemPackages = with pkgs; [
   kde4.kdeartwork kde4.l10n.de kde4.oxygen_icons
 
   # GTK icons / themes
-  oxygen_gtk gnome3.gnome_icon_theme hicolor_icon_theme
+  oxygen_gtk gnome3.adwaita-icon-theme hicolor_icon_theme
 
   # Other packages
   pythonPackages.udiskie
