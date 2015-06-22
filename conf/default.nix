@@ -66,6 +66,14 @@ environment.variables = {
   LC_MESSAGES = "en_US.UTF-8";
   LANGUAGE = "de";
   SHELL = "${pkgs.fish}/bin/fish";
+  ASPELL_CONF =
+    let
+      allDicts = pkgs.buildEnv {
+        name = "all-dictionaries";
+        paths = builtins.attrValues pkgs.aspellDicts;
+        pathsToLink = ["/lib"];
+      };
+    in "dict-dir ${allDicts}/lib/aspell";
 };
 
 # Make SSL root certificates used by Mozilla Firefox available
