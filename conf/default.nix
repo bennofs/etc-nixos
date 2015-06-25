@@ -102,7 +102,7 @@ time.timeZone = "Europe/Berlin";
 # More fonts!
 fonts.fonts = with pkgs; [
   source-code-pro dejavu_fonts liberation_ttf vistafonts corefonts
-  cantarell_fonts
+  cantarell_fonts fira fira-mono
 ];
 
 networking = {
