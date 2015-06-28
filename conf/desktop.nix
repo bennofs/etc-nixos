@@ -17,15 +17,14 @@ services.xserver = {
   };
 
   displayManager.desktopManagerHandlesLidAndPower = false;
-  xrandrHeads = ["VGA-0" "LVDS"];
   desktopManager.session =
     [ { name = "custom";
         start = ''
-          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/Nordsee1.jpg}
+          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --screen 0 &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-          ${pkgs.trayer}/bin/trayer --monitor 1 --edge top --align right --width 10 --height 19 --transparent true --alpha 0 --tint "0xeee8d3" &
+          ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 18 --transparent true --alpha 125 --tint "0xeee8d3" &
           ${pkgs.skype}/bin/skype &
           ${pkgs.hipchat}/bin/hipchat &
           ${pkgs.rxvt_unicode}/bin/urxvtd &
