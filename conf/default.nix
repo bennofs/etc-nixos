@@ -11,17 +11,14 @@ imports = [
 # Available packages
 environment.systemPackages = with pkgs;
   [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
-    pmutils psmisc htop fuse inetutils samba which binutils scrot xsel
-    linuxPackages.perf wpa_supplicant_gui gnuplot
-    nmap bc libvirt k2pdfopt ncmpcpp mpc_cli beets arandr
-    emacs weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode
+    pmutils psmisc htop fuse inetutils which binutils scrot xsel
+    linuxPackages.perf wpa_supplicant_gui 
+    bc k2pdfopt ncmpcpp mpc_cli beets arandr
+    emacs vimHugeX weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode keepassx2
     calibre libreoffice wireshark gimp hipchat skype
-    ruby python python3 nix-repl texLiveFull ghostscript llvm coq
-   ] ++ (with haskellngPackages; [hasktags hlint xmobar cabal-install ghc]) ++ [
-    emacs24Packages.proofgeneral_4_3_pre
-    xlibs.xmodmap xclip mplayer youtubeDL
-    manpages man_db expr.armagetronad
-    shadow # required by lxc
+    nix-repl llvm coq haskellPackages.ghc
+    xlibs.xmodmap mplayer 
+    manpages man expr.armagetronad
   ];
 
 boot.loader.grub.device = "/dev/sda";
