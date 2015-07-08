@@ -37,6 +37,7 @@ services.xserver = {
     } ];
   desktopManager.default = "custom";
   desktopManager.xterm.enable = false;
+  desktopManager.kde5.enable = true;
 
   windowManager.default = "xmonad";
   windowManager.xmonad.enable = true;
