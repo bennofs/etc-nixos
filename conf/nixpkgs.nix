@@ -2,8 +2,6 @@
 allowUnfree = true;
 chromium.enablePepperFlash = true;
 chromium.enablePepperPDF = true;
-conkeror.enableAdobeFlash = true;
-firefox.enableAdobeFlash = true;
 cabal.libraryProfiling = true;
 packageOverrides = pkgs: rec {
   rxvt_unicode = pkgs.rxvt_unicode.overrideDerivation (old: {
