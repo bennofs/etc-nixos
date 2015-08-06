@@ -1,14 +1,14 @@
-{stdenv, fetchbzr, boost, which, automake, autoconf, SDL2, SDL2_mixer, SDL2_image, libxml2, protobuf, mesa, ftgl, glew, pkgconfig, libpng, m4, yacc, python}:
+{stdenv, fetchbzr, boost, which, automake, autoconf, SDL, SDL_mixer, SDL_image, libxml2, protobuf, mesa, ftgl, glew, pkgconfig, libpng, m4, yacc, python}:
 
 stdenv.mkDerivation rec {
   name = "armagetronad-0.4-bzr-r${rev}";
-  rev = "1566";
+  rev = "1571";
   src = fetchbzr {
-    url = "lp:~armagetronad-dev/armagetronad/0.4-armagetronad-sdl2";
+    url = "lp:armagetronad/0.4";
     inherit rev;
-    sha256 = "0rj4yaixskyzka4i7mcpadpk36f3l5mvnzc9j8ss0mln99cxd463";
+    sha256 = "0xd3nc9daia9xdkbyqd5nw8fx9lhzvk3jnd0rlizhbz06lqk77kn";
   };
-  buildInputs = [stdenv boost which automake autoconf SDL2 SDL2_mixer SDL2_image libxml2 protobuf mesa ftgl glew pkgconfig libpng m4 yacc python];
+  buildInputs = [stdenv boost which automake autoconf SDL SDL_mixer SDL_image libxml2 protobuf mesa ftgl glew pkgconfig libpng m4 yacc python];
   patches = [ ./coler_auto_completion.patch ];
   patchFlags = "-p0";
   configureFlags = "--disable-games --disable-etc";

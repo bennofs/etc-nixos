@@ -12,12 +12,12 @@ imports = [
 environment.systemPackages = with pkgs;
   [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
     pmutils psmisc htop fuse inetutils which binutils scrot xsel
-    linuxPackages.perf wpa_supplicant_gui 
+    linuxPackages.perf wpa_supplicant_gui
     bc k2pdfopt ncmpcpp mpc_cli beets arandr
     emacs vimHugeX weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode keepassx2
     calibre libreoffice wireshark gimp hipchat skype
     nix-repl llvm coq haskellPackages.ghc
-    xlibs.xmodmap mplayer 
+    xlibs.xmodmap mplayer
     manpages man expr.armagetronad
   ];
 
