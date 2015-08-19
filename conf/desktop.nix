@@ -20,7 +20,7 @@ services.xserver = {
   desktopManager.session =
     [ { name = "custom";
         start = ''
-          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/unsplash/autumn.jpg}
+          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --screen 0 &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &

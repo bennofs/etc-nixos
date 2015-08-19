@@ -41,9 +41,6 @@ services.udev.extraRules = ''
   SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ENV{ID_REMOTE_CONTROL}="1"
 '';
 
-# Required for user systemd dbus
-systemd.services."user@".environment.DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/%I/dbus/user_bus_socket";
-
 fileSystems."/data" = {
   label = "data";
   fsType = "ext4";
@@ -60,6 +57,7 @@ environment.variables = {
     #!${pkgs.bash}/bin/bash
     ${pkgs.conkerorWrapperWithoutScrollbars}/bin/conkeror "$@" &
   '');
+  EDITOR="${pkgs.neovim}/bin/nvim";
   LC_MESSAGES = "en_US.UTF-8";
   LANGUAGE = "de";
   SHELL = "${pkgs.fish}/bin/fish";
@@ -91,7 +89,7 @@ environment.etc."sync" = {
 i18n = {
   consoleFont = "lat9w-16";
   consoleKeyMap = "de-latin1";
-  defaultLocale = "de_DE.UTF-8";
+  defaultLocale = "en_US.UTF-8";
 };
 time.timeZone = "Europe/Berlin";
 
@@ -119,7 +117,6 @@ nix = {
   useChroot = true;
   extraOptions = ''
     auto-optimise-store = true
-    build-cache-failure = true
   '';
   binaryCaches = [ https://cache.nixos.org  http://hydra.cryp.to https://ryantrinkle.com:5443 ];
   trustedBinaryCaches = [
