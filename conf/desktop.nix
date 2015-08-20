@@ -41,6 +41,7 @@ services.xserver = {
   windowManager.default = "xmonad";
   windowManager.xmonad.enable = true;
   windowManager.xmonad.enableContribAndExtras = true;
+  windowManager.i3.enable = true;
 
   wacom.enable = true;
 };
