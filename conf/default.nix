@@ -57,9 +57,8 @@ environment.variables = {
     #!${pkgs.bash}/bin/bash
     ${pkgs.conkerorWrapperWithoutScrollbars}/bin/conkeror "$@" &
   '');
-  EDITOR="${pkgs.neovim}/bin/nvim";
+  EDITOR="${pkgs.vim}/bin/vim";
   LC_MESSAGES = "en_US.UTF-8";
-  LANGUAGE = "de";
   SHELL = "${pkgs.fish}/bin/fish";
   ASPELL_CONF =
     let
