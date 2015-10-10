@@ -21,7 +21,6 @@ environment.systemPackages = with pkgs;
     manpages man expr.armagetronad
   ];
 
-boot.loader.grub.device = "/dev/sda";
 boot.cleanTmpDir = true;
 boot.kernel.sysctl = {
   "kernel.dmesg_restrict" = true;
