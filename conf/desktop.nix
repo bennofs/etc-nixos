@@ -11,7 +11,7 @@ services.xserver = {
   synaptics.twoFingerScroll = true;
   xkbOptions = "ctrl:nocaps";
 
-  displayManager.sddm.enable = true;
+  displayManager.kdm.enable = true;
   displayManager.desktopManagerHandlesLidAndPower = false;
 
   desktopManager.session =
