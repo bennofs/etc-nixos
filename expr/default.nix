@@ -8,6 +8,10 @@ softwarechallenge15-gui = callPackage ./softwarechallenge-gui/2015.nix {
   jre = oraclejre8;
 };
 
+softwarechallenge16-gui = callPackage ./softwarechallenge-gui/2016.nix {
+  jre = oraclejre8;
+};
+
 esu = callPackage ./esu {};
 
 armagetronad = callPackage ./armagetronad {};

@@ -1,3 +1,3 @@
 /hardware-configuration.nix
-/conf/accounts
+/conf/accounts.nix
 /expr/softwarechallenge-gui/plugin2015.jar

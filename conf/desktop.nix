@@ -5,23 +5,20 @@ imports = [];
 # Enable the X11 windowing system.
 services.xserver = {
   enable = true;
-  videoDrivers = ["ati"];
   layout = "de";
   synaptics.enable = true;
   synaptics.accelFactor = "0.0005";
   synaptics.twoFingerScroll = true;
   xkbOptions = "ctrl:nocaps";
 
-  displayManager.sddm = {
-    enable = true;
-  };
-
+  displayManager.sddm.enable = true;
   displayManager.desktopManagerHandlesLidAndPower = false;
+
   desktopManager.session =
     [ { name = "custom";
         start = ''
-          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
-          ${pkgs.haskellngPackages.xmobar}/bin/xmobar --screen 0 &
+          ${pkgs.feh}/bin/feh --bg-fill ${""}
+          ${pkgs.haskellngPackages.xmobar}/bin/xmobar 0 &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
           ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 18 --transparent true --alpha 125 --tint "0xeee8d3" &
@@ -41,7 +38,6 @@ services.xserver = {
   windowManager.default = "xmonad";
   windowManager.xmonad.enable = true;
   windowManager.xmonad.enableContribAndExtras = true;
-  windowManager.i3.enable = true;
 
   wacom.enable = true;
 };
@@ -50,9 +46,8 @@ services.xserver = {
 
 # GTK theme
 environment.extraInit = ''
-  export GTK_PATH=$GTK_PATH:${pkgs.oxygen_gtk}/lib/gtk-2.0
-  export GTK2_RC_FILES=$GTK2_RC_FILES:${pkgs.oxygen_gtk}/share/themes/oxygen-gtk/gtk-2.0/gtkrc
-  export XDG_DOWNLOAD_DIR="$HOME/downloads"
+  export GTK_PATH=$GTK_PATH:${pkgs.oxygen-gtk2}/lib/gtk-2.0
+  export GTK2_RC_FILES=$GTK2_RC_FILES:${pkgs.oxygen-gtk2}/share/themes/oxygen-gtk/gtk-2.0/gtkrc
 '';
 
 environment.systemPackages = with pkgs; [
@@ -60,10 +55,7 @@ environment.systemPackages = with pkgs; [
   kde4.kdeartwork kde4.l10n.de kde4.oxygen_icons
 
   # GTK icons / themes
-  oxygen_gtk gnome3.adwaita-icon-theme hicolor_icon_theme
-
-  # Other packages
-  pythonPackages.udiskie
+  gnome3.adwaita-icon-theme hicolor_icon_theme
 ];
 
 # QT / KDE

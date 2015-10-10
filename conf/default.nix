@@ -5,7 +5,7 @@ with builtins; with pkgs.lib; {
 imports = [
   ./desktop.nix
   ./services.nix
-  ./accounts
+  ./accounts.nix
 ];
 
 # Available packages
@@ -14,7 +14,7 @@ environment.systemPackages = with pkgs;
     pmutils psmisc htop fuse inetutils which binutils scrot xsel
     linuxPackages.perf wpa_supplicant_gui
     bc k2pdfopt ncmpcpp mpc_cli beets arandr
-    emacs vimHugeX weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode keepassx2
+    vimHugeX weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode keepassx2
     calibre libreoffice wireshark gimp hipchat skype
     nix-repl llvm coq haskellPackages.ghc
     xlibs.xmodmap mplayer
@@ -22,12 +22,10 @@ environment.systemPackages = with pkgs;
   ];
 
 boot.loader.grub.device = "/dev/sda";
-boot.initrd.kernelModules = [ "ext4" ];
 boot.cleanTmpDir = true;
 boot.kernel.sysctl = {
   "kernel.dmesg_restrict" = true;
 };
-hardware.cpu.amd.updateMicrocode = true;
 hardware.pulseaudio.enable = true;
 
 services.udev.packages = with pkgs; [
@@ -46,19 +44,13 @@ fileSystems."/data" = {
   fsType = "ext4";
 };
 
-fileSystems."/vms" = {
-  label = "vms";
-  fsType = "ext4";
-};
-
 # Environment variables
 environment.variables = {
   BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
     #!${pkgs.bash}/bin/bash
     ${pkgs.conkerorWrapperWithoutScrollbars}/bin/conkeror "$@" &
   '');
-  EDITOR="${pkgs.vim}/bin/vim";
-  LC_MESSAGES = "en_US.UTF-8";
+  EDITOR="${pkgs.vimHugeX}/bin/vim";
   SHELL = "${pkgs.fish}/bin/fish";
   ASPELL_CONF =
     let
