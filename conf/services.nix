@@ -27,6 +27,10 @@ virtualisation.libvirtd.enable = true;
 # This only enables the service, but does not add users to the docker group.
 virtualisation.docker.enable = true;
 
+# We need to choose a storage driver for docker.
+# "overlay" is currently actively developed and will eventually become the default, so use it.
+virtualisation.docker.storageDriver = "overlay";
+
 networking.firewall = {
   # Pings are very useful for network troubleshooting.
   allowPing = true;
