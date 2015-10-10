@@ -66,7 +66,7 @@ environment.variables = {
 environment.etc."ssl/certs/mozilla.crt" = {
   source = pkgs.fetchurl {
     url = "http://curl.haxx.se/ca/cacert.pem";
-    sha256 = "1r1ccw9mch23jvchvb12mdska22p75jmh7zmzyxp7jnmyj2flh6z";
+    sha256 = "1ziwf1p9c1980j0v49281f8jzqks5sh9sz8g6jsnn063bias0ibd";
   };
   mode = "444";
 };
