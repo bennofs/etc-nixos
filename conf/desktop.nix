@@ -7,8 +7,12 @@ services.xserver = {
   enable = true;
   layout = "de";
   synaptics.enable = true;
-  synaptics.accelFactor = "0.0005";
+  synaptics.accelFactor = "0.01";
   synaptics.twoFingerScroll = true;
+  synaptics.additionalOptions = ''
+    Option "VertScrollDelta" "-112"
+    Option "HorizScrollDelta" "-112"
+  '';
   xkbOptions = "ctrl:nocaps";
 
   displayManager.kdm.enable = true;
@@ -17,11 +21,11 @@ services.xserver = {
   desktopManager.session =
     [ { name = "custom";
         start = ''
-          ${pkgs.feh}/bin/feh --bg-fill ${""}
-          ${pkgs.haskellngPackages.xmobar}/bin/xmobar 0 &
+          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
+          ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
+          ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 22 --transparent true --alpha 55 --tint "0xeee8d3" &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-          ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 18 --transparent true --alpha 125 --tint "0xeee8d3" &
           ${pkgs.skype}/bin/skype &
           ${pkgs.hipchat}/bin/hipchat &
           ${pkgs.rxvt_unicode}/bin/urxvtd &
