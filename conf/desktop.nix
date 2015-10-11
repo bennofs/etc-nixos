@@ -48,10 +48,13 @@ services.xserver = {
 
 # Themes and icons
 
-# GTK theme
 environment.extraInit = ''
+  # GTK theme
   export GTK_PATH=$GTK_PATH:${pkgs.oxygen-gtk2}/lib/gtk-2.0
   export GTK2_RC_FILES=$GTK2_RC_FILES:${pkgs.oxygen-gtk2}/share/themes/oxygen-gtk/gtk-2.0/gtkrc
+
+  # LS colors
+  eval `${pkgs.coreutils}/bin/dircolors "${./dircolors}"`
 '';
 
 environment.systemPackages = with pkgs; [
