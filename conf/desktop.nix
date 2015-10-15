@@ -12,6 +12,8 @@ services.xserver = {
   synaptics.additionalOptions = ''
     Option "VertScrollDelta" "-112"
     Option "HorizScrollDelta" "-112"
+    Option "TapButton2" "3"
+    Option "TabButton3" "2"
   '';
   xkbOptions = "ctrl:nocaps";
 
@@ -23,7 +25,7 @@ services.xserver = {
         start = ''
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
-          ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 22 --transparent true --alpha 55 --tint "0xeee8d3" &
+          ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 22 --transparent true --alpha 55 --tint "0xffffff" &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
           ${pkgs.skype}/bin/skype &
