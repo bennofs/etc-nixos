@@ -103,6 +103,12 @@ services.logind.extraConfig = ''
   HandleLidSwitchDocked=suspend
 '';
 
+# We want volatile storage, so journald doesn't keep the hard
+# disk spinning
+services.journald.extraConfig = ''
+  Storage=volatile
+'';
+
 nix = {
   useChroot = true;
   extraOptions = ''
