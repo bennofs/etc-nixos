@@ -17,13 +17,7 @@ services.xserver = {
   '';
   xkbOptions = "ctrl:nocaps";
 
-  displayManager.kdm.enable = true;
-  displayManager.kdm.extraConfig = ''
-    [X-*-Core]
-    AutoLoginEnable=1
-    AutoLoginUser=benno
-    ClientLogFile=.runtime-dir/xsession-errors
-  '';
+  displayManager.lightdm.enable = true;
   displayManager.desktopManagerHandlesLidAndPower = false;
 
   desktopManager.session =
