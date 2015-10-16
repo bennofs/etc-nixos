@@ -18,12 +18,17 @@ services.xserver = {
   xkbOptions = "ctrl:nocaps";
 
   displayManager.kdm.enable = true;
+  displayManager.kdm.extraConfig = ''
+    [X-*-Core]
+    AutoLoginEnable=1
+    AutoLoginUser=benno
+    ClientLogFile=.runtime-dir/xsession-errors
+  '';
   displayManager.desktopManagerHandlesLidAndPower = false;
 
   desktopManager.session =
     [ { name = "custom";
         start = ''
-          exec >> $XDG_RUNTIME_DIR/.xsession-errors 2>&1
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
           ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 22 --transparent true --alpha 55 --tint "0xffffff" &
