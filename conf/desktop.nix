@@ -23,6 +23,7 @@ services.xserver = {
   desktopManager.session =
     [ { name = "custom";
         start = ''
+          exec >> $XDG_RUNTIME_DIR/.xsession-errors 2>&1
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
           ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 22 --transparent true --alpha 55 --tint "0xffffff" &
@@ -31,7 +32,7 @@ services.xserver = {
           ${pkgs.skype}/bin/skype &
           ${pkgs.hipchat}/bin/hipchat &
           ${pkgs.rxvt_unicode}/bin/urxvtd &
-          ${pkgs.gvolicon}/bin/gvolicon &
+          ${pkgs.gvolicon}/bin/gvolicon &> /dev/null &
           ${pkgs.unclutter}/bin/unclutter -idle 3 -grab &
           ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
           ${pkgs.dunst}/bin/dunst -key 'mod4+less' -history_key 'mod4+shift+less' -all_key ' ' -cto 4 -nto 2 -lto 1 -config ${./dunstrc} &
