@@ -23,7 +23,6 @@ services.xserver = {
   desktopManager.session =
     [ { name = "custom";
         start = ''
-          ${expr.lock}/bin/lock
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
           ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 22 --transparent true --alpha 55 --tint "0xffffff" &
