@@ -19,6 +19,7 @@ services.xserver = {
 
   displayManager.lightdm.enable = true;
   displayManager.lightdm.extraSeatDefaults = ''
+    [SeatDefaults]
     autologin-user=benno
   '';
   displayManager.desktopManagerHandlesLidAndPower = false;
