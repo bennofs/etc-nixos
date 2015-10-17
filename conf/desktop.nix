@@ -17,7 +17,7 @@ services.xserver = {
   '';
   xkbOptions = "ctrl:nocaps";
 
-  displayManager.gdm.enable = true;
+  displayManager.sddm.enable = true;
   displayManager.desktopManagerHandlesLidAndPower = false;
 
   desktopManager.session =
