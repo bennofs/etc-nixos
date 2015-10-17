@@ -13,11 +13,11 @@ services.xserver = {
     Option "VertScrollDelta" "-112"
     Option "HorizScrollDelta" "-112"
     Option "TapButton2" "3"
-    Option "TabButton3" "2"
+    Option "TapButton3" "2"
   '';
   xkbOptions = "ctrl:nocaps";
 
-  displayManager.sddm.enable = true;
+  displayManager.lightdm.enable = true;
   displayManager.desktopManagerHandlesLidAndPower = false;
 
   desktopManager.session =
