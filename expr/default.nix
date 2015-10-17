@@ -21,6 +21,10 @@ nixos-sync = nixos-rebuild: callPackage ./nixos-sync {
   inherit nixos-rebuild;
 };
 
+lock = callPackage ./lock {
+  inherit (xlibs) xprop;
+};
+
 asurocon = callPackage ./asurocon {};
 
 }
