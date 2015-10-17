@@ -18,6 +18,9 @@ services.xserver = {
   xkbOptions = "ctrl:nocaps";
 
   displayManager.lightdm.enable = true;
+  displayManager.lightdm.extraSeatDefaults = ''
+    autologin-user=benno
+  '';
   displayManager.desktopManagerHandlesLidAndPower = false;
 
   desktopManager.session =
