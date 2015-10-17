@@ -9,7 +9,7 @@ index cf1526d..c9d7f7f 100644
 -                    if (fork() != 0)
 +                    int pid = fork();
 +                    if (pid != 0) {
-+                        printf("%d", pid);
++                        printf("%d\n", pid);
                          exit(0);
 +                    }
  
