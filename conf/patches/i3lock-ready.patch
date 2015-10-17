@@ -1,0 +1,13 @@
+diff --git a/i3lock.c b/i3lock.c
+index cf1526d..4d2741e 100644
+--- a/i3lock.c
++++ b/i3lock.c
+@@ -660,6 +660,8 @@ static void xcb_check_cb(EV_P_ ev_check *w, int revents) {
+ 
+                     ev_loop_fork(EV_DEFAULT);
+                 }
++                printf("ready\n");
++                fflush(stdout);
+                 break;
+ 
+             case XCB_CONFIGURE_NOTIFY:

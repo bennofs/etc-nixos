@@ -18,7 +18,7 @@ packageOverrides = pkgs: rec {
   });
 
   i3lock = pkgs.i3lock.overrideDerivation (old: {
-    patches = (old.patches or []) ++ [ ./patches/i3lock-margins.patch ./patches/i3lock-child-pid.patch ];
+    patches = (old.patches or []) ++ [ ./patches/i3lock-margins.patch ./patches/i3lock-ready.patch ];
   });
 
   conkerorWrapperWithoutScrollbars = pkgs.lib.overrideDerivation pkgs.conkerorWrapper (old: rec {

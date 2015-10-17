@@ -1,9 +1,12 @@
 #!/nix/store/xag5ayq906w9zhlxs8wayv4kvpiyqphq-bash-4.3-p42/bin/bash
 /nix/store/dc1yc54hf2varg9zv8lk7zl6320xq9im-xprop-1.2.2/bin/xprop -root -f _SCREEN_LOCKED 8b -set _SCREEN_LOCKED True
 /nix/store/ds2jvlaqnin2s5l0v05l6g3mjhgqy4yl-xdotool-3.20150503.1/bin/xdotool key "Control+Alt+Super+l"
-pid=$(/nix/store/zwx3xcr58p8wq0hq4z5yxn7j5bj7hvjq-i3lock-2.7/bin/i3lock --top-margin 22 -i /data/pics/lockscreen.png)
+exec 3< <(/nix/store/zwx3xcr58p8wq0hq4z5yxn7j5bj7hvjq-i3lock-2.7/bin/i3lock --top-margin 22 -i /data/pics/lockscreen.png)
+read pid <&3
+exec 3<&-
 date
-( wait $pid;
+echo "pid: $pid"
+( wait $pid 
   /nix/store/dc1yc54hf2varg9zv8lk7zl6320xq9im-xprop-1.2.2/bin/xprop -root -f _SCREEN_LOCKED 8b -set _SCREEN_LOCKED False;
   /nix/store/ds2jvlaqnin2s5l0v05l6g3mjhgqy4yl-xdotool-3.20150503.1/bin/xdotool key "Control+Alt+Super+l"
 ) & disown
