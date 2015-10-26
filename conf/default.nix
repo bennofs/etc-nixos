@@ -128,7 +128,7 @@ nix = {
   extraOptions = ''
     auto-optimise-store = true
   '';
-  binaryCaches = [ https://cache.nixos.org  http://hydra.cryp.to ];
+  binaryCaches = [ https://cache.nixos.org ];
   binaryCachePublicKeys = [ "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs=" ];
   trustedBinaryCaches = [
     http://cache.nixos.org
