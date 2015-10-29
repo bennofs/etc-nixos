@@ -20,7 +20,7 @@ environment.systemPackages = with pkgs;
     xlibs.xmodmap scrot xsel xlibs.xbacklight arandr
 
     # Command line utils 
-    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain
+    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain mplayer
 
     # Development tools
     nix-repl llvm coq haskellPackages.ghc
