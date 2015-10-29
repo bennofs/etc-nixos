@@ -20,7 +20,7 @@ services = {
 };
 
 # Use libvirtd for managing virtual machines.
-# This only enables the services, but does not users to the libvirt group.
+# This only enables the service, but does not add users to the libvirt group.
 virtualisation.libvirtd.enable = true;
 
 # Enable docker for container management.

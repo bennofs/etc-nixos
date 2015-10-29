@@ -51,23 +51,32 @@ services.xserver = {
 # Themes and icons
 
 environment.extraInit = ''
-  # GTK theme
-  export GTK_PATH=$GTK_PATH:${pkgs.oxygen-gtk2}/lib/gtk-2.0
-  export GTK2_RC_FILES=$GTK2_RC_FILES:${pkgs.oxygen-gtk2}/share/themes/oxygen-gtk/gtk-2.0/gtkrc
+  # GTK2 theme
+  export GTK_PATH=$GTK_PATH:${pkgs.gtk-engine-murrine}/lib/gtk-2.0
+  export GTK2_RC_FILES=${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
+
+  # GTK3 theme
+  export GTK_DATA_PREFIX=${pkgs.orion}
 
   # LS colors
   eval `${pkgs.coreutils}/bin/dircolors "${./dircolors}"`
 '';
 
-environment.systemPackages = with pkgs; [
-  # QT icons / themes
-  kde4.kdeartwork kde4.l10n.de kde4.oxygen_icons
+# QT4/5 theme
+environment.etc."xdg/Trolltech.conf" = {
+  text = ''
+    [Qt]
+    style=Breeze
+  '';
+  mode = "444";
+};
 
-  # GTK icons / themes
-  gnome3.adwaita-icon-theme hicolor_icon_theme
+environment.systemPackages = with pkgs; [
+  # QT icons / theme
+  kde5.breeze
 ];
 
-# QT / KDE
+# Make applications find files in <prefix>/share
 environment.pathsToLink = [ "/share" ];
 
 # Suspend on LID close

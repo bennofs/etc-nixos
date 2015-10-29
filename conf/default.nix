@@ -10,15 +10,27 @@ imports = [
 
 # Available packages
 environment.systemPackages = with pkgs;
-  [ git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
-    pmutils psmisc htop fuse inetutils which binutils scrot xsel
-    linuxPackages.perf wpa_supplicant_gui
-    bc k2pdfopt ncmpcpp mpc_cli beets arandr
-    vimHugeX weechat conkerorWrapperWithoutScrollbars zathura rxvt_unicode keepassx2
-    calibre libreoffice wireshark gimp hipchat skype
+  [ # Version control / archiving
+    git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
+
+    # Linux utils
+    pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc
+
+    # Desktop utils
+    xlibs.xmodmap scrot xsel xlibs.xbacklight arandr
+
+    # Command line utils 
+    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain
+
+    # Development tools
     nix-repl llvm coq haskellPackages.ghc
-    xlibs.xmodmap mplayer
-    manpages man expr.armagetronad
+
+    # Desktop applications
+    xfce.thunar gimp hipchat skype wireshark libreoffice calibre conkerorWrapperWithoutScrollbars
+    keepassx2 zathura rxvt_unicode firefox chromium
+
+    # Other
+    expr.softwarechallenge16-gui expr.armagetronad
   ];
 
 boot.cleanTmpDir = true;
