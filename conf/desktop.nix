@@ -74,6 +74,9 @@ environment.etc."xdg/Trolltech.conf" = {
 environment.systemPackages = with pkgs; [
   # QT icons / theme
   kde5.breeze
+
+  # Gtk icons
+  hicolor_icon_theme
 ];
 
 # Make applications find files in <prefix>/share
