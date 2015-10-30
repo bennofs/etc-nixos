@@ -4,10 +4,14 @@ let
   themeEnv = ''
     # GTK2 theme
     export GTK_PATH=$GTK_PATH:${pkgs.gtk-engine-murrine}/lib/gtk-2.0
-    export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="oxygen"''}:${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
+    export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="breeze"''}:${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
 
     # GTK3 theme
     export GTK_DATA_PREFIX=${pkgs.orion}
+    export GTK_THEME="orion"
+
+    # SVG loader for pixbuf (needed for svg icon themes)
+    export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg}/lib/gdk-pixbuf-2.0/*/loaders.cache)
   '';
 
 in {
@@ -85,7 +89,6 @@ environment.systemPackages = with pkgs; [
 
   # Icons
   hicolor_icon_theme
-  kde4.oxygen_icons
 ];
 
 # Make applications find files in <prefix>/share
