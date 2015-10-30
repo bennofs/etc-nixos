@@ -13,10 +13,6 @@ packageOverrides = pkgs: rec {
 
   custom = import ../expr { inherit pkgs; };
 
-  trayer = pkgs.trayer.overrideDerivation (old: {
-    patches = [ ./patches/trayer-force-icon-width.patch ];
-  });
-
   i3lock = pkgs.i3lock.overrideDerivation (old: {
     patches = (old.patches or []) ++ [ ./patches/i3lock-margins.patch ./patches/i3lock-ready.patch ];
   });
