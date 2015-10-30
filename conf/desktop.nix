@@ -1,4 +1,16 @@
-{ config, pkgs, expr, ... }: {
+{ config, pkgs, expr, ... }:
+
+let
+  themeEnv = ''
+    # GTK2 theme
+    export GTK_PATH=$GTK_PATH:${pkgs.gtk-engine-murrine}/lib/gtk-2.0
+    export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="oxygen"''}:${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
+
+    # GTK3 theme
+    export GTK_DATA_PREFIX=${pkgs.orion}
+  '';
+
+in {
 
 imports = [];
 
@@ -23,10 +35,14 @@ services.xserver = {
   desktopManager.session =
     [ { name = "custom";
         start = ''
+          # Setup desktop
+          ${themeEnv}
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
           ${pkgs.trayer}/bin/trayer --edge top --align right --width 10 --height 22 --transparent true --alpha 55 --tint "0xffffff" &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
+
+          # Autostart
           ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
           ${pkgs.skype}/bin/skype &
           ${pkgs.hipchat}/bin/hipchat &
@@ -48,16 +64,8 @@ services.xserver = {
   wacom.enable = true;
 };
 
-# Themes and icons
-
 environment.extraInit = ''
-  # GTK2 theme
-  export GTK_PATH=$GTK_PATH:${pkgs.gtk-engine-murrine}/lib/gtk-2.0
-  export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="oxygen"''}:${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
-
-  # GTK3 theme
-  export GTK_DATA_PREFIX=${pkgs.orion}
-
+  ${themeEnv}
   # LS colors
   eval `${pkgs.coreutils}/bin/dircolors "${./dircolors}"`
 '';
