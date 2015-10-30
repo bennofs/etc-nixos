@@ -53,7 +53,7 @@ services.xserver = {
 environment.extraInit = ''
   # GTK2 theme
   export GTK_PATH=$GTK_PATH:${pkgs.gtk-engine-murrine}/lib/gtk-2.0
-  export GTK2_RC_FILES=${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
+  export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="oxygen"''}:${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
 
   # GTK3 theme
   export GTK_DATA_PREFIX=${pkgs.orion}
