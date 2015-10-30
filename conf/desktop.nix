@@ -86,6 +86,7 @@ environment.etc."xdg/Trolltech.conf" = {
 environment.systemPackages = with pkgs; [
   # Qt theme
   kde5.breeze
+  pkgsi686Linux.kde5.breeze # for skype (32bit)
 
   # Icons
   hicolor_icon_theme
