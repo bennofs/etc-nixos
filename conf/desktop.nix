@@ -72,7 +72,7 @@ environment.etc."xdg/Trolltech.conf" = {
 };
 
 environment.systemPackages = with pkgs; [
-  # QT icons / theme
+  # Qt theme
   kde5.breeze
 
   # Gtk icons

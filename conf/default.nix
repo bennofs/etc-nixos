@@ -14,13 +14,13 @@ environment.systemPackages = with pkgs;
     git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
 
     # Linux utils
-    pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc
+    pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
 
     # Desktop utils
     xlibs.xmodmap scrot xsel xlibs.xbacklight arandr
 
     # Command line utils 
-    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain mplayer
+    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain mplayer patchutils fish
 
     # Development tools
     nix-repl llvm coq haskellPackages.ghc
