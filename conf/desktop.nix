@@ -75,8 +75,9 @@ environment.systemPackages = with pkgs; [
   # Qt theme
   kde5.breeze
 
-  # Gtk icons
+  # Icons
   hicolor_icon_theme
+  kde4.oxygen_icons
 ];
 
 # Make applications find files in <prefix>/share
