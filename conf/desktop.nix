@@ -37,6 +37,7 @@ services.xserver = {
   displayManager.sddm.autoLogin = {
     enable = true;
     user = "benno";
+    relogin = true;
   };
   displayManager.desktopManagerHandlesLidAndPower = false;
 
