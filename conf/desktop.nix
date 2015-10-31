@@ -54,6 +54,7 @@ services.xserver = {
           ${pkgs.gvolicon}/bin/gvolicon &> /dev/null &
           ${pkgs.unclutter}/bin/unclutter -idle 3 &
           ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
+          ${pkgs.wpa_supplicant_gui}/bin/wpa_gui -q -t &
           ${pkgs.dunst}/bin/dunst -key 'mod4+less' -history_key 'mod4+shift+less' -all_key ' ' -cto 4 -nto 2 -lto 1 -config ${./dunstrc} &
           syndaemon -i 1 -R -K -t -d
         '';
