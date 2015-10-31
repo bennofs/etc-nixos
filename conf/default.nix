@@ -5,7 +5,6 @@ with builtins; with pkgs.lib; {
 imports = [
   ./desktop.nix
   ./services.nix
-  ./accounts.nix
 ];
 
 # Available packages

@@ -1,4 +1,4 @@
-{ config, pkgs, expr, ... }:
+{ config, pkgs, expr, buildVM, ... }:
 
 let
   themeEnv = ''
@@ -34,6 +34,10 @@ services.xserver = {
   xkbOptions = "ctrl:nocaps";
 
   displayManager.sddm.enable = true;
+  displayManager.sddm.autoLogin = {
+    enable = true;
+    user = "benno";
+  };
   displayManager.desktopManagerHandlesLidAndPower = false;
 
   desktopManager.session =
@@ -41,15 +45,21 @@ services.xserver = {
         start = ''
           # Setup desktop
           ${themeEnv}
+
+          # Lock
+	  ${expr.lock}/bin/lock
+
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
           ${pkgs.stalonetray}/bin/stalonetray --slot-size 22 --icon-size 20 --geometry 9x1-0 --icon-gravity NE --grow-gravity E -c /dev/null --kludges fix_window_pos,force_icons_size,use_icons_hints --transparent --tint-level 200 &> /dev/null &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
 
           # Autostart
-          ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-          ${pkgs.skype}/bin/skype &
-          ${pkgs.hipchat}/bin/hipchat &
+          ${pkgs.lib.optionalString (!buildVM) ''
+            ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
+            ${pkgs.skype}/bin/skype &
+            ${pkgs.hipchat}/bin/hipchat &
+          ''}
           ${pkgs.rxvt_unicode}/bin/urxvtd &
           ${pkgs.gvolicon}/bin/gvolicon &> /dev/null &
           ${pkgs.unclutter}/bin/unclutter -idle 3 &
