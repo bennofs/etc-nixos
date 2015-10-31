@@ -25,6 +25,10 @@ lock = callPackage ./lock {
   inherit (xlibs) xprop;
 };
 
+lock-suspend = callPackage ./lock-suspend {
+  inherit lock;
+};
+
 asurocon = callPackage ./asurocon {};
 
 }
