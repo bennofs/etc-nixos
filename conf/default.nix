@@ -17,7 +17,7 @@ environment.systemPackages = with pkgs;
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
 
     # Desktop utils
-    xlibs.xmodmap scrot xsel xlibs.xbacklight arandr
+    xlibs.xmodmap scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui
 
     # Command line utils 
     k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain mplayer patchutils fish
