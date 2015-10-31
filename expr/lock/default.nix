@@ -8,6 +8,7 @@ writeScriptBin "lock" ''
     ${i3lock}/bin/i3lock --nofork --top-margin 22 -i /data/pics/lockscreen.png
     ${xprop}/bin/xprop -root -f _SCREEN_LOCKED 8b -set _SCREEN_LOCKED False
     ${xdotool}/bin/xdotool key "Control+Alt+Super+l"
+    eval "$1"
   )
   read i <&3
 ''
