@@ -105,7 +105,6 @@ fonts.fonts = with pkgs; [
 networking = {
   hostName = "c-cube";
   wireless.enable = true;
-  wireless.interfaces = [];
   wireless.userControlled.enable = true;
 };
 
