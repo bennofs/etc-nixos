@@ -49,6 +49,7 @@ services.xserver = {
 
           # Lock
 	  ${expr.lock}/bin/lock
+	  ${expr.lock-suspend}/bin/lock-on-suspend &
 
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
           ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
