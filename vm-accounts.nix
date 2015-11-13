@@ -6,6 +6,7 @@ security.sudo.enable = true;
 users.extraUsers.benno = {
   description = "Benno Fünfstück";
   isNormalUser = true;
+  createHome = true;
   home = "/home";
   extraGroups = ["wheel" "docker" "libvirtd" ];
   password = "test";

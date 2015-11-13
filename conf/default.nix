@@ -86,6 +86,29 @@ environment.etc."sync" = {
   mode = "500";
 };
 
+# Setup /home
+system.activationScripts.homeUser = stringAfter [ "users" ] ''
+  chown benno:users /home
+'';
+environment.loginShellInit = ''
+  if [ ! -d /home/.git ]; then
+    pushd
+    cd /home
+    git=${pkgs.git}/bin/git
+    $git init &> /tmp/git-init
+    $git remote add origin https://github.com/bennofs/dotfiles &> /tmp/git-remote
+    $git fetch &> /tmp/git-fetch
+    $git checkout -t origin/master &> /tmp/git-checkout
+    popd
+  fi
+'';
+
+# Set VM disk size (in MB)
+virtualisation.diskSize = 2048;
+
+# Set VM ram amount (in MB)
+virtualisation.memorySize = 1024;
+
 # Select internationalisation properties.
 i18n = {
   consoleFont = "lat9w-16";

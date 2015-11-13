@@ -48,11 +48,11 @@ services.xserver = {
           ${themeEnv}
 
           # Lock
-	  ${expr.lock}/bin/lock
-	  ${expr.lock-suspend}/bin/lock-on-suspend &
+          ${expr.lock}/bin/lock
+          ${expr.lock-suspend}/bin/lock-on-suspend &
 
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
-          ${pkgs.haskellngPackages.xmobar}/bin/xmobar --alpha 200 &
+          ${pkgs.haskellPackages.xmobar}/bin/xmobar --alpha 200 &
           ${pkgs.stalonetray}/bin/stalonetray --slot-size 22 --icon-size 20 --geometry 9x1-0 --icon-gravity NE --grow-gravity E -c /dev/null --kludges fix_window_pos,force_icons_size,use_icons_hints --transparent --tint-level 200 &> /dev/null &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
 
@@ -69,6 +69,8 @@ services.xserver = {
           ${pkgs.wpa_supplicant_gui}/bin/wpa_gui -q -t &
           ${pkgs.dunst}/bin/dunst -key 'mod4+less' -history_key 'mod4+shift+less' -all_key ' ' -cto 4 -nto 2 -lto 1 -config ${./dunstrc} &
           syndaemon -i 1 -R -K -t -d
+
+          ${pkgs.lib.optionalString buildVM '' ${pkgs.rxvt_unicode}/bin/urxvt '' }
         '';
     } ];
   desktopManager.default = "custom";
