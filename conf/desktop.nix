@@ -85,8 +85,12 @@ services.xserver = {
 
 environment.extraInit = ''
   ${themeEnv}
+
   # LS colors
   eval `${pkgs.coreutils}/bin/dircolors "${./dircolors}"`
+
+  # Remove Qt configuration (can cause programs to SEGV)
+  rm -f ~/.config/Trolltech.conf
 '';
 
 # QT4/5 theme
