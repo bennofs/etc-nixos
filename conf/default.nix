@@ -103,11 +103,6 @@ environment.loginShellInit = ''
   fi
 '';
 
-# Set VM disk size (in MB)
-virtualisation.diskSize = 2048;
-
-# Set VM ram amount (in MB)
-virtualisation.memorySize = 1024;
 
 # Select internationalisation properties.
 i18n = {
