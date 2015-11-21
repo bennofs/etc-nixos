@@ -6,12 +6,19 @@ writeScriptBin "lock" ''
   ${xdotool}/bin/xdotool key "Control+Alt+Super+l"
   cmd=''${1:-true}
   shift
-  exec 3< <(
+  PIPE=$(mktemp -u)
+  exec 3<>$PIPE
+  rm $PIPE
+  (
     ${i3lock}/bin/i3lock --nofork --top-margin 22 -i ${/data/pics/lockscreen.png}
     ${xprop}/bin/xprop -root -f _SCREEN_LOCKED 8b -set _SCREEN_LOCKED False
     ${xdotool}/bin/xdotool key "Control+Alt+Super+l"
 
     exec "$cmd" "$@"
-  )
-  read i <&3
+  ) >&3 & disown
+  while read i <&3; do
+    if [ "$i" = "ready" ]; then
+      break
+    fi
+  done
 ''
