@@ -1,6 +1,25 @@
 { config, pkgs, expr, buildVM, ... }:
 
 let
+  iconTheme = pkgs.stdenv.mkDerivation {
+    name = "breeze-icons";
+    buildCommand = ''
+      mkdir -p $out/share
+      cp -r ${pkgs.pkgsi686Linux.kde5.breeze}/share/icons $out/share/icons
+      chmod +w -R $out/share/icons
+
+      # Add some additional icons
+      find ${pkgs.gnome3.adwaita-icon-theme}/share/icons/Adwaita/scalable/status -name "*wireless*" -exec cp {} $out/share/icons/breeze/status \;
+    '';
+  };
+  qtTheme = pkgs.stdenv.mkDerivation {
+    name = "breeze-style";
+    buildCommand = ''
+      cp -r --no-preserve=all ${pkgs.kde5.breeze} $out
+      chmod +w -R $out/share/icons
+      rm -r $out/share/icons
+    '';
+  };
   themeEnv = ''
     # GTK2 theme
     export GTK_PATH=$GTK_PATH:${pkgs.gtk-engine-murrine}/lib/gtk-2.0
@@ -104,11 +123,11 @@ environment.etc."xdg/Trolltech.conf" = {
 
 environment.systemPackages = with pkgs; [
   # Qt theme
-  kde5.breeze
-  pkgsi686Linux.kde5.breeze # for skype (32bit)
+  qtTheme # 32 bit, to handle 32 bit apps (skype)
 
   # Icons
   hicolor_icon_theme
+  iconTheme
 ];
 
 # Make applications find files in <prefix>/share
