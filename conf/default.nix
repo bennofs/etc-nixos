@@ -48,6 +48,9 @@ services.udev.packages = with pkgs; [
 services.udev.extraRules = ''
   # AREXX USB-IR-Transceiver. For flashing ASURO robot
   SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ENV{ID_REMOTE_CONTROL}="1"
+
+  # Wiko android devices
+  ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bb4", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
 '';
 
 fileSystems."/data" = {
