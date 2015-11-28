@@ -1,0 +1,706 @@
+# A new TeX mode for Aspell 0.60.6
+# by Matthias Franz
+# 
+# This patch (hopefully) improves Aspell's TeX mode. The new features
+# are as follows:
+# 
+# 1) Aspell skips over math contents inside $...$, $$..$$, \[...\] and
+# common LaTeX and AMS-LaTeX environments like "equation" and "gather".
+# Additional environments to be skipped over can be defined via the new
+# "tex-ignore-env" list.
+# 
+# 2) Forced spell-checking of macro arguments while skipping over
+# arguments or environments. This is achieved with the new 'T' option to
+# "add-tex-command".
+# 
+# 3) Discretionary hyphens and italic corrections are ignored. For
+# example, "hy\-phen" and "shelf\/ful" are recognized as single words.
+# 
+# 4) Spell-checking can be manually switched on and off by putting the
+# text "aspell:on" and "aspell:off" into the file. This allows to skip
+# over macro definitions and other parts of text that confuse Aspell.
+# 
+# See the new Info file for more details.
+
+
+# Comments about the patch:
+#
+# ./modules/filter/context.cpp
+# It seems that the order of the context filter was undefined. Whether
+# one wants to have this filter before or after other filters depends on
+# the application in mind. I need it before the tex filter so that one
+# can place the "aspell:off" and "aspell:on" flags inside TeX comments.
+# 
+# ./modules/filter/tex.cpp
+# The new code for the tex filter.
+# 
+# ./modules/filter/tex-filter.info
+# The new default settings for the filter variables. "tex-ignore-env" is
+# new. Most changes to "tex-command" are related to the new 'T' option.
+# The new "begin" line is used internally. The rest are additions and
+# corrections to existing definitions.
+# 
+# ./modules/filter/modes/tex.amf
+# Note that we enable the context filter by default.
+# 
+# ./manual/aspell.1
+# ./manual/aspell.texi
+# Updated documentation.
+# 
+--- ./modules/filter/context.cpp.orig	2004-06-28 20:18:18.000000000 -0400
++++ ./modules/filter/context.cpp	2010-05-03 21:09:39.000000000 -0400
+@@ -62,6 +62,7 @@ namespace {
+     
+   PosibErr<bool> ContextFilter::setup(Config * config){
+     name_ = "context-filter";
++    order_num_ = 0.15;
+     StringList delimiters;
+     StringEnumeration * delimiterpairs;
+     const char * delimiterpair=NULL;
+--- ./modules/filter/tex.cpp.orig	2006-01-17 09:23:45.000000000 -0500
++++ ./modules/filter/tex.cpp	2010-09-13 21:08:41.000000000 -0400
+@@ -32,17 +32,17 @@ namespace {
+   class TexFilter : public IndividualFilter 
+   {
+   private:
+-    enum InWhat {Name, Opt, Parm, Other, Swallow};
++    enum InWhat {Text, Name, Comment, InlineMath, DisplayMath, Scan};
+     struct Command {
+       InWhat in_what;
+       String name;
+-      const char * do_check;
++      bool skip;
++      int size;
++      const char * args;
+       Command() {}
+-      Command(InWhat w) : in_what(w), do_check("P") {}
++      Command(InWhat w, bool s, const char *a) : in_what(w), skip(s), args(a), size(0) {}
+     };
+ 
+-    bool in_comment;
+-    bool prev_backslash;
+     Vector<Command> stack;
+ 
+     class Commands : public StringMap {
+@@ -53,11 +53,11 @@ namespace {
+     
+     Commands commands;
+     bool check_comments;
++     
++    StringMap ignore_env;
+     
+-    inline void push_command(InWhat);
+-    inline void pop_command();
+-
+-    bool end_option(char u, char l);
++    inline bool push_command(InWhat, bool, const char *);
++    inline bool pop_command();
+ 
+     inline bool process_char(FilterChar::Chr c);
+     
+@@ -71,14 +71,17 @@ namespace {
+   //
+   //
+ 
+-  inline void TexFilter::push_command(InWhat w) {
+-    stack.push_back(Command(w));
++  inline bool TexFilter::push_command(InWhat w, bool skip, const char *args = "") {
++    stack.push_back(Command(w, skip, args));
++    return skip;
+   }
+ 
+-  inline void TexFilter::pop_command() {
+-    stack.pop_back();
+-    if (stack.empty())
+-      push_command(Parm);
++  inline bool TexFilter::pop_command() {
++    bool skip = stack.back().skip;
++    if (stack.size() > 1) {
++      stack.pop_back();
++    }
++    return skip;
+   }
+ 
+   //
+@@ -95,6 +98,8 @@ namespace {
+     opts->retrieve_list("f-tex-command", &commands);
+     
+     check_comments = opts->retrieve_bool("f-tex-check-comments");
++    
++    opts->retrieve_list("f-tex-ignore-env", &ignore_env);
+ 
+     reset();
+     return true;
+@@ -102,127 +107,154 @@ namespace {
+   
+   void TexFilter::reset() 
+   {
+-    in_comment = false;
+-    prev_backslash = false;
+     stack.resize(0);
+-    push_command(Parm);
++    push_command(Text, false);
+   }
+ 
+ #  define top stack.back()
++#  define next_arg       if (*top.args) { ++top.args; if (!*top.args) pop_command(); }
++#  define skip_opt_args  if (*top.args) { while (*top.args == 'O' || *top.args == 'o') { ++top.args; } if (!*top.args) pop_command(); }
++
+ 
+   // yes this should be inlined, it is only called once
+   inline bool TexFilter::process_char(FilterChar::Chr c) 
+   {
+-    // deal with comments
+-    if (c == '%' && !prev_backslash) in_comment = true;
+-    if (in_comment && c == '\n')     in_comment = false;
+-
+-    prev_backslash = false;
+-
+-    if (in_comment)                  return !check_comments;
+-
++    top.size++;
++    
+     if (top.in_what == Name) {
+       if (asc_isalpha(c)) {
+ 
+ 	top.name += c;
+-	return true;
++	return top.skip;
+ 
+       } else {
+-
+-	if (top.name.empty() && (c == '@')) {
+-	  top.name += c;
+-	  return true;
+-	}
+-	  
+-	top.in_what = Other;
++	bool in_name;
+ 
+ 	if (top.name.empty()) {
+-	  top.name.clear();
+ 	  top.name += c;
+-	  top.do_check = commands.lookup(top.name.c_str());
+-	  if (top.do_check == 0) top.do_check = "";
+-	  return !asc_isspace(c);
++	  in_name = true;
++	} else {
++	  top.size--;  // necessary?
++	  in_name = false;
+ 	}
+ 
+-	top.do_check = commands.lookup(top.name.c_str());
+-	if (top.do_check == 0) top.do_check = "";
++	String name = top.name;
+ 
+-	if (asc_isspace(c)) { // swallow extra spaces
+-	  top.in_what = Swallow;
+-	  return true;
+-	} else if (c == '*') { // ignore * at end of commands
+-	  return true;
++	pop_command();
++
++	const char *args = commands.lookup(name.c_str());
++	
++	// later?
++	if (name == "begin")
++	  push_command(top.in_what, top.skip);
++	  // args = "s";
++	else if (name == "end")
++	  pop_command();
++
++	// we might still be waiting for arguments
++	skip_opt_args;
++	if (*top.args) {
++	  next_arg;
++	} else if (name == "[") {
++	  // \[
++	  push_command(DisplayMath, true);
++	} else if (name == "]") {
++	  // \]
++	  pop_command();  // pop DisplayMath
++	} else if (args && *args) {
++	  push_command(top.in_what, top.skip, args);
+ 	}
+ 	
+-	// continue o...
++	if (in_name || c == '*')  // better way to deal with "*"?
++	  return true;
++	else
++	  return process_char(c);  // start over
++      }
++      
++    }
++     
++    if (top.in_what == Comment) {
++      if (c == '\n') {
++	pop_command();
++	return false;  // preserve newlines
++      } else {
++        return top.skip;
+       }
+-
+-    } else if (top.in_what == Swallow) {
+-
+-      if (asc_isspace(c))
+-	return true;
+-      else
+-	top.in_what = Other;
+     }
+ 
+-    if (c == '{')
+-      while (*top.do_check == 'O' || *top.do_check == 'o') 
+-	++top.do_check;
+-
+-    if (*top.do_check == '\0')
+-      pop_command();
+-
+-    if (c == '{') {
+-
+-      if (top.in_what == Parm || top.in_what == Opt || top.do_check == '\0')
+-	push_command(Parm);
+-
+-      top.in_what = Parm;
++    if (c == '%') {
++      push_command(Comment, !check_comments);
+       return true;
+     }
+-
+-    if (top.in_what == Other) {
+-
+-      if (c == '[') {
+-
+-	top.in_what = Opt;
+-	return true;
+-
+-      } else if (asc_isspace(c)) {
+-
+-	return true;
+-
++     
++    if (c == '$') {
++      if (top.in_what != InlineMath) {
++	// $ begin
++	return push_command(InlineMath, true);
++      } else if (top.size > 1) {
++	// $ end
++	return pop_command();
+       } else {
+-	
+-	pop_command();
+-
++	// $ -> $$
++	pop_command();  // pop InlineMath
++	if (top.in_what == DisplayMath)
++	  // $$ end
++	  return pop_command();
++	else
++	  // $$ start
++	  return push_command(DisplayMath, true);
+       }
+-
+-    } 
++    }
+ 
+     if (c == '\\') {
+-      prev_backslash = true;
+-      push_command(Name);
+-      return true;
++      return push_command(Name, true);
+     }
+ 
+-    if (top.in_what == Parm) {
+-
+-      if (c == '}')
+-	return end_option('P','p');
+-      else
+-	return *top.do_check == 'p';
+-
+-    } else if (top.in_what == Opt) {
++    if (c == '}' || c == ']') {
++      if (top.in_what == Scan) {
++	String env = top.name;
++	if (env.back() == '*')
++	  env.pop_back();
++	bool skip = pop_command();
++	next_arg;
++	if (ignore_env.have(env)) {
++	  stack[stack.size()-2].skip = true;
++	}
++	return skip;
++      } else {
++	bool skip = pop_command();
++	next_arg;
++	return skip;
++      }
++    }
+ 
+-      if (c == ']')
+-	return end_option('O', 'o');
++    if (c == '{') {
++      skip_opt_args;
++      if (*top.args == 'T')
++	return push_command(Text, false);
++      else if (*top.args == 's')  // also do it below?
++	return push_command(Scan, true);
+       else
+-	return *top.do_check == 'o';
+-
++	return push_command(top.in_what, top.skip || *top.args == 'p');
++    }
++    
++    if (c == '[') {
++      if (*top.args == 'O' || *top.args == 'o' || !*top.args) {
++	return push_command(top.in_what, top.skip || *top.args == 'o');
++      }
++      // else: fall-through to treat it as argument
+     }
++    
++    if (top.in_what == Scan)
++      top.name += c;
+ 
+-    return false;
++    // we might still be waiting for arguments
++    if (!asc_isspace(c)) {
++      skip_opt_args;
++      next_arg;
++    }
++    
++    return top.skip;
+   }
+ 
+   void TexFilter::process(FilterChar * & str, FilterChar * & stop)
+@@ -230,19 +262,24 @@ namespace {
+     FilterChar * cur = str;
+ 
+     while (cur != stop) {
+-      if (process_char(*cur))
++      bool hyphen = top.in_what == Name && top.size == 0
++	&& (*cur == '-' || *cur == '/') && cur-str >= 2;
++      if (process_char(*cur)) {
+ 	*cur = ' ';
++      }
++      if (hyphen) {
++	FilterChar *i = cur-2, *j = cur+1;
++	*i = FilterChar(*i, FilterChar::sum(i, j));
++	i++;
++	while (j != stop)
++	  *(i++) = *(j++);
++	*(stop-2) = *(stop-1) = FilterChar(0, 0);
++	cur--;
++      }
+       ++cur;
+     }
+   }
+ 
+-  bool TexFilter::end_option(char u, char l) {
+-    top.in_what = Other;
+-    if (*top.do_check == u || *top.do_check == l)
+-      ++top.do_check;
+-    return true;
+-  }
+-
+   //
+   // TexFilter::Commands
+   //
+@@ -252,14 +289,14 @@ namespace {
+     while (!asc_isspace(value[p1])) {
+       if (value[p1] == '\0') 
+ 	return make_err(bad_value, value,"",
+-                        _("a string of 'o','O','p',or 'P'"));
++                        _("a string of 'o', 'O', 'p', 'P', 's' or 'T'"));
+       ++p1;
+     }
+     int p2 = p1 + 1;
+     while (asc_isspace(value[p2])) {
+       if (value[p2] == '\0') 
+ 	return make_err(bad_value, value,"",
+-                        _("a string of 'o','O','p',or 'P'"));
++                        _("a string of 'o', 'O', 'p', 'P', 's' or 'T'"));
+       ++p2;
+     }
+     String t1; t1.assign(value,p1);
+--- ./modules/filter/tex-filter.info.orig	2004-06-27 00:54:00.000000000 -0400
++++ ./modules/filter/tex-filter.info	2011-02-05 16:44:49.000000000 -0500
+@@ -16,15 +16,35 @@ DESCRIPTION check TeX comments
+ DEFAULT false
+ ENDOPTION
+ 
++OPTION ignore-env
++TYPE list
++DESCRIPTION LaTeX environments to be ignored
++# LaTeX
++#DEFAULT thebibliography
++DEFAULT equation
++DEFAULT eqnarray
++# AMS-LaTeX
++DEFAULT gather
++DEFAULT multline
++DEFAULT align
++DEFAULT flalign
++DEFAULT alignat
++# Babel
++DEFAULT otherlanguage
++ENDOPTION
++
+ OPTION command
+ TYPE list
+ DESCRIPTION TeX commands
++# plain TeX / LaTeX
+ DEFAULT addtocounter pp
+ DEFAULT addtolength pp
+-DEFAULT alpha p
++DEFAULT alph p
++DEFAULT Alph p
+ DEFAULT arabic p
+ DEFAULT fnsymbol p
+ DEFAULT roman p
++DEFAULT Roman p
+ DEFAULT stepcounter p
+ DEFAULT setcounter pp
+ DEFAULT usecounter p
+@@ -42,7 +62,8 @@ DEFAULT newtheorem poPo
+ DEFAULT newfont pp
+ DEFAULT documentclass op
+ DEFAULT usepackage op
+-DEFAULT begin po
++# Do NOT change the next line!
++DEFAULT begin so
+ DEFAULT end p
+ DEFAULT setlength pp
+ DEFAULT addtolength pp
+@@ -54,15 +75,17 @@ DEFAULT hyphenation p
+ DEFAULT pagenumbering p
+ DEFAULT pagestyle p
+ DEFAULT addvspace p
+-DEFAULT framebox ooP
++DEFAULT framebox ooT
+ DEFAULT hspace p
+ DEFAULT vspace p
+-DEFAULT makebox ooP
+-DEFAULT parbox ooopP
+-DEFAULT raisebox pooP
++DEFAULT hbox T
++DEFAULT vbox T
++DEFAULT makebox ooT
++DEFAULT parbox ooopT
++DEFAULT raisebox pooT
+ DEFAULT rule opp
+ DEFAULT sbox pO
+-DEFAULT savebox pooP
++DEFAULT savebox pooT
+ DEFAULT usebox p
+ DEFAULT include p
+ DEFAULT includeonly p
+@@ -76,13 +99,30 @@ DEFAULT fontshape p
+ DEFAULT fontsize pp
+ DEFAULT usefont pppp
+ DEFAULT documentstyle op
+-DEFAULT cite p
++DEFAULT cite Op
+ DEFAULT nocite p
+ DEFAULT psfig p
+ DEFAULT selectlanguage p
+ DEFAULT includegraphics op
+ DEFAULT bibitem op
++DEFAULT bibliography p
++DEFAULT bibliographystyle p
+ DEFAULT geometry p
++# AMS-LaTeX
++DEFAULT address p
++DEFAULT email p
++DEFAULT mathbb p
++DEFAULT mathfrak p
++DEFAULT eqref p
++DEFAULT text T
++DEFAULT intertext T
++DEFAULT DeclareMathOperator pp
++DEFAULT DeclareMathAlphabet ppppp
++# hyperref
++DEFAULT href pP
++DEFAULT autoref p
++DEFAULT url p
++DEFAULT texorpdfstring Pp
+ ENDOPTION
+ 
+ #OPTION multi-byte
+--- ./modules/filter/modes/tex.amf.orig	2004-10-30 12:00:07.000000000 -0400
++++ ./modules/filter/modes/tex.amf	2010-05-30 20:49:28.000000000 -0400
+@@ -6,5 +6,8 @@ MAGIC /0:256:^[ \t]*\\documentclass\[[^\
+ 
+ DESCRIPTION mode for checking TeX/LaTeX documents
+ 
+-FILTER url
++FILTER context
++OPTION clear-context-delimiters 
++OPTION add-context-delimiters aspell:off aspell:on
++OPTION enable-context-visible-first
+ FILTER tex
+--- ./manual/aspell.1.orig	2006-12-19 05:55:08.000000000 -0500
++++ ./manual/aspell.1	2011-02-05 14:30:00.000000000 -0500
+@@ -181,7 +181,7 @@ encoding the document is expected to be 
+ current locale.
+ .TP
+ \fB\-\-add-email\-quote=\fR\fI<list>\fR, \fB\-\-rem-email\-quote=\fR\fI<list>\fR
+-Add or Remove a list of email quote characters.
++Add or remove a list of email quote characters.
+ .TP
+ \fB\-\-email\-margin=\fR\fI<integer>\fR
+ Number of chars that can appear before the quote char.
+@@ -191,14 +191,14 @@ Add or remove a list of HTML attributes 
+ look inside alt= tags.
+ .TP
+ \fB\-\-add\-html\-skip=\fR\fI<list>\fR, \fB\-\-rem\-html\-skip=\fR\fI<list>\fR
+-Add or remove a list of HTML attributes to always skip while spell
++Add or remove a list of HTML tags to always skip while spell
+ checking.
+ .TP
+ \fB\-\-add\-sgml\-check=\fR\fI<list>\fR, \fB\-\-rem\-sgml\-check=\fR\fI<list>\fR
+ Add or remove a list of SGML attributes to always check for spelling.
+ .TP
+ \fB\-\-add\-sgml\-skip=\fR\fI<list>\fR, \fB\-\-rem\-sgml\-skip=\fR\fI<list>\fR
+-Add or remove a list of SGML attributes to always skip while spell
++Add or remove a list of SGML tags to always skip while spell
+ checking.
+ .TP
+ \fB\-\-sgml\-extension=\fR\fI<list>\fR
+@@ -208,7 +208,22 @@ SGML file extensions.
+ Check TeX comments.
+ .TP
+ \fB\-\-add\-tex\-command=\fR\fI<list>\fR, \fB\-\-rem\-tex\-command=\fR\fI<list>\fR
+-Add or Remove a list of TeX commands.
++Add or remove a list of TeX commands.
++.TP
++\fB\-\-add\-tex\-ignore\-env=\fR\fI<list>\fR, \fB\-\-rem\-tex\-ignore\-env=\fR\fI<list>\fR
++Add or remove a list of LaTeX environments to skip while spell checking.
++.TP
++\fB\-\-add\-texinfo\-ignore=\fR\fI<list>\fR, \fB\-\-rem\-texinfo\-ignore=\fR\fI<list>\fR
++Add or remove a list of Texinfo commands.
++.TP
++\fB\-\-add\-texinfo\-ignore\-env=\fR\fI<list>\fR, \fB\-\-rem\-texinfo\-ignore\-env=\fR\fI<list>\fR
++Add or remove a list of Texinfo environments to ignore.
++.TP
++\fB\-\-context\-visible\-first, \fB\-\-dont\-context\-visible\-first
++Switch the context which should be visible to Aspell.
++.TP
++\fB\-\-add\-context\-delimiters=\fR\fI<list>\fR, \fB\-\-rem\-context\-delimiters=\fR\fI<list>\fR
++Add or remove pairs of delimiters.
+ .SH RUN\-TOGETHER WORD OPTIONS
+ These may be used to control the behavior of run\-together words.
+ .TP
+--- ./manual/aspell.texi.orig	2008-04-16 01:14:36.000000000 -0400
++++ ./manual/aspell.texi	2011-02-05 16:49:09.000000000 -0500
+@@ -1065,6 +1065,10 @@ being readable text in LaTeX output from
+ @i{(list)}
+ @TeX{} commands
+ 
++address@hidden tex-ignore-env
++address@hidden(list)}
++address@hidden environments to always skip over
++
+ @item tex-check-comments
+ @i{(boolean)}
+ check @TeX{} comments
+@@ -1363,13 +1367,15 @@ all their parameters and/or options chec
+ is
+ 
+ @example
+-<command> <a list of p,P,o and Os>
++<command> <a list of 'p', 'P', 'o', 'O' and 'T's>
+ @end example
+ 
+ The first item is simply the command name.  The second item controls
+ which parameters to skip over.  A 'p' skips over a parameter while a
+ 'P' doesn't.  Similarly an 'o' will skip over an optional parameter
+-while an 'O' doesn't.  The first letter on the list will apply to the
++while an 'O' doesn't.  A 'T' will force spell-checking of a parameter
++even if the command occurs within a parameter or an environment Aspell
++is told to skipped over. The first letter on the list will apply to the
+ first parameter, the second letter will apply to the second parameter
+ etc.  If there are more parameters than letters Aspell will simply
+ check them as normal.  For example the option
+@@ -1392,6 +1398,25 @@ over the next optional parameter, if it 
+ the second parameter --- even if the optional parameter is not present
+ --- and will check any additional parameters.
+ 
++address@hidden
++add-tex-command foo T
++address@hidden example
++
++address@hidden
++will @emph{check} the first parameter of the @code{foo} command even
++if Aspell is currently skipping over an argument or environment.  For
++example, if Aspell has been told to skip over the @code{bar}
++environment (@pxref{Ignoring LaTeX Environments}), then in the text
++
++address@hidden
++address@hidden@} don't check address@hidden@} don't check address@hidden@}
++address@hidden example
++
++address@hidden
++it will nevertheless @emph{check} the argument to @code{foo}.  This is
++useful to force checking of arguments to text-related commands like
++address@hidden, @code{text} or @code{intertext} inside math environments.
++
+ A @samp{*} at the end of the command is simply ignored.  For example
+ the option
+ 
+@@ -1414,6 +1439,50 @@ rem-tex-command foo
+ will remove the command foo, if present, from the list of @TeX{}
+ commands.
+ 
++address@hidden LaTeX Environments}
++The option
++address@hidden|rem-tex-ignore-env}
++controls which @TeX{} environments are skipped over.  By default,
++Aspell will skip over math formulas inside @code{$...$}, @code{$$...$$}
++and @code{\[...\]} and over several common LaTeX and AMS-LaTeX math
++environments like @code{equation} and @code{gather}.  For example,
++
++address@hidden
++add-tex-ignore-env thebibliography
++address@hidden example
++
++address@hidden
++will tell Aspell to skip over the bibliography as well (which may or
++may not be a good idea).  As with commands, skipping applies to the
++starred form of the environment as well.
++
++address@hidden
++rem-tex-ignore-env equation
++address@hidden example
++
++address@hidden
++will make Aspell spell-check the contents of @code{equation} and
++address@hidden environments.  Skipping the contents of @code{$...$},
++address@hidden and @code{\[...\]} cannot be turned off.
++
++Note that one can force spell-checking of arguments to TeX commands
++inside ignored environments with the 'T' parameter to the
++address@hidden option.
++
++As a last resort, spell checking can be switched off by putting the
++text @code{aspell:off} into the file. Similarly, with @code{aspell:on}
++one can turn it on again. This can be useful for macro definitions,
++for example
++
++address@hidden
++% aspell:off
++address@hidden@{http://dx.doi.org/address@hidden@{doi:address@hidden@}
++% aspell:on
++address@hidden example
++
++address@hidden
++This feature is implemented via the @ref{Context Filter}.
++
+ The TeX filter mode is also available via @option{latex} alias name.
+ 
+ @c The TeXfilter mode also contains a decoding and a encoding filter for
+@@ -1514,6 +1583,7 @@ escapes
+ (@code{\(}) and extended (@code{\[comp1 comp2 @dots{}]}) form.
+ @end itemize
+ 
++address@hidden Filter}
+ @subsubsection Context Filter
+ 
+ The @emph{context} filter allows Aspell to distinguish between visible

@@ -21,6 +21,12 @@ packageOverrides = pkgs: rec {
     patches = (old.patches or []) ++ [ ./patches/mpd-utf8-crash.patch ];
   });
 
+  aspell = pkgs.aspell.overrideDerivation (old: {
+    patchPhase = (old.patchPhase or "") + ''
+      patch -p1 < ${./patches/aspell-tex2.patch}
+    '';
+  });
+
   conkerorWrapperWithoutScrollbars = pkgs.lib.overrideDerivation pkgs.conkerorWrapper (old: rec {
     disableScrollbars = pkgs.writeText "conkeror-gtk2-no-scrollbars.rc" ''
       style "noscrollbars" {
