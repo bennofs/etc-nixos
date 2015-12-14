@@ -14,7 +14,7 @@ in stdenv.mkDerivation {
 
     cat > $out/bin/lock-on-suspend <<EOF
     #!${bash}/bin/bash
-    exec ${systemd}/bin/systemd-inhibit --what=sleep $out/libexec/lock-on-suspend.inhibit
+    exec ${systemd}/bin/systemd-inhibit --what='sleep:handle-lid-switch' $out/libexec/lock-on-suspend.inhibit
     EOF
     chmod +x $out/bin/lock-on-suspend
   '';
