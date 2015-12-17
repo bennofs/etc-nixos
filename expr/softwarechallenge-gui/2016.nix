@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
   name = "softwarechallenge16-gui";
   src = fetchurl {
     url = "http://www.software-challenge.de/wp-content/uploads/2015/09/server-gui-java8.zip";
-    sha256 = "0w6yaci44p3qbalpfaw14hvrxi40dvyv7a5n3895hwhzjgwynvbh";
+    sha256 = "0icl667d0q6yrsw4rag7l48fl1mn7grglw6yj2b164cg3q3fx209";
   };
 
   buildInputs = [ unzip ];
