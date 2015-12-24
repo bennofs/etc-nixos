@@ -51,9 +51,6 @@ services.udev.extraRules = ''
 
   # Wiko android devices
   ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bb4", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
-
-  # Huawei android devices
-  ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="12d1", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
 '';
 
 fileSystems."/data" = {
