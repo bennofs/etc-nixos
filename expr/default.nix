@@ -31,4 +31,8 @@ lock-suspend = callPackage ./lock-suspend {
 
 asurocon = callPackage ./asurocon {};
 
+mfcj430w-driver = callPackage ./mfcj430w-driver {
+  psnup = texlive.combined.scheme-minimal;
+};
+
 }

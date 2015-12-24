@@ -14,6 +14,9 @@ services = {
   # Enable CUPS to print documents.
   printing.enable = true;
 
+  # Add drivers to CUPS
+  printing.drivers = [ expr.mfcj430w-driver ];
+
   # Avahi is used for finding other devices on the network.
   avahi.enable = true;
 
