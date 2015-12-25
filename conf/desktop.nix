@@ -37,6 +37,13 @@ in {
 
 imports = [];
 
+# Required for our screen-lock-on-suspend functionality
+services.logind.extraConfig = ''
+  LidSwitchIgnoreInhibited=False
+  HandleLidSwitch=suspend
+  HoldoffTimeoutSec=10
+'';
+
 # Enable the X11 windowing system.
 services.xserver = {
   enable = true;
@@ -59,7 +66,6 @@ services.xserver = {
     relogin = true;
   };
   displayManager.desktopManagerHandlesLidAndPower = false;
-
   desktopManager.session =
     [ { name = "custom";
         start = ''
@@ -132,8 +138,5 @@ environment.systemPackages = with pkgs; [
 
 # Make applications find files in <prefix>/share
 environment.pathsToLink = [ "/share" ];
-
-# Suspend on LID close
-services.logind.extraConfig = "HandleLidSwitch=suspend";
 
 }
