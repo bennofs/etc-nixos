@@ -19,6 +19,7 @@ services = {
 
   # Avahi is used for finding other devices on the network.
   avahi.enable = true;
+  avahi.nssmdns = true;
 
 };
 
