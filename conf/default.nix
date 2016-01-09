@@ -53,11 +53,6 @@ services.udev.extraRules = ''
   ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bb4", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
 '';
 
-fileSystems."/data" = {
-  label = "data";
-  fsType = "ext4";
-};
-
 # Environment variables
 environment.variables = {
   BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
