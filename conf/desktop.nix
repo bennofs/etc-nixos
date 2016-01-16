@@ -10,11 +10,13 @@ let
       chmod +w -R $out/share/icons
 
       # Add some additional icons
-      find ${pkgs.gnome3.adwaita-icon-theme}/share/icons/Adwaita/scalable/status -name "*wireless*" -exec cp {} $out/share/icons/breeze/status \;
-
-      # Merge icons into hicolor (qt uses this as default icon theme)
-      cp -r ${pkgs.hicolor_icon_theme}/share/icons $out/share/icons
-      cp -r $out/share/icons/breeze/* $out/share/icons/hicolor
+      for file in $(find ${pkgs.gnome3.adwaita-icon-theme}/share/icons/Adwaita/scalable/status -name "*wireless*"); do
+        for dir in $out/share/icons/breeze/status/*; do
+          target=''${file/%-symbolic.svg/.svg}
+          echo "$file:$dir:$target"
+          cp -v $file $dir/''${target##*/}
+        done
+      done
     '';
   };
   qtTheme = pkgs.stdenv.mkDerivation {
@@ -138,6 +140,7 @@ environment.systemPackages = with pkgs; [
 
   # Icons
   iconTheme
+  hicolor_icon_theme
 ];
 
 # Make applications find files in <prefix>/share
