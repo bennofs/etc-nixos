@@ -4,12 +4,17 @@ let
   iconTheme = pkgs.stdenv.mkDerivation {
     name = "breeze-icons";
     buildCommand = ''
+      # Copy base icons
       mkdir -p $out/share
       cp -r ${pkgs.pkgsi686Linux.kde5.breeze}/share/icons $out/share/icons
       chmod +w -R $out/share/icons
 
       # Add some additional icons
       find ${pkgs.gnome3.adwaita-icon-theme}/share/icons/Adwaita/scalable/status -name "*wireless*" -exec cp {} $out/share/icons/breeze/status \;
+
+      # Merge icons into hicolor (qt uses this as default icon theme)
+      cp -r ${pkgs.hicolor_icon_theme}/share/icons $out/share/icons
+      cp -r $out/share/icons/breeze/* $out/share/icons/hicolor
     '';
   };
   qtTheme = pkgs.stdenv.mkDerivation {
@@ -132,7 +137,6 @@ environment.systemPackages = with pkgs; [
   qtTheme # 32 bit, to handle 32 bit apps (skype)
 
   # Icons
-  hicolor_icon_theme
   iconTheme
 ];
 
