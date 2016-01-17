@@ -12,9 +12,7 @@ let
       # Add some additional icons
       for file in $(find ${pkgs.gnome3.adwaita-icon-theme}/share/icons/Adwaita/scalable/status -name "*wireless*"); do
         for dir in $out/share/icons/breeze/status/*; do
-          target=''${file/%-symbolic.svg/.svg}
-          echo "$file:$dir:$target"
-          cp -v $file $dir/''${target##*/}
+          cp -v $file $dir
         done
       done
     '';
