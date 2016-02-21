@@ -5,7 +5,8 @@ hardware.cpu.intel.updateMicrocode = true;
 boot.loader.grub.device = "/dev/sdb";
 boot.loader.grub.extraEntries = ''
   menuentry "Windows 10" {
-    chainloader (hd1,msdos1)+1;
+    set root=(hd0,msdos1);
+    chainloader (hd0,msdos1)+1;
   }
 '';
 

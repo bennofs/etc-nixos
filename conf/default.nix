@@ -25,7 +25,7 @@ environment.systemPackages = with pkgs;
     nix-repl llvm coq haskellPackages.ghc
 
     # Desktop applications
-    xfce.thunar gimp hipchat skype wireshark libreoffice calibre conkerorWrapperWithoutScrollbars
+    xfce.thunar gimp hipchat skype wireshark libreoffice calibre
     keepassx2 zathura rxvt_unicode firefox chromium
 
     # Other
@@ -57,7 +57,7 @@ services.udev.extraRules = ''
 environment.variables = {
   BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
     #!${pkgs.bash}/bin/bash
-    ${pkgs.conkerorWrapperWithoutScrollbars}/bin/conkeror "$@" &
+    ${pkgs.chromium}/bin/chromium "$@" &
   '');
   EDITOR="${pkgs.vimHugeX}/bin/vim";
   SHELL = "${pkgs.fish}/bin/fish";
