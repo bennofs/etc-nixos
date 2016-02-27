@@ -15,6 +15,11 @@ fileSystems."/data" = {
   fsType = "ext4";
 };
 
+fileSystems."/home/.data.mount" = {
+  label = "data";
+  fsType = "ext4";
+};
+
 fileSystems."/data/code" = {
   label = "code";
   fsType = "ext4";
