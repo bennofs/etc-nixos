@@ -70,7 +70,6 @@ services.xserver = {
     user = "benno";
     relogin = true;
   };
-  displayManager.desktopManagerHandlesLidAndPower = false;
   desktopManager.session =
     [ { name = "custom";
         start = ''
