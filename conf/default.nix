@@ -57,7 +57,7 @@ services.udev.extraRules = ''
 environment.variables = {
   BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
     #!${pkgs.bash}/bin/bash
-    ${pkgs.firefox}/bin/fireofx "$@" &
+    ${pkgs.firefox}/bin/firefox "$@" &
   '');
   EDITOR="${pkgs.vimHugeX}/bin/vim";
   SHELL = "${pkgs.fish}/bin/fish";
