@@ -37,7 +37,8 @@ stdenv.mkDerivation {
         --replace /usr "$out" \
         --replace /etc "$out/etc" \
         --replace /var/tmp "$TMPDIR" \
-        --replace "share/ppd" "share/cups/model"
+        --replace "share/ppd" "share/cups/model" \
+        --replace "DEBUG=0" "DEBUG=1"
     done
     patchShebangs $out
 
