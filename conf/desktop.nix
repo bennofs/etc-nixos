@@ -6,7 +6,7 @@ let
     buildCommand = ''
       # Copy base icons
       mkdir -p $out/share
-      cp -r ${pkgs.pkgsi686Linux.kde5.breeze}/share/icons $out/share/icons
+      cp -r ${pkgs.pkgsi686Linux.kde5.breeze-icons}/share/icons $out/share/icons
       chmod +w -R $out/share/icons
 
       # Add some additional icons
@@ -15,14 +15,6 @@ let
           cp -v $file $dir
         done
       done
-    '';
-  };
-  qtTheme = pkgs.stdenv.mkDerivation {
-    name = "breeze-style";
-    buildCommand = ''
-      cp -r --no-preserve=all ${pkgs.kde5.breeze} $out
-      chmod +w -R $out/share/icons
-      rm -r $out/share/icons
     '';
   };
   themeEnv = ''
@@ -133,7 +125,7 @@ environment.etc."xdg/Trolltech.conf" = {
 
 environment.systemPackages = with pkgs; [
   # Qt theme
-  qtTheme # 32 bit, to handle 32 bit apps (skype)
+  pkgsi686Linux.kde5.breeze # 32 bit, to handle 32 bit apps (skype)
 
   # Icons
   iconTheme
