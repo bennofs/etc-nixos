@@ -125,7 +125,7 @@ environment.etc."xdg/Trolltech.conf" = {
 
 environment.systemPackages = with pkgs; [
   # Qt theme
-  pkgsi686Linux.kde5.breeze # 32 bit, to handle 32 bit apps (skype)
+  kde5.breeze # 32 bit, to handle 32 bit apps (skype)
 
   # Icons
   iconTheme
