@@ -6,7 +6,7 @@ let
     buildCommand = ''
       # Copy base icons
       mkdir -p $out/share
-      cp -r ${pkgs.pkgsi686Linux.kde5.breeze-icons}/share/icons $out/share/icons
+      cp -r ${pkgs.kde5.breeze-icons.out}/share/icons $out/share/icons
       chmod +w -R $out/share/icons
 
       # Add some additional icons
