@@ -27,6 +27,10 @@ packageOverrides = pkgs: rec {
     '';
   });
 
+  gvolicon = pkgs.gvolicon.overrideDerivation (old: {
+    patches = (old.patches or []) ++ [ ./patches/gvolicon-tray-icon-fix.patch ];
+  });
+
   conkerorWrapperWithoutScrollbars = pkgs.lib.overrideDerivation pkgs.conkerorWrapper (old: rec {
     disableScrollbars = pkgs.writeText "conkeror-gtk2-no-scrollbars.rc" ''
       style "noscrollbars" {

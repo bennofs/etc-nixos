@@ -1,0 +1,33 @@
+From 49606fff41379a2f96f59c3757ae16d6e6b86392 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Benno=20F=C3=BCnfst=C3=BCck?= <benno.fuenfstueck@gmail.com>
+Date: Fri, 20 May 2016 15:27:28 +0200
+Subject: [PATCH] set tray icon image before making it visible
+
+---
+ gvolicon.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/gvolicon.c b/gvolicon.c
+index b35a704..3bf2c8f 100644
+--- a/gvolicon.c
++++ b/gvolicon.c
+@@ -233,8 +233,6 @@ tray_icon_check_for_update(GtkStatusIcon *icon)  {
+ 		tray_icon_set_icon(icon);
+ 		tray_icon_set_tooltip(icon);
+ 	}
+-
+-	g_printf("oldmute: %d\nmute: %d\n", vol.oldmute, vol.mute);
+ }
+ 
+ int
+@@ -273,6 +271,7 @@ main(int argc, char **argv) {
+ 	gtk_init(&argc, &argv);
+ 
+ 	tray_icon = gtk_status_icon_new();
++	tray_icon_set_icon(tray_icon);
+ 	gtk_status_icon_set_visible(tray_icon, TRUE);
+ 	g_signal_connect(tray_icon, "activate", G_CALLBACK(tray_icon_on_click), NULL);
+ 	g_signal_connect(tray_icon, "scroll-event", G_CALLBACK(tray_icon_on_scroll), NULL);
+-- 
+2.8.0
+
