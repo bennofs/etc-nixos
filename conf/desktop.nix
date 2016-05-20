@@ -27,7 +27,7 @@ let
     export GTK_THEME="orion"
 
     # SVG loader for pixbuf (needed for svg icon themes)
-    export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg}/lib/gdk-pixbuf-2.0/*/loaders.cache)
+    export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/*/loaders.cache)
   '';
 
 in {
