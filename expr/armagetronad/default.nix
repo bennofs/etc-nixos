@@ -2,14 +2,13 @@
 
 stdenv.mkDerivation rec {
   name = "armagetronad-0.4-bzr-r${rev}";
-  rev = "1580";
+  rev = "1587";
   src = fetchbzr {
     url = "lp:armagetronad/0.4";
     inherit rev;
-    sha256 = "0pkxg48p9jr24li6rmbm3kn3dl2ldha94sxc8xa4zivalcr0dy0q";
+    sha256 = "0hba1mg0rv9mnnahf6ks6d20v0801ass3r1vvijfmpf0sl0s8z7g";
   };
   buildInputs = [stdenv boost which automake autoconf SDL SDL_mixer SDL_image libxml2 protobuf mesa ftgl glew pkgconfig libpng m4 yacc python];
-  patches = [ ./coler_auto_completion.patch ];
   patchFlags = "-p0";
   configureFlags = "--disable-games --disable-etc";
   preConfigure = ''

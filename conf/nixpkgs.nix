@@ -17,10 +17,6 @@ packageOverrides = pkgs: rec {
     patches = (old.patches or []) ++ [ ./patches/i3lock-margins.patch ./patches/i3lock-ready.patch ];
   });
 
-  mpd = pkgs.mpd.overrideDerivation (old: {
-    patches = (old.patches or []) ++ [ ./patches/mpd-utf8-crash.patch ];
-  });
-
   aspell = pkgs.aspell.overrideDerivation (old: {
     patchPhase = (old.patchPhase or "") + ''
       patch -p1 < ${./patches/aspell-tex2.patch}
