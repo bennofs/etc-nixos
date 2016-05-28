@@ -19,7 +19,7 @@ environment.systemPackages = with pkgs;
     xlibs.xmodmap scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
 
     # Command line utils 
-    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain mplayer patchutils fish haskellPackages.themplate
+    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain mplayer patchutils fish haskellPackages.themplate manpages.docdev
 
     # Development tools
     nix-repl llvm coq haskellPackages.ghc
