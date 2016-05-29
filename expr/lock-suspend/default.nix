@@ -1,21 +1,15 @@
-{ stdenv, bash, dbus_tools, systemd, lock, haskellPackages }:
+{ stdenv, bash, lock, python3, python3Packages }:
 
 let
-  ghcEnv = haskellPackages.ghcWithPackages (hs: with hs; [
-    turtle dbus libmpd
-  ]);
+  pythonEnv = python3.buildEnv.override {
+    extraLibs = with python3Packages; [ dbus pygobject3 mpd2 ];
+  };
 in stdenv.mkDerivation {
   name = "lock-on-suspend";
-  inherit lock;
+  inherit lock pythonEnv;
   buildCommand = ''
     mkdir -p $out/bin $out/libexec
-    substituteAll ${./inhibitor.hs} ./inhibitor.hs
-    ${ghcEnv}/bin/ghc -o $out/libexec/lock-on-suspend.inhibit ./inhibitor.hs
-
-    cat > $out/bin/lock-on-suspend <<EOF
-    #!${bash}/bin/bash
-    exec ${systemd}/bin/systemd-inhibit --what='sleep' --mode='delay' $out/libexec/lock-on-suspend.inhibit
-    EOF
+    substituteAll ${./inhibitor.py} $out/bin/lock-on-suspend
     chmod +x $out/bin/lock-on-suspend
   '';
 }
