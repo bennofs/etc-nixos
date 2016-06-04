@@ -23,7 +23,6 @@ let
     export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="breeze"''}:${pkgs.orion}/share/themes/orion/gtk-2.0/gtkrc:$GTK2_RC_FILES
 
     # GTK3 theme
-    export GTK_DATA_PREFIX=${pkgs.orion}
     export GTK_THEME="orion"
 
     # SVG loader for pixbuf (needed for svg icon themes)
