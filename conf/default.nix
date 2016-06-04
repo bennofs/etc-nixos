@@ -10,7 +10,7 @@ imports = [
 # Available packages
 environment.systemPackages = with pkgs;
   [ # Version control / archiving
-    git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub
+    git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub p7zip
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
