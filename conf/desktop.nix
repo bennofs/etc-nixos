@@ -59,7 +59,7 @@ services.xserver = {
   displayManager.sddm.autoLogin = {
     enable = true;
     user = "benno";
-    relogin = true;
+    relogin = false;
   };
   desktopManager.session =
     [ { name = "custom";
