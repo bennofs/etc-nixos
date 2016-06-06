@@ -21,6 +21,13 @@ services = {
   avahi.enable = true;
   avahi.nssmdns = true;
 
+  # HackingLab openvpn config
+  openvpn.servers.hacking-lab = {
+    config = builtins.readFile ./hacking-lab.ovpn;
+    updateResolvConf = true;
+    autoStart = false;
+  };
+
 };
 
 # Use libvirtd for managing virtual machines.
