@@ -151,7 +151,7 @@ security.polkit.extraConfig = ''
 '';
 
 nix = {
-  useChroot = true;
+  useSandbox = true;
   extraOptions = ''
     auto-optimise-store = true
   '';
