@@ -45,6 +45,8 @@ packageOverrides = pkgs: rec {
         --prefix GTK2_RC_FILES ":" ${disableScrollbars}
     '';
   });
+
+  haskellPackages = pkgs.haskell.packages.ghc7103;
 };
 
 }
