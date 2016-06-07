@@ -21,12 +21,22 @@ services = {
   avahi.enable = true;
   avahi.nssmdns = true;
 
+  # Enable dnsmasq (required to merge VPN nameservers)
+  dnsmasq = {
+    enable = true;
+    extraConfig = ''
+      bind-interfaces
+      interface=lo
+    '';
+  };
+
   # HackingLab openvpn config
   openvpn.servers.hacking-lab = {
     config = builtins.readFile ./hacking-lab.ovpn;
     updateResolvConf = true;
     autoStart = false;
   };
+
 
 };
 
