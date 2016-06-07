@@ -20,5 +20,5 @@ if [[ $response =~ ^(yes|y| ) ]]; then
   git checkout master
   git reset --hard $(git --git-dir=$checkout/.git rev-parse HEAD)
   git submodule update --init --recursive
-  nixos-rebuild switch
+  nixos-rebuild switch "$@"
 fi
