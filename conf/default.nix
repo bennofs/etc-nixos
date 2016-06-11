@@ -26,7 +26,7 @@ environment.systemPackages = with pkgs;
 
     # Desktop applications
     xfce.thunar gimp hipchat skype wireshark libreoffice calibre
-    keepassx2 zathura rxvt_unicode firefox
+    keepassx2 zathura rxvt_unicode chromium
 
     # Other
     expr.softwarechallenge16-gui expr.armagetronad
@@ -57,7 +57,7 @@ services.udev.extraRules = ''
 environment.variables = {
   BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
     #!${pkgs.bash}/bin/bash
-    ${pkgs.firefox}/bin/firefox "$@" &
+    ${pkgs.chromium}/bin/chromium "$@" &
   '');
   EDITOR="${pkgs.vimHugeX}/bin/vim";
   SHELL = "${pkgs.fish}/bin/fish";
