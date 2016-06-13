@@ -151,7 +151,7 @@ security.polkit.extraConfig = ''
 '';
 
 nix = {
-  useSandbox = true;
+  useSandbox = "relaxed";
   extraOptions = ''
     auto-optimise-store = true
   '';
