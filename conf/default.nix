@@ -14,6 +14,7 @@ environment.systemPackages = with pkgs;
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
+    exfat
 
     # Desktop utils
     xlibs.xmodmap scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
