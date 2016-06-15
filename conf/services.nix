@@ -45,6 +45,13 @@ services = {
 # This only enables the service, but does not add users to the libvirt group.
 virtualisation.libvirtd.enable = true;
 
+# Libvirtd needs to start after data is mounted, because the storage pool lives
+# on /data.
+systemd.services.libvirtd = {
+  after = ["data.mount"];
+  requires = ["data.mount"];
+};
+
 # Enable docker for container management.
 # This only enables the service, but does not add users to the docker group.
 virtualisation.docker.enable = true;
