@@ -6,7 +6,7 @@ function finish {
 }
 trap finish EXIT
 
-sudo -u nobody git clone --recursive /home/nixos $checkout
+sudo -u nobody git clone --recursive /nixos $checkout
 chown root:root -R $checkout
 chmod a-w -R $checkout
 chmod a+x -R $checkout
