@@ -3,15 +3,28 @@
 let
   iconTheme = pkgs.kde5.breeze-icons.out;
   themeEnv = ''
-    # GTK2 theme
-    export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="breeze"''}:${pkgs.kde5.breeze}/share/themes/Breeze/gtk-2.0/gtkrc:$GTK2_RC_FILES
+    # QT: remove local user overrides (for determinism, causes hard to find bugs)
+    rm -f ~/.config/Trolltech.conf
 
-    # GTK3 theme
-    export GTK_THEME="Breeze-gtk"
+    # GTK3: remove local user overrides (for determinisim, causes hard to find bugs)
+    rm -f ~/.config/gtk-3.0/settings.ini
+
+    # GTK3: add breeze theme to search path for themes
+    # (currently, we need to use gnome-breeze because the GTK3 version of kde5.breeze is broken)
     export XDG_DATA_DIRS="${pkgs.gnome-breeze}/share:$XDG_DATA_DIRS"
 
-    # SVG loader for pixbuf (needed for svg icon themes)
+    # GTK3: add /etc/xdg/gtk-3.0 to search path for settings.ini
+    # We use /etc/xdg/gtk-3.0/settings.ini to set the icon and theme name for GTK 3
+    export XDG_CONFIG_DIRS="/etc/xdg:$XDG_CONFIG_DIRS"
+
+    # GTK2 theme + icon theme
+    export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="breeze"''}:${pkgs.kde5.breeze}/share/themes/Breeze/gtk-2.0/gtkrc:$GTK2_RC_FILES
+
+    # SVG loader for pixbuf (needed for GTK svg icon themes)
     export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/*/loaders.cache)
+
+    # LS colors
+    eval `${pkgs.coreutils}/bin/dircolors "${./dircolors}"`
   '';
 
 in {
@@ -49,9 +62,6 @@ services.xserver = {
   desktopManager.session =
     [ { name = "custom";
         start = ''
-          # Setup desktop
-          ${themeEnv}
-
           # Lock
           ${expr.lock}/bin/lock
           ${expr.lock-suspend}/bin/lock-on-suspend &
@@ -87,17 +97,9 @@ services.xserver = {
   wacom.enable = true;
 };
 
-environment.extraInit = ''
-  ${themeEnv}
+environment.extraInit = themeEnv;
 
-  # LS colors
-  eval `${pkgs.coreutils}/bin/dircolors "${./dircolors}"`
-
-  # Remove Qt configuration (can cause programs to SEGV)
-  rm -f ~/.config/Trolltech.conf
-'';
-
-# QT4/5 theme
+# QT4/5 global theme
 environment.etc."xdg/Trolltech.conf" = {
   text = ''
     [Qt]
@@ -106,9 +108,19 @@ environment.etc."xdg/Trolltech.conf" = {
   mode = "444";
 };
 
+# GTK3 global theme (widget and icon theme)
+environment.etc."xdg/gtk-3.0/settings.ini" = {
+  text = ''
+    [Settings]
+    gtk-icon-theme-name=breeze
+    gtk-theme-name=Breeze-gtk
+  '';
+  mode = "444";
+};
+
 environment.systemPackages = with pkgs; [
   # Qt theme
-  kde5.breeze # 32 bit, to handle 32 bit apps (skype)
+  kde5.breeze
 
   # Icons (Main)
   iconTheme
