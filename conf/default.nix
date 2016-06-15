@@ -102,6 +102,10 @@ environment.loginShellInit = ''
     $git fetch &> /tmp/git-fetch
     $git checkout -t origin/master &> /tmp/git-checkout
     popd
+
+    # Setup nix-env
+    rm /home/.nix-defexpr/*
+    ln -s /run/current-system/nixpkgs /home/.nix-defexpr
   fi
 '';
 
