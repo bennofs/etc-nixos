@@ -10,7 +10,7 @@ imports = [
 # Available packages
 environment.systemPackages = with pkgs;
   [ # Version control / archiving
-    git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub p7zip
+    git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub p7zip dtrx
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
@@ -20,8 +20,8 @@ environment.systemPackages = with pkgs;
     xlibs.xmodmap scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
 
     # Command line utils 
-    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant dtrx mp3gain mplayer
-    patchutils fish haskellPackages.themplate manpages.docdev
+    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mplayer
+    patchutils fish haskellPackages.themplate manpages.docdev vimHugeX
 
     # Development tools
     nix-repl llvm coq haskellPackages.ghc
@@ -104,6 +104,10 @@ environment.loginShellInit = ''
   fi
 '';
 
+# Add nixpkgs link to system
+system.extraSystemBuilderCmds = ''
+  ln -s ${builtins.filterSource (name: _: baseNameOf name != ".git") <nixpkgs>} $out/nixpkgs
+'';
 
 # Select internationalisation properties.
 i18n = {
@@ -112,7 +116,6 @@ i18n = {
   defaultLocale = "en_US.UTF-8";
 };
 time.timeZone = "Europe/Berlin";
-
 
 # More fonts!
 fonts.fonts = with pkgs; [
