@@ -80,7 +80,6 @@ services.xserver = {
           ${pkgs.lib.optionalString (!buildVM) ''
             ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
             ${pkgs.skype}/bin/skype &
-            ( sleep 3; ${pkgs.hipchat}/bin/hipchat ) &
           ''}
           ${pkgs.rxvt_unicode}/bin/urxvtd &
           ${pkgs.gvolicon}/bin/gvolicon &> /dev/null &
