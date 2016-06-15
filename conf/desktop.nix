@@ -1,22 +1,7 @@
 { config, pkgs, expr, buildVM, ... }:
 
 let
-  iconTheme = pkgs.stdenv.mkDerivation {
-    name = "breeze-icons";
-    buildCommand = ''
-      # Copy base icons
-      mkdir -p $out/share
-      cp -r ${pkgs.kde5.breeze-icons.out}/share/icons $out/share/icons
-      chmod +w -R $out/share/icons
-
-      # Add some additional icons
-      for file in $(find ${pkgs.gnome3.adwaita-icon-theme}/share/icons/Adwaita/scalable/status -name "*wireless*"); do
-        for dir in $out/share/icons/breeze/status/*; do
-          cp -v $file $dir
-        done
-      done
-    '';
-  };
+  iconTheme = pkgs.kde5.breeze-icons.out;
   themeEnv = ''
     # GTK2 theme
     export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="breeze"''}:${pkgs.kde5.breeze}/share/themes/Breeze/gtk-2.0/gtkrc:$GTK2_RC_FILES
@@ -125,8 +110,11 @@ environment.systemPackages = with pkgs; [
   # Qt theme
   kde5.breeze # 32 bit, to handle 32 bit apps (skype)
 
-  # Icons
+  # Icons (Main)
   iconTheme
+
+  # Icons (Fallback)
+  gnome3.adwaita-icon-theme
   hicolor_icon_theme
 ];
 
