@@ -27,6 +27,7 @@ services = {
     extraConfig = ''
       bind-interfaces
       interface=lo
+      no-negcache
     '';
   };
 
