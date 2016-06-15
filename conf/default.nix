@@ -170,5 +170,10 @@ nix = {
   ];
   daemonNiceLevel = 1;
   daemonIONiceLevel = 1;
+  nixPath = [
+    "nixpkgs=/run/current-system/nixpkgs"
+    "/run/current-system/nixpkgs"
+    "nixos-config=/etc/nixos/configuration.nix"
+  ];
 };
 }
