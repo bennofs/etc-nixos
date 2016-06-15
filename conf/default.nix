@@ -15,10 +15,10 @@ environment.systemPackages = with pkgs;
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
-    exfat
+    exfat file ltrace
 
     # Desktop utils
-    xlibs.xmodmap scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
+    xlibs.xmodmap scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock virtmanager
 
     # Command line utils 
     k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mplayer
@@ -29,7 +29,7 @@ environment.systemPackages = with pkgs;
 
     # Desktop applications
     xfce.thunar gimp skype wireshark libreoffice calibre
-    keepassx2 zathura rxvt_unicode chromium
+    keepassx2 zathura rxvt_unicode chromium steam vlc
 
     # Other
     expr.softwarechallenge16-gui expr.armagetronad
