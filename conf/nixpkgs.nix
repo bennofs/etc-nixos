@@ -24,7 +24,10 @@ packageOverrides = pkgs: rec {
   });
 
   gvolicon = pkgs.gvolicon.overrideDerivation (old: {
-    patches = (old.patches or []) ++ [ ./patches/gvolicon-tray-icon-fix.patch ];
+    patches = (old.patches or []) ++ [
+      ./patches/gvolicon-tray-icon-fix.patch
+      ./patches/gvolicon-update-loop-fix.patch
+    ];
   });
 
   conkerorWrapperWithoutScrollbars = pkgs.lib.overrideDerivation pkgs.conkerorWrapper (old: rec {
