@@ -15,21 +15,21 @@ environment.systemPackages = with pkgs;
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
-    exfat file ltrace
+    exfat file ltrace dosfstools
 
     # Desktop utils
-    xlibs.xmodmap scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock virtmanager
+    scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
 
     # Command line utils 
-    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mplayer
-    patchutils fish haskellPackages.themplate manpages.docdev vimHugeX
+    k2pdfopt ncmpcpp mpc_cli beets manpages manpages.docdev man wpa_supplicant mp3gain mplayer
+    patchutils fish haskellPackages.themplate
 
     # Development tools
-    nix-repl llvm coq haskellPackages.ghc
+    nix-repl llvm haskellPackages.ghc
 
     # Desktop applications
     xfce.thunar gimp skype wireshark libreoffice calibre
-    keepassx2 zathura rxvt_unicode chromium steam vlc
+    keepassx2 zathura rxvt_unicode chromium steam vlc virtmanager
 
     # Other
     expr.softwarechallenge16-gui expr.armagetronad
