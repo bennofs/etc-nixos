@@ -22,7 +22,7 @@ environment.systemPackages = with pkgs;
 
     # Command line utils 
     k2pdfopt ncmpcpp mpc_cli beets manpages manpages.docdev man wpa_supplicant mp3gain mplayer
-    patchutils fish haskellPackages.themplate
+    patchutils fish haskellPackages.themplate neovim
 
     # Development tools
     nix-repl llvm haskellPackages.ghc
@@ -62,7 +62,7 @@ environment.variables = {
     #!${pkgs.bash}/bin/bash
     ${pkgs.chromium}/bin/chromium "$@" &
   '');
-  EDITOR="${pkgs.vimHugeX}/bin/vim";
+  EDITOR="${pkgs.neovim}/bin/nvim";
   SHELL = "${pkgs.fish}/bin/fish";
   ASPELL_CONF =
     let
