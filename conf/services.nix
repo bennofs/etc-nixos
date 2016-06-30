@@ -93,7 +93,7 @@ networking.extraResolvconfConf =
       "2001:4860:4860::8888"
       "2001:4860:4860::8844"
       # ipv6.lt NAT64 DNS server
-      "2001:778::37"
+      #"2001:778::37"
     ];
   in ''
     name_servers="$name_servers''${name_servers:+ }${toString extraNameServers}"
