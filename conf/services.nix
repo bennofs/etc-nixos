@@ -25,6 +25,7 @@ services = {
   dnsmasq = {
     enable = true;
     extraConfig = ''
+      strict-order
       bind-interfaces
       interface=lo
       no-negcache
@@ -37,7 +38,6 @@ services = {
     updateResolvConf = true;
     autoStart = false;
   };
-
 
 };
 
@@ -83,4 +83,14 @@ networking.firewall = {
   '';
 };
 
+# Use Google IPv6 dns servers
+networking.extraResolvconfConf =
+  let
+    extraNameServers = [
+      "2001:4860:4860::8888"
+      "2001:4860:4860::8844"
+    ];
+  in ''
+    name_servers="$name_servers''${name_servers:+ }${toString extraNameServers}"
+  '';
 }
