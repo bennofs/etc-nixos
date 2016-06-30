@@ -111,7 +111,7 @@ environment.loginShellInit = ''
 
 # Add nixpkgs link to system
 system.extraSystemBuilderCmds = ''
-  ln -s ${builtins.filterSource (name: _: baseNameOf name != ".git") <nixpkgs>} $out/nixpkgs
+  cp ${builtins.filterSource (name: _: baseNameOf name != ".git") <nixpkgs>} $out/nixpkgs
 '';
 
 # Select internationalisation properties.
