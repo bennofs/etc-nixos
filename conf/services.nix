@@ -36,7 +36,10 @@ services = {
 
   # HackingLab openvpn config
   openvpn.servers.hacking-lab = {
-    config = builtins.readFile ./hacking-lab.ovpn;
+    config = ''
+      ${builtins.readFile ./hacking-lab.ovpn};
+      ca ${./hacking-lab-vpn.crt}
+    '';
     updateResolvConf = true;
     autoStart = false;
   };
