@@ -23,13 +23,6 @@ packageOverrides = pkgs: rec {
     '';
   });
 
-  gvolicon = pkgs.gvolicon.overrideDerivation (old: {
-    patches = (old.patches or []) ++ [
-      ./patches/gvolicon-tray-icon-fix.patch
-      ./patches/gvolicon-update-loop-fix.patch
-    ];
-  });
-
   conkerorWrapperWithoutScrollbars = pkgs.lib.overrideDerivation pkgs.conkerorWrapper (old: rec {
     disableScrollbars = pkgs.writeText "conkeror-gtk2-no-scrollbars.rc" ''
       style "noscrollbars" {
@@ -48,8 +41,6 @@ packageOverrides = pkgs: rec {
         --prefix GTK2_RC_FILES ":" ${disableScrollbars}
     '';
   });
-
-  haskellPackages = pkgs.haskell.packages.ghc7103;
 };
 
 }
