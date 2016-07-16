@@ -58,6 +58,7 @@ URxvt*foreground:         S_base0
 URxvt*cursorColor:             S_base1
 URxvt*pointerColorBackground:  S_base01
 URxvt*pointerColorForeground:  S_base1
+URxvt.intensityStyles: false
 
 URxvt*color0:                  S_base02
 URxvt*color1:                  S_red
