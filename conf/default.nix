@@ -15,7 +15,7 @@ environment.systemPackages = with pkgs;
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
-    exfat file ltrace dosfstools
+    exfat file ltrace dosfstools ag
 
     # Desktop utils
     scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
