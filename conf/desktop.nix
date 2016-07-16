@@ -97,7 +97,15 @@ services.xserver = {
   wacom.enable = true;
 };
 
-environment.extraInit = themeEnv;
+environment.extraInit = ''
+  ${themeEnv};
+
+  # these are the defaults, but some applications are buggy so we set them
+  # here anyway
+  export XDG_CONFIG_HOME=$HOME/.config
+  export XDG_DATA_HOME=$HOME/.local/share
+  export XDG_CACHE_HOME=$HOME/.cache
+'';
 
 # QT4/5 global theme
 environment.etc."xdg/Trolltech.conf" = {
