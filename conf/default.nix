@@ -22,7 +22,7 @@ environment.systemPackages = with pkgs;
 
     # Command line utils 
     k2pdfopt ncmpcpp mpc_cli beets manpages manpages.docdev man wpa_supplicant mp3gain mplayer
-    patchutils fish haskellPackages.themplate neovim
+    patchutils fish haskellPackages.themplate neovim abcde vorbisgain
 
     # Development tools
     nix-repl llvm haskellPackages.ghc

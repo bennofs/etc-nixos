@@ -44,6 +44,9 @@ services = {
     autoStart = false;
   };
 
+  # Enable TLP for optimal power saving
+  tlp.enable = true;
+
 };
 
 # Use libvirtd for managing virtual machines.
