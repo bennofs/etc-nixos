@@ -98,7 +98,7 @@ services.xserver = {
 };
 
 environment.extraInit = ''
-  ${themeEnv};
+  ${themeEnv}
 
   # these are the defaults, but some applications are buggy so we set them
   # here anyway
