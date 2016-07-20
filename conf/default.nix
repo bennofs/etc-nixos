@@ -64,15 +64,19 @@ environment.variables = {
   '');
   EDITOR="${pkgs.neovim}/bin/nvim";
   SHELL = "${pkgs.fish}/bin/fish";
-  ASPELL_CONF =
-    let
-      allDicts = pkgs.buildEnv {
-        name = "all-dictionaries";
-        paths = builtins.attrValues pkgs.aspellDicts;
-        pathsToLink = ["/lib"];
-      };
-    in "dict-dir ${allDicts}/lib/aspell";
 };
+
+# Ugh, the default 'extraInit' has code to override ASPELL_DICTS, so we need
+# to set our ASPELL_DICT environment variable after that code has executed.
+# shellInit is executed after extraInit.
+environment.shellInit =
+  let
+    allDicts = pkgs.buildEnv {
+      name = "all-dictionaries";
+      paths = builtins.attrValues pkgs.aspellDicts;
+      pathsToLink = ["/lib"];
+    };
+  in ''export ASPELL_CONF="dict-dir ${allDicts}/lib/aspell"'';
 
 # Make SSL root certificates used by Mozilla Firefox available
 environment.etc."ssl/certs/mozilla.crt" = {
