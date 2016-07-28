@@ -53,12 +53,13 @@ services.xserver = {
   '';
   xkbOptions = "ctrl:nocaps";
 
-  displayManager.sddm.enable = true;
-  displayManager.sddm.autoLogin = {
+  displayManager.logToJournal = true;
+  displayManager.lightdm.enable = true;
+  displayManager.lightdm.autoLogin = {
     enable = true;
     user = "benno";
-    relogin = false;
   };
+  displayManager.lightdm.greeter.enable = false;
   desktopManager.session =
     [ { name = "custom";
         start = ''
