@@ -82,7 +82,7 @@ services.xserver = {
           ${pkgs.unclutter}/bin/unclutter -idle 3 &
           ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
           ${pkgs.wpa_supplicant_gui}/bin/wpa_gui -q -t &
-          ${pkgs.dunst}/bin/dunst -key 'mod4+less' -history_key 'mod4+shift+less' -all_key ' ' -cto 4 -nto 2 -lto 1 -config ${./dunstrc} &
+          ${pkgs.dunst}/bin/dunst -cto 4 -nto 2 -lto 1 -config ${./dunstrc} &
           syndaemon -i 1 -R -K -t -d
           trap 'trap - SIGINT SIGTERM EXIT && kill 0 && wait' SIGINT SIGTERM EXIT
           ${pkgs.lib.optionalString buildVM '' ${pkgs.rxvt_unicode}/bin/urxvt '' }
@@ -137,6 +137,10 @@ environment.systemPackages = with pkgs; [
   # Icons (Fallback)
   gnome3.adwaita-icon-theme
   hicolor_icon_theme
+
+  # These packages are used in autostart, they need to in systemPackages
+  # or icons won't work correctly
+  pythonPackages.udiskie skype
 ];
 
 # Make applications find files in <prefix>/share
