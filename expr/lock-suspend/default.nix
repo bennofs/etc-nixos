@@ -2,7 +2,7 @@
 
 let
   pythonEnv = python3.buildEnv.override {
-    extraLibs = with python3Packages; [ dbus pygobject3 mpd2 ];
+    extraLibs = with python3Packages; [ dbus-python pygobject3 mpd2 ];
   };
 in stdenv.mkDerivation {
   name = "lock-on-suspend";
