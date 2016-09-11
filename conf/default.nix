@@ -22,14 +22,14 @@ environment.systemPackages = with pkgs;
 
     # Command line utils 
     k2pdfopt ncmpcpp mpc_cli beets manpages manpages.docdev man wpa_supplicant mp3gain mplayer
-    patchutils fish haskellPackages.themplate neovim abcde vorbisgain
+    patchutils fish haskellPackages.themplate neovim abcde vorbisgain dfc
 
     # Development tools
     nix-repl llvm haskellPackages.ghc
 
     # Desktop applications
     xfce.thunar gimp skype wireshark libreoffice calibre
-    keepassx2 zathura rxvt_unicode chromium steam vlc virtmanager
+    keepassx2 zathura rxvt_unicode chromium steam vlc
 
     # Other
     expr.softwarechallenge16-gui expr.armagetronad
