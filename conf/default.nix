@@ -21,7 +21,7 @@ environment.systemPackages = with pkgs;
     scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
 
     # Command line utils 
-    k2pdfopt ncmpcpp mpc_cli beets manpages manpages.docdev man wpa_supplicant mp3gain mplayer
+    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mplayer
     patchutils fish haskellPackages.themplate neovim abcde vorbisgain dfc
 
     # Development tools
