@@ -57,6 +57,9 @@ services.udev.extraRules = ''
 
   # Wiko android devices
   ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bb4", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+
+  # set deadline scheduler for non-rotating disks
+  ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="deadline"
 '';
 
 # Environment variables
