@@ -40,6 +40,7 @@ boot.kernel.sysctl = {
   "kernel.dmesg_restrict" = true;
 };
 hardware.pulseaudio.enable = true;
+hardware.bluetooth.enable = true;
 hardware.opengl.driSupport32Bit = true;
 
 services.udev.packages = with pkgs; [
