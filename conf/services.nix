@@ -64,9 +64,16 @@ systemd.services.libvirtd = {
 # This only enables the service, but does not add users to the docker group.
 virtualisation.docker.enable = true;
 
+# Docker images are quite big, so we don't want to place them on the SSD.
+virtualisation.docker.extraOptions = "-g /data/blob/docker";
+systemd.services.docker = {
+  after = ["data.mount"];
+  requires = ["data.mount"];
+};
+
 # We need to choose a storage driver for docker.
-# "overlay" is currently actively developed and will eventually become the default, so use it.
-virtualisation.docker.storageDriver = "overlay";
+# "overlay2" is currently actively developed and will eventually become the default, so use it.
+virtualisation.docker.storageDriver = "overlay2";
 
 networking.firewall = {
   # Pings are very useful for network troubleshooting.
