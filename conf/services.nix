@@ -82,20 +82,6 @@ networking.firewall = {
   allowedTCPPorts = [
     3000        # hydra
   ];
-
-  # We want to route packets coming from VMs, so we need to disable the
-  # reverse path test for the libvirt bridge interfaces.
-  checkReversePath = false;
-
-  # Setup a restricted reverse path test that doesn't apply to libvirt's bridge interfaces.
-  extraCommands = ''
-    ip46tables -A PREROUTING -t raw ! -i virbr+ -m rpfilter --invert -j DROP
-  '';
-
-  # When stopping the firewall, remove the restricted reverse path test again.
-  extraStopCommands = ''
-    ip46tables -D PREROUTING -t raw ! -i virbr+ -m rpfilter --invert -j DROP
-  '';
 };
 
 # Configure additional DNS servers
