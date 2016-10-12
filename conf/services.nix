@@ -53,6 +53,9 @@ services = {
 # This only enables the service, but does not add users to the libvirt group.
 virtualisation.libvirtd.enable = true;
 
+# Set the default connection string for `virsh` etc to be the system qemu instance.
+environment.variables.LIBVIRT_DEFAULT_URI = "qemu:///system";
+
 # Libvirtd needs to start after data is mounted, because the storage pool lives
 # on /data.
 systemd.services.libvirtd = {
