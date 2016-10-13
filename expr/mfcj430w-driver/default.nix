@@ -1,9 +1,9 @@
-{ stdenv, fetchurl, writeScriptBin, dpkg, findutils, patchelf, file, makeWrapper, psnup, coreutils, which, ghostscript }:
+{ stdenv, fetchurl, writeScriptBin, dpkg, findutils, patchelf, file, makeWrapper, psnup, coreutils, which, ghostscript, gnused, gawk, gnugrep, bc, a2ps, pkgsi686Linux }:
 
 let
   model = "mfcj430w";
   stubScript = name: "${writeScriptBin name ''echo "${name}: skipping"''}/bin";
-  a2ps = stubScript "a2ps";
+  stdbin = stdenv.lib.makeBinPath [ gnused gawk coreutils gnugrep bc ghostscript ];
 in
 
 stdenv.mkDerivation {
@@ -37,8 +37,7 @@ stdenv.mkDerivation {
         --replace /usr "$out" \
         --replace /etc "$out/etc" \
         --replace /var/tmp "$TMPDIR" \
-        --replace "share/ppd" "share/cups/model" \
-        --replace "DEBUG=0" "DEBUG=1"
+        --replace "share/ppd" "share/cups/model"
     done
     patchShebangs $out
 
@@ -51,11 +50,17 @@ stdenv.mkDerivation {
       file="''${file%%:*}"
       echo "Patching executable $file ..."
       patchelf --interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" $file
+      wrapProgram "$file" \
+        --set LD_PRELOAD "${pkgsi686Linux.libredirect}/lib/libredirect.so" \
+        --set NIX_REDIRECTS "/opt=$out/opt" \
+        --argv0 brprintconf_mfcj430w
     done
 
 
     wrapProgram "$out/lib/cups/filter/brother_lpdwrapper_${model}" \
-      --prefix PATH ":" "${psnup}/bin"
+      --run 'exec 2<&-' \
+      --run 'exec 2<>/tmp/brother-lpdwrapper-errors' \
+      --prefix PATH ":" "${psnup}/bin:${stdbin}:$out/bin"
     wrapProgram "$out/opt/brother/Printers/${model}/lpd/filter${model}" \
       --prefix PATH ":" "${file}/bin:${a2ps}/bin"
     wrapProgram "$out/opt/brother/Printers/${model}/lpd/psconvertij2" \
