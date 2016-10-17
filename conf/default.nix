@@ -20,7 +20,7 @@ environment.systemPackages = with pkgs;
     # Desktop utils
     scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
 
-    # Command line utils 
+    # Command line utils
     k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mplayer
     patchutils fish haskellPackages.themplate emacs abcde vorbisgain dfc ripgrep
     aspell
