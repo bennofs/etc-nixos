@@ -15,14 +15,14 @@ environment.systemPackages = with pkgs;
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
-    exfat file ltrace dosfstools platinum-searcher
+    exfat file ltrace dosfstools platinum-searcher iotop powertop
 
     # Desktop utils
     scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
 
     # Command line utils 
     k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mplayer
-    patchutils fish haskellPackages.themplate neovim abcde vorbisgain dfc ripgrep
+    patchutils fish haskellPackages.themplate emacs abcde vorbisgain dfc ripgrep
 
     # Development tools
     nix-repl llvm haskellPackages.ghc
@@ -68,7 +68,7 @@ environment.variables = {
     #!${pkgs.bash}/bin/bash
     ${pkgs.chromium}/bin/chromium "$@" &
   '');
-  EDITOR="${pkgs.neovim}/bin/nvim";
+  EDITOR="${pkgs.emacs}/bin/emacsclient -c";
   SHELL = "${pkgs.fish}/bin/fish";
 };
 
