@@ -78,6 +78,7 @@ services.xserver = {
             ${pkgs.skype}/bin/skype &
           ''}
           ${pkgs.rxvt_unicode}/bin/urxvtd &
+          ${pkgs.emacs}/bin/emacs --daemon &
           ${pkgs.gvolicon}/bin/gvolicon &> /dev/null &
           ${pkgs.unclutter}/bin/unclutter -idle 3 &
           ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
