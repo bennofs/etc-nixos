@@ -68,8 +68,8 @@ services.xserver = {
           ${expr.lock-suspend}/bin/lock-on-suspend &
 
           ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
-          #${pkgs.haskellPackages.xmobar}/bin/xmobar --dock --alpha 200 &
-          #${pkgs.stalonetray}/bin/stalonetray --slot-size 22 --icon-size 20 --geometry 9x1-0 --icon-gravity NE --grow-gravity E -c /dev/null --kludges fix_window_pos,force_icons_size,use_icons_hints --transparent --tint-level 200 &> /dev/null &
+          ${pkgs.haskellPackages.xmobar}/bin/xmobar --dock --alpha 200 &
+          ${pkgs.stalonetray}/bin/stalonetray --slot-size 22 --icon-size 20 --geometry 9x1-0 --icon-gravity NE --grow-gravity E -c /dev/null --kludges fix_window_pos,force_icons_size,use_icons_hints --transparent --tint-level 200 &> /dev/null &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
 
           # Autostart
@@ -93,8 +93,9 @@ services.xserver = {
   desktopManager.default = "custom";
   desktopManager.xterm.enable = false;
 
-  windowManager.default = "i3";
-  windowManager.i3.enable = true;
+  windowManager.default = "xmonad";
+  windowManager.xmonad.enable = true;
+  windowManager.xmonad.enableContribAndExtras = true;
 
   wacom.enable = true;
 };
