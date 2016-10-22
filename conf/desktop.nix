@@ -89,41 +89,12 @@ services.xserver = {
           ${pkgs.lib.optionalString buildVM '' ${pkgs.rxvt_unicode}/bin/urxvt '' }
         '';
       }
-      { name = "emacs";
-        start = ''
-          ${pkgs.xorg.xhost}/bin/xhost +
-          # Lock
-          ${expr.lock}/bin/lock
-          ${expr.lock-suspend}/bin/lock-on-suspend &
-
-          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
-          ${pkgs.haskellPackages.xmobar}/bin/xmobar --dock --alpha 200 &
-          ${pkgs.stalonetray}/bin/stalonetray --slot-size 22 --icon-size 20 --geometry 9x1-0 --icon-gravity NE --grow-gravity E -c /dev/null --kludges fix_window_pos,force_icons_size,use_icons_hints --transparent --tint-level 200 &> /dev/null &
-          ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
-
-          # Autostart
-          ${pkgs.lib.optionalString (!buildVM) ''
-            ${pkgs.skype}/bin/skype &
-          ''}
-          ${pkgs.rxvt_unicode}/bin/urxvtd &
-          ${pkgs.gvolicon}/bin/gvolicon &> /dev/null &
-          ${pkgs.unclutter}/bin/unclutter -idle 3 &
-          ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
-          ${pkgs.wpa_supplicant_gui}/bin/wpa_gui -q -t &
-          ${pkgs.dunst}/bin/dunst -cto 4 -nto 2 -lto 1 -config ${./dunstrc} &
-          syndaemon -i 1 -R -K -t -d
-          trap 'trap - SIGINT SIGTERM EXIT && kill 0 && wait' SIGINT SIGTERM EXIT
-          ${pkgs.lib.optionalString buildVM '' ${pkgs.rxvt_unicode}/bin/urxvt '' }
-          env EMACS_WM=1 ${pkgs.emacs}/bin/emacs
-        '';
-      }
     ];
-  desktopManager.default = "emacs";
+  desktopManager.default = "custom";
   desktopManager.xterm.enable = false;
 
-  windowManager.default = "none";
-  windowManager.xmonad.enable = true;
-  windowManager.xmonad.enableContribAndExtras = true;
+  windowManager.default = "i3";
+  windowManager.i3.enable = true;
 
   wacom.enable = true;
 };
