@@ -61,6 +61,9 @@ services.udev.extraRules = ''
 
   # set deadline scheduler for non-rotating disks
   ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="deadline"
+
+  # spindown /dev/sda after 5 minutes of inactivity
+  ACTION=="add", SUBSYSTEM=="block", KERNEL=="sda", RUN+="${pkgs.hdparm}/bin/hdparm -S 60 /dev/sda"
 '';
 
 # Environment variables
