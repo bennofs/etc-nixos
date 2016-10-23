@@ -106,6 +106,13 @@ environment.etc."sync" = {
 system.activationScripts.homeUser = stringAfter [ "users" ] ''
   chown benno:users /home
 '';
+
+# Make sure /run/media/benno exists
+system.activationScripts.mediaMountPoint = ''
+  mkdir -p /run/media/benno
+  chown benno:users /run/media/benno
+'';
+
 environment.loginShellInit = ''
   if [ ! -d /home/.git ]; then
     pushd
