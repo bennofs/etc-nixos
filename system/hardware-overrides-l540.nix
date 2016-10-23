@@ -20,7 +20,7 @@ fileSystems."/home/.data.mount" = {
   fsType = "ext4";
 };
 
-fileSystems."/data/code" = {
+fileSystems."/code" = {
   label = "code";
   fsType = "ext4";
 };
