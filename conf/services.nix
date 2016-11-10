@@ -6,6 +6,12 @@ in {
 
 imports = [];
 
+# Enable SANE for scanning
+hardware.sane = {
+  enable = true;
+  extraBackends = [ pkgs.brscan4 ];
+};
+
 services = {
 
   # The locate service for finding files in the nix-store quickly.
@@ -47,6 +53,9 @@ services = {
   # Enable TLP for optimal power saving
   tlp.enable = true;
 
+  # Enable sambda for sharing files
+  samba.enable = true;
+
 };
 
 # Use libvirtd for managing virtual machines.
@@ -84,6 +93,11 @@ networking.firewall = {
 
   allowedTCPPorts = [
     3000        # hydra
+    139 445     # samba
+  ];
+
+  allowedUDPPorts = [
+    137 138     # samba
   ];
 };
 
