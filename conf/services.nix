@@ -12,6 +12,8 @@ hardware.sane = {
   extraBackends = [ pkgs.brscan4 ];
 };
 
+security.setuidPrograms = [ "dumpcap" ];
+
 services = {
 
   # The locate service for finding files in the nix-store quickly.
