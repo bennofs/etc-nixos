@@ -37,6 +37,7 @@ services = {
       all-servers
       dnssec
       trust-anchor=.,19036,8,2,49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5
+      server=/vm/192.168.122.1
     '';
   };
 
