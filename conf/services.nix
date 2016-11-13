@@ -6,12 +6,6 @@ in {
 
 imports = [];
 
-# Enable SANE for scanning
-hardware.sane = {
-  enable = true;
-  extraBackends = [ pkgs.brscan4 ];
-};
-
 security.setuidPrograms = [ "dumpcap" ];
 
 services = {
