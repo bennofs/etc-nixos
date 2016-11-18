@@ -15,13 +15,13 @@ environment.systemPackages = with pkgs;
 
     # Linux utils
     pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
-    exfat file ltrace dosfstools platinum-searcher iotop powertop
+    exfat file dosfstools platinum-searcher iotop powertop ltrace strace usbutils smartmontools
 
     # Desktop utils
-    scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock
+    scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock pavucontrol paprefs
 
     # Command line utils
-    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mplayer
+    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mpv
     patchutils fish haskellPackages.themplate emacs abcde vorbisgain dfc ripgrep
     aspell
 
