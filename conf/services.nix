@@ -53,6 +53,13 @@ services = {
   # Enable sambda for sharing files
   samba.enable = true;
 
+  # Enable SSH service
+  openssh = {
+    enable = true;
+    passwordAuthentication = false;
+    permitRootLogin = "no";
+  };
+
 };
 
 # Use libvirtd for managing virtual machines.
@@ -94,6 +101,7 @@ networking.firewall = {
   allowedTCPPorts = [
     3000        # hydra
     139 445     # samba
+    22          # ssh
   ];
 
   allowedUDPPorts = [
