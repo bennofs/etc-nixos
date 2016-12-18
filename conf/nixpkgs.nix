@@ -42,6 +42,16 @@ packageOverrides = pkgs: rec {
         --prefix GTK2_RC_FILES ":" ${disableScrollbars}
     '';
   });
+
+  stdenv = pkgs.stdenv // {
+    platform = pkgs.stdenv.platform // {
+      kernelExtraConfig = ''
+        EARLY_PRINTK y
+      '';
+    };
+  };
 };
+
+
 
 }
