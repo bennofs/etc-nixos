@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   name = "armagetronad-0.4-bzr-r${rev}";
-  rev = "1587";
+  rev = "1608";
   src = fetchbzr {
     url = "lp:armagetronad/0.4";
     inherit rev;
-    sha256 = "0hba1mg0rv9mnnahf6ks6d20v0801ass3r1vvijfmpf0sl0s8z7g";
+    sha256 = "1xwlay3l51nc9mc4d7kbpmi754i36gm0cx706mdg1gnajsdpjp8b";
   };
   buildInputs = [stdenv boost which automake autoconf SDL SDL_mixer SDL_image libxml2 protobuf mesa ftgl glew pkgconfig libpng m4 yacc python freetype];
   patchFlags = "-p0";
