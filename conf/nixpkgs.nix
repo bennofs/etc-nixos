@@ -2,7 +2,7 @@
 allowUnfree = true;
 chromium.enablePepperFlash = true;
 chromium.enablePepperPDF = true;
-chromium.enableWideVine = true;
+#chromium.enableWideVine = true;
 cabal.libraryProfiling = true;
 packageOverrides = pkgs: rec {
   rxvt_unicode = pkgs.rxvt_unicode.overrideDerivation (old: {
