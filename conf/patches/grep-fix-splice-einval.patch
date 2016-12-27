@@ -1,0 +1,28 @@
+diff --git a/src/grep.c b/src/grep.c
+index f28f3c2..3e8e662 100644
+--- a/src/grep.c
++++ b/src/grep.c
+@@ -1729,10 +1729,19 @@ drain_input (int fd, struct stat const *st)
+ #ifdef SPLICE_F_MOVE
+       /* Should be faster, since it need not copy data to user space.  */
+       while ((nbytes = splice (fd, NULL, STDOUT_FILENO, NULL,
+-                               INITIAL_BUFSIZE, SPLICE_F_MOVE)))
+-        if (nbytes < 0)
+-          return false;
+-      return true;
++                               INITIAL_BUFSIZE, SPLICE_F_MOVE)) > 0)
++        continue;
++
++      if(nbytes == 0) return true;
++
++      /* STDOUT might have been opened with O_APPEND (gnumake sets this flag for example).
++       * In this case, splice fails with EINVAL. 
++       *
++       * In that case, the safe_read still works so instead of returning with an error here,
++       * we just fall through to the safe_read variant.
++       */
++      if(nbytes < 0 && errno != EINVAL) return false;
++
+ #endif
+     }
+   while ((nbytes = safe_read (fd, buffer, bufalloc)))

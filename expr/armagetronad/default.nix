@@ -1,4 +1,4 @@
-{stdenv, fetchbzr, boost, which, automake, autoconf, SDL, SDL_mixer, SDL_image, libxml2, protobuf, mesa, ftgl, glew, pkgconfig, libpng, m4, yacc, python, freetype}:
+{stdenv, fetchbzr, gnugrep, boost, which, automake, autoconf, SDL, SDL_mixer, SDL_image, libxml2, protobuf, mesa, ftgl, glew, pkgconfig, libpng, m4, yacc, python, freetype}:
 
 stdenv.mkDerivation rec {
   name = "armagetronad-0.4-bzr-r${rev}";
@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
     inherit rev;
     sha256 = "1xwlay3l51nc9mc4d7kbpmi754i36gm0cx706mdg1gnajsdpjp8b";
   };
-  buildInputs = [stdenv boost which automake autoconf SDL SDL_mixer SDL_image libxml2 protobuf mesa ftgl glew pkgconfig libpng m4 yacc python freetype];
+  buildInputs = [gnugrep stdenv boost which automake autoconf SDL SDL_mixer SDL_image libxml2 protobuf mesa ftgl glew pkgconfig libpng m4 yacc python freetype];
   patchFlags = "-p0";
   configureFlags = "--disable-games --disable-etc";
   preConfigure = ''
