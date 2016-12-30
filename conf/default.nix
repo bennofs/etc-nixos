@@ -22,9 +22,15 @@ environment.systemPackages = with pkgs;
     scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock pavucontrol paprefs
 
     # Command line utils
-    k2pdfopt ncmpcpp mpc_cli beets manpages man wpa_supplicant mp3gain mpv
+    k2pdfopt ncmpcpp mpc_cli beets wpa_supplicant mp3gain mpv
     patchutils fish haskellPackages.themplate emacs abcde vorbisgain dfc ripgrep
     aspell
+
+    # Man pages
+    man
+    man-pages
+    posix_man_pages
+    stdman
 
     # Development tools
     nix-repl llvm haskellPackages.ghc
