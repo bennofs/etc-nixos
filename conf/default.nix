@@ -10,37 +10,41 @@ imports = [
 # Available packages
 environment.systemPackages = with pkgs;
   [ # Version control / archiving
-    git mercurial bazaar subversion unzip wget zip unrar gitAndTools.hub p7zip dtrx
-    nix-prefetch-scripts
+    git gitAndTools.hub mercurial bazaar subversion
+    unzip zip unrar p7zip dtrx
 
-    # Linux utils
-    pmutils psmisc htop fuse inetutils which binutils linuxPackages.perf bc utillinuxCurses
-    exfat file dosfstools platinum-searcher iotop powertop ltrace strace usbutils smartmontools
-    pciutils
+    # Debugging / monitoring / analyzing
+    htop iotop powertop
+    ltrace strace linuxPackages.perf
+    pciutils lshw smartmontools usbutils
+
+    # Networking
+    inetutils wireshark wget nix-prefetch-scripts
+
+    # Linux shell utils
+    pmutils psmisc which file binutils bc utillinuxCurses exfat dosfstools
+    patchutils moreutils
 
     # Desktop utils
     scrot xsel xlibs.xbacklight arandr wpa_supplicant_gui expr.lock pavucontrol paprefs
 
-    # Command line utils
+    # Command line programs
     k2pdfopt ncmpcpp mpc_cli beets wpa_supplicant mp3gain mpv
-    patchutils fish haskellPackages.themplate emacs abcde vorbisgain dfc ripgrep
-    aspell
+    fish haskellPackages.themplate abcde vorbisgain dfc ripgrep
+    aspell weechat
 
     # Man pages
-    man
-    man-pages
-    posix_man_pages
-    stdman
+    man man-pages posix_man_pages stdman
 
     # Development tools
     nix-repl llvm haskellPackages.ghc
 
     # Desktop applications
-    xfce.thunar gimp skype wireshark libreoffice calibre
+    xfce.thunar gimp skype libreoffice calibre emacs
     keepassx2 zathura rxvt_unicode chromium steam vlc
 
-    # Other
-    expr.softwarechallenge16-gui expr.armagetronad
+    # Games
+    expr.armagetronad steam
   ];
 
 boot.cleanTmpDir = true;
@@ -75,10 +79,7 @@ services.udev.extraRules = ''
 
 # Environment variables
 environment.variables = {
-  BROWSER = builtins.toString (pkgs.writeScript "run-browser.sh" ''
-    #!${pkgs.bash}/bin/bash
-    ${pkgs.chromium}/bin/chromium "$@" &
-  '');
+  BROWSER ="${pkgs.chromium}/bin/chromium";
   EDITOR="${pkgs.emacs}/bin/emacsclient -c";
   SHELL = "${pkgs.fish}/bin/fish";
 };
