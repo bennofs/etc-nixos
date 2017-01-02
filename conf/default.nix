@@ -121,7 +121,14 @@ system.activationScripts.mediaMountPoint = ''
   chown benno:users /run/media/benno
 '';
 
+
+# Extra environment variables
+environment.extraInit = ''
+  export PATH="$HOME/.local/bin:$PATH"
+'';
+
 environment.loginShellInit = ''
+
   if [ ! -d /home/.git ]; then
     pushd
     cd /home
