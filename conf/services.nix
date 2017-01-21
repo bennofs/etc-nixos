@@ -60,6 +60,13 @@ services = {
     permitRootLogin = "no";
   };
 
+  # Enable Hydra
+  hydra = {
+    enable = true;
+    hydraURL = "http://localhost:3000";
+    notificationSender = "hydra@localhost";
+  };
+
 };
 
 # Use libvirtd for managing virtual machines.
