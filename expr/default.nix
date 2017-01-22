@@ -39,4 +39,13 @@ mfcj430w-driver = pkgsi686Linux.callPackage ./mfcj430w-driver {
   psnup = texlive.combined.scheme-minimal;
 };
 
+hydra =
+  let
+    source = fetchgit {
+      url = "https://github.com/mayflower/hydra";
+      rev = "6216eeb7d9b3de922100f2afebc2b5e11aac6726";
+      sha256 = "1y5zqy7y3ghizpqcph71apjkzjkczn1gb4ia301d6an6sdk2ybjz";
+    };
+  in (import "${source}/release.nix" {}).build.${system};
+
 }
