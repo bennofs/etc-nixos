@@ -217,7 +217,9 @@ nix = {
     "nixos-config=/etc/nixos/configuration.nix"
   ];
   buildMachines = [
-    { hostName = "localhost"; system = builtins.currentSystem; } 
+    { hostName = "localhost"; system = builtins.currentSystem; inherit (config.nix) maxJobs; } 
   ];
 };
+
 }
+
