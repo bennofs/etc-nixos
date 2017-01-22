@@ -216,5 +216,8 @@ nix = {
     "/run/current-system/nixpkgs"
     "nixos-config=/etc/nixos/configuration.nix"
   ];
+  buildMachines = [
+    { hostName = "localhost"; system = builtins.currentSystem; } 
+  ];
 };
 }
