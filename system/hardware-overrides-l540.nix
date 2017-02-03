@@ -27,4 +27,6 @@ fileSystems."/code" = {
 
 networking.wireless.interfaces = [ "wlp2s0" ];
 
+boot.kernelParams = [ "libata.force=6.00:noncq" ];
+
 }
