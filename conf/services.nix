@@ -78,7 +78,7 @@ virtualisation.libvirtd.enable = true;
 environment.variables.LIBVIRT_DEFAULT_URI = "qemu:///system";
 
 # Set the MPD host
-environment.variables.MPD_HOST = "pi-cube";
+environment.variables.MPD_HOST = "pi-cube.fritz.box";
 
 # Libvirtd needs to start after data is mounted, because the storage pool lives
 # on /data.
