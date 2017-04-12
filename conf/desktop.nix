@@ -1,7 +1,7 @@
 { config, pkgs, expr, buildVM, ... }:
 
 let
-  iconTheme = pkgs.kde5.breeze-icons.out;
+  iconTheme = pkgs.breeze-icons.out;
   themeEnv = ''
     # QT: remove local user overrides (for determinism, causes hard to find bugs)
     rm -f ~/.config/Trolltech.conf
@@ -18,7 +18,7 @@ let
     export XDG_CONFIG_DIRS="/etc/xdg:$XDG_CONFIG_DIRS"
 
     # GTK2 theme + icon theme
-    export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="breeze"''}:${pkgs.kde5.breeze-gtk}/share/themes/Breeze/gtk-2.0/gtkrc:$GTK2_RC_FILES
+    export GTK2_RC_FILES=${pkgs.writeText "iconrc" ''gtk-icon-theme-name="breeze"''}:${pkgs.breeze-gtk}/share/themes/Breeze/gtk-2.0/gtkrc:$GTK2_RC_FILES
 
     # SVG loader for pixbuf (needed for GTK svg icon themes)
     export GDK_PIXBUF_MODULE_FILE=$(echo ${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/*/loaders.cache)
@@ -131,8 +131,8 @@ environment.etc."xdg/gtk-3.0/settings.ini" = {
 
 environment.systemPackages = with pkgs; [
   # Qt theme
-  kde5.breeze-qt5
-  kde5.breeze-qt4
+  breeze-qt5
+  breeze-qt4
 
   # Icons (Main)
   iconTheme
