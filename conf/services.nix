@@ -6,7 +6,15 @@ in {
 
 imports = [];
 
-security.setuidPrograms = [ "dumpcap" ];
+security.wrappers = {
+  "dumpcap" = {
+    source = "${pkgs.wireshark-cli}/bin/dumpcap";
+    owner = "root";
+    group = "wheel";
+    permissions = "550"; 
+    capabilities = "cap_net_raw,cap_net_admin=eip";
+  };
+};
 
 services = {
 
