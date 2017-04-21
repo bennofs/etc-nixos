@@ -73,7 +73,6 @@ services = {
     enable = true;
     hydraURL = "http://localhost:3000";
     notificationSender = "hydra@localhost";
-    package = expr.hydra;
   };
 
 };
