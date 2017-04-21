@@ -14,11 +14,7 @@ softwarechallenge16-gui = callPackage ./softwarechallenge-gui/2016.nix {
 
 esu = callPackage ./esu {};
 
-armagetronad = callPackage ./armagetronad {
-  gnugrep = gnugrep.overrideDerivation (old: {
-    patches = (old.patches or []) ++ [ ../conf/patches/grep-fix-splice-einval.patch ];
-  });
-};
+armagetronad = callPackage ./armagetronad {};
 
 nixos-sync = nixos-rebuild: callPackage ./nixos-sync {
   git = gitMinimal;
