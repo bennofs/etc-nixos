@@ -137,4 +137,9 @@ networking.extraResolvconfConf =
   in ''
     name_servers="$name_servers''${name_servers:+ }${toString extraNameServers}"
   '';
+
+# User services
+services.dbus.socketActivated = true;
+
 }
+
