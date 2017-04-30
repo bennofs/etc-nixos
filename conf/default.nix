@@ -60,8 +60,8 @@ hardware.opengl.driSupport32Bit = true;
 services.udev.packages = with pkgs; [
   # Enable Android udev rules
   # This is needed so that the android device nodes in /dev have
-  # the correct access levels (they will be managed by systemd-logind)
-  libmtp
+  # the correct access levels (they will be managed by systemd-logind/udevd)
+  android-udev-rules
 ];
 services.udev.extraRules = ''
   # AREXX USB-IR-Transceiver. For flashing ASURO robot
