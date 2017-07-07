@@ -5,6 +5,7 @@ with builtins; with pkgs.lib; {
 imports = [
   ./desktop.nix
   ./services.nix
+  ./accounts.nix
 ];
 
 # Available packages
@@ -100,7 +101,7 @@ environment.shellInit =
 environment.etc."ssl/certs/mozilla.crt" = {
   source = pkgs.fetchurl {
     url = "http://curl.haxx.se/ca/cacert.pem";
-    sha256 = "1ziwf1p9c1980j0v49281f8jzqks5sh9sz8g6jsnn063bias0ibd";
+    sha256 = "1l4xzr16vjdxcpj1fl3qrn8srh7ni3cl5fabwrkd8as3njvqm377";
   };
   mode = "444";
 };
@@ -110,15 +111,20 @@ environment.etc."sync" = {
   mode = "500";
 };
 
+environment.etc."wpa_supplicant.conf" = {
+  mode = "symlink";
+  source = "/etc/local/wpa_supplicant.conf";
+};
+
 # Setup /home
 system.activationScripts.homeUser = stringAfter [ "users" ] ''
-  chown benno:users /home
+  chown bennofs:users /home
 '';
 
 # Make sure /run/media/benno exists
 system.activationScripts.mediaMountPoint = ''
-  mkdir -p /run/media/benno
-  chown benno:users /run/media/benno
+  mkdir -p /run/media/bennofs
+  chown bennofs:users /run/media/bennofs
 '';
 
 
@@ -130,14 +136,14 @@ environment.extraInit = ''
 environment.loginShellInit = ''
 
   if [ ! -d /home/.git ]; then
-    pushd
-    cd /home
-    git=${pkgs.git}/bin/git
-    $git init &> /tmp/git-init
-    $git remote add origin https://github.com/bennofs/dotfiles &> /tmp/git-remote
-    $git fetch &> /tmp/git-fetch
-    $git checkout -t origin/master &> /tmp/git-checkout
-    popd
+    (
+      cd /home
+      git=${pkgs.git}/bin/git
+      $git init &> /tmp/git-init
+      $git remote add origin https://github.com/bennofs/dotfiles &> /tmp/git-remote
+      $git fetch &> /tmp/git-fetch
+      $git checkout -t origin/master &> /tmp/git-checkout
+    )
 
     # Setup nix-env
     rm /home/.nix-defexpr/*
@@ -152,7 +158,7 @@ system.extraSystemBuilderCmds = ''
 
 # Select internationalisation properties.
 i18n = {
-  consoleFont = "lat9w-16";
+  #consoleFont = "lat9w-16";
   consoleKeyMap = "de-latin1";
   defaultLocale = "en_US.UTF-8";
 };
@@ -174,12 +180,6 @@ networking = {
 # monitor is connected.
 services.logind.extraConfig = ''
   HandleLidSwitchDocked=suspend
-'';
-
-# We want volatile storage, so journald doesn't keep the hard
-# disk spinning
-services.journald.extraConfig = ''
-  Storage=volatile
 '';
 
 # Allow normal users to mount devices

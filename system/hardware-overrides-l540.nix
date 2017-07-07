@@ -1,14 +1,7 @@
-{ ... }: {
+{ lib, ... }: {
 
 hardware.cpu.intel.updateMicrocode = true;
-
-boot.loader.grub.device = "/dev/sdb";
-boot.loader.grub.extraEntries = ''
-  menuentry "Windows 10" {
-    set root=(hd0,msdos1);
-    chainloader (hd0,msdos1)+1;
-  }
-'';
+hardware.enableAllFirmware = true;
 
 fileSystems."/data" = {
   label = "data";
@@ -20,13 +13,27 @@ fileSystems."/home/.data.mount" = {
   fsType = "ext4";
 };
 
-fileSystems."/code" = {
-  label = "code";
+fileSystems."/" = {
+  label = "nixos";
   fsType = "ext4";
 };
 
+fileSystems."/boot" = {
+  label = "esp";
+  device = "/dev/sdb1";
+};
+
+
 networking.wireless.interfaces = [ "wlp2s0" ];
 
-boot.kernelParams = [ "libata.force=6.00:noncq" ];
+boot.loader.systemd-boot.enable = true;
+boot.loader.efi.canTouchEfiVariables = true;
+boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
+boot.kernelModules = [ "kvm-intel" ];
+boot.extraModulePackages = [ ];
+
+swapDevices = [ ];
+
+nix.maxJobs = lib.mkDefault 4;
 
 }

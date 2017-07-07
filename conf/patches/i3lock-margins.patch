@@ -2,7 +2,7 @@ diff --git a/i3lock.c b/i3lock.c
 index a7b54f5..cf1526d 100644
 --- a/i3lock.c
 +++ b/i3lock.c
-@@ -735,6 +735,10 @@ int main(int argc, char *argv[]) {
+@@ -813,3 +813,7 @@ int main(int argc, char *argv[]) {
      struct passwd *pw;
      char *username;
      char *image_path = NULL;
@@ -10,9 +10,6 @@ index a7b54f5..cf1526d 100644
 +    int bottom_margin = 0;
 +    int left_margin = 0;
 +    int right_margin = 0;
-     int ret;
-     struct pam_conv conv = {conv_callback, NULL};
-     int curs_choice = CURS_NONE;
 @@ -755,6 +759,10 @@ int main(int argc, char *argv[]) {
          {"ignore-empty-password", no_argument, NULL, 'e'},
          {"inactivity-timeout", required_argument, NULL, 'I'},
@@ -47,15 +44,13 @@ index a7b54f5..cf1526d 100644
              default:
                  errx(EXIT_FAILURE, "Syntax: i3lock [-v] [-n] [-b] [-d] [-c color] [-u] [-p win|default]"
                                     " [-i image.png] [-t] [-e] [-I timeout] [-f]");
-@@ -932,7 +956,7 @@ int main(int argc, char *argv[]) {
+@@ -932,5 +956,5 @@ int main(int argc, char *argv[]) {
      xcb_pixmap_t bg_pixmap = draw_image(last_resolution);
  
      /* open the fullscreen window, already with the correct pixmap in place */
 -    win = open_fullscreen_window(conn, screen, color, bg_pixmap);
 +    win = open_fullscreen_window(conn, screen, color, bg_pixmap, top_margin, bottom_margin, left_margin, right_margin);
      xcb_free_pixmap(conn, bg_pixmap);
- 
-     pid_t pid = fork();
 diff --git a/xcb.c b/xcb.c
 index f1a9a76..ca7b1e8 100644
 --- a/xcb.c

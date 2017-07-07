@@ -15,7 +15,7 @@ packageOverrides = pkgs: rec {
   custom = import ../expr { inherit pkgs; };
 
   i3lock = pkgs.i3lock.overrideDerivation (old: {
-    patches = (old.patches or []) ++ [ ./patches/i3lock-margins.patch ./patches/i3lock-ready.patch ];
+    # patches = (old.patches or []) ++ [ ./patches/i3lock-margins.patch ./patches/i3lock-ready.patch ];
   });
 
   aspell = pkgs.aspell.overrideDerivation (old: {

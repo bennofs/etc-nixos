@@ -57,7 +57,7 @@ services.xserver = {
   displayManager.lightdm.enable = true;
   displayManager.lightdm.autoLogin = {
     enable = true;
-    user = "benno";
+    user = "bennofs";
   };
   displayManager.lightdm.greeter.enable = false;
   desktopManager.session =
@@ -67,7 +67,7 @@ services.xserver = {
           ${expr.lock}/bin/lock
           ${expr.lock-suspend}/bin/lock-on-suspend &
 
-          ${pkgs.feh}/bin/feh --bg-fill ${/data/pics/wallpapers/unsplash/autumn.jpg}
+          ${pkgs.feh}/bin/feh --bg-fill "/data/pics/wallpapers/unsplash/autumn.jpg"
           ${pkgs.haskellPackages.xmobar}/bin/xmobar --dock --alpha 200 &
           ${pkgs.stalonetray}/bin/stalonetray --slot-size 22 --icon-size 20 --geometry 9x1-0 --icon-gravity NE --grow-gravity E -c /dev/null --kludges fix_window_pos,force_icons_size,use_icons_hints --transparent --tint-level 200 &> /dev/null &
           ${pkgs.xlibs.xrdb}/bin/xrdb -load ${./Xresources}
@@ -75,10 +75,8 @@ services.xserver = {
           # Autostart
           ${pkgs.lib.optionalString (!buildVM) ''
             ${pkgs.rxvt_unicode}/bin/urxvt -title "IRC bennofs" -e ${pkgs.weechat}/bin/weechat &
-            ${pkgs.skype}/bin/skype &
           ''}
           ${pkgs.rxvt_unicode}/bin/urxvtd &
-          ${pkgs.emacs}/bin/emacs --daemon &
           ${pkgs.pasystray}/bin/pasystray &> /dev/null &
           ${pkgs.unclutter}/bin/unclutter -idle 3 &
           ${pkgs.pythonPackages.udiskie}/bin/udiskie --tray &
