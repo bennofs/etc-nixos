@@ -20,7 +20,7 @@ fileSystems."/" = {
 
 fileSystems."/boot" = {
   label = "esp";
-  device = "/dev/sdb1";
+  fsType = "vfat";
 };
 
 networking.hostName = "c-cube";
