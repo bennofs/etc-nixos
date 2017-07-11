@@ -1,7 +1,7 @@
 let
   configuration = { config, pkgs, ... }: {
 
-    imports = [ ./hardware-configuration.nix ./hardware-overrides.nix ./conf/default.nix ./vm-accounts.nix ];
+    imports = [ ./conf/default.nix ./vm-accounts.nix ];
 
     nixpkgs.config = import ./conf/nixpkgs.nix;
     _module.args.expr = import ./expr { inherit pkgs; };

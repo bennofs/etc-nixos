@@ -121,7 +121,7 @@ system.activationScripts.homeUser = stringAfter [ "users" ] ''
   chown bennofs:users /home
 '';
 
-# Make sure /run/media/benno exists
+# Make sure /run/media/bennofs exists
 system.activationScripts.mediaMountPoint = ''
   mkdir -p /run/media/bennofs
   chown bennofs:users /run/media/bennofs
@@ -143,7 +143,7 @@ environment.loginShellInit = ''
       $git remote add origin https://github.com/bennofs/dotfiles &> /tmp/git-remote
       $git fetch &> /tmp/git-fetch
       $git checkout -t origin/master &> /tmp/git-checkout
-    )
+    ) || rm /home/.git -rf
 
     # Setup nix-env
     rm /home/.nix-defexpr/*
@@ -152,9 +152,7 @@ environment.loginShellInit = ''
 '';
 
 # Add nixpkgs link to system
-system.extraSystemBuilderCmds = ''
-  cp -r ${builtins.filterSource (name: _: baseNameOf name != ".git") <nixpkgs>} $out/nixpkgs
-'';
+system.copySystemNixpkgs = true;
 
 # Select internationalisation properties.
 i18n = {

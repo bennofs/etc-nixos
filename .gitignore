@@ -1,4 +1,3 @@
 /hardware-configuration.nix
 /hardware-overrides.nix
-/conf/accounts.nix
 /expr/softwarechallenge-gui/plugin2015.jar

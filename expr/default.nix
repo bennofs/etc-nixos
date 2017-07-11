@@ -42,6 +42,8 @@ hydra =
       rev = "6216eeb7d9b3de922100f2afebc2b5e11aac6726";
       sha256 = "1y5zqy7y3ghizpqcph71apjkzjkczn1gb4ia301d6an6sdk2ybjz";
     };
-  in (import "${source}/release.nix" {}).build.${system};
+  in (import "${source}/release.nix" {}).build."${system}";
+
+radare2-git = callPackage ./radare2-git { };
 
 }
