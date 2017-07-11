@@ -23,7 +23,7 @@ fileSystems."/boot" = {
   device = "/dev/sdb1";
 };
 
-
+networking.hostName = "c-cube";
 networking.wireless.interfaces = [ "wlp2s0" ];
 
 boot.loader.systemd-boot.enable = true;
