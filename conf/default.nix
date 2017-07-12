@@ -51,6 +51,7 @@ environment.systemPackages = with pkgs;
 boot.cleanTmpDir = true;
 boot.kernel.sysctl = {
   "kernel.dmesg_restrict" = true;
+  "kernel.yama.ptrace_scope" = 1;
 };
 hardware.pulseaudio.enable = true;
 hardware.pulseaudio.support32Bit = true;
@@ -73,9 +74,6 @@ services.udev.extraRules = ''
 
   # set deadline scheduler for non-rotating disks
   ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="deadline"
-
-  # spindown /dev/sda after 5 minutes of inactivity
-  ACTION=="add", SUBSYSTEM=="block", KERNEL=="sda", RUN+="${pkgs.hdparm}/bin/hdparm -S 60 /dev/sda"
 '';
 
 # Environment variables
@@ -156,13 +154,12 @@ system.copySystemNixpkgs = true;
 
 # Select internationalisation properties.
 i18n = {
-  #consoleFont = "lat9w-16";
   consoleKeyMap = "de-latin1";
   defaultLocale = "en_US.UTF-8";
 };
 time.timeZone = "Europe/Berlin";
 
-# More fonts!
+# All the fonts!
 fonts.fonts = with pkgs; [
   source-code-pro dejavu_fonts liberation_ttf vistafonts corefonts
   cantarell_fonts fira fira-mono fira-code hasklig

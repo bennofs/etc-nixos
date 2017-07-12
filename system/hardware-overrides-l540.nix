@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{ lib, pkgs, ... }: {
 
 hardware.cpu.intel.updateMicrocode = true;
 hardware.enableAllFirmware = true;
@@ -33,6 +33,11 @@ boot.kernelModules = [ "kvm-intel" ];
 boot.extraModulePackages = [ ];
 
 swapDevices = [ ];
+
+services.udev.extraRules = ''
+  # spindown /dev/sda after 5 minutes of inactivity
+  ACTION=="add", SUBSYSTEM=="block", KERNEL=="sda", RUN+="${pkgs.hdparm}/bin/hdparm -S 60 /dev/sda"
+'';
 
 nix.maxJobs = lib.mkDefault 4;
 
