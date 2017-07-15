@@ -16,7 +16,7 @@ environment.systemPackages = with pkgs;
 
     # Debugging / monitoring / analyzing
     htop iotop powertop
-    ltrace strace # linuxPackages.perf 2017-07-11: perf doesn't compile
+    ltrace strace linuxPackages.perf
     pciutils lshw smartmontools usbutils
 
     # Networking
