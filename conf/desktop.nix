@@ -25,6 +25,9 @@ let
 
     # LS colors
     eval `${pkgs.coreutils}/bin/dircolors "${./dircolors}"`
+
+    # QT5: convince it to use our preferred style
+    export QT_STYLE_OVERRIDE=breeze
   '';
 
 in {
